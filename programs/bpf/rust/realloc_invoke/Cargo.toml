@@ -1,12 +1,12 @@
 [package]
-name = "solana-bpf-rust-realloc-invoke"
+name = "paychains-bpf-rust-realloc-invoke"
 version = "1.10.0"
-description = "Solana BPF test program written in Rust"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana"
+description = "PayChains BPF test program written in Rust"
+authors = ["PayChains Maintainers <maintainers@paychains.foundation>"]
+repository = "https://github.com/paychains-labs/paychains"
 license = "Apache-2.0"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-bpf-rust-realloc-invoke"
+homepage = "https://paychains.com/"
+documentation = "https://docs.rs/paychains-bpf-rust-realloc-invoke"
 edition = "2021"
 
 [features]
@@ -14,8 +14,8 @@ default = ["program"]
 program = []
 
 [dependencies]
-solana-program = { path = "../../../../sdk/program", version = "=1.10.0" }
-solana-bpf-rust-realloc = { path = "../realloc", version = "=1.10.0", default-features = false }
+paychains-program = { path = "../../../../sdk/program", version = "=1.10.0" }
+paychains-bpf-rust-realloc = { path = "../realloc", version = "=1.10.0", default-features = false }
 
 [lib]
 crate-type = ["lib", "cdylib"]

@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @brief Solana Blake3 system call
+ * @brief PayChains Blake3 system call
  */
 
 #include <sol/types.h>
@@ -21,8 +21,8 @@ extern "C" {
  * @param bytes_len Number of byte arrays
  * @param result 32 byte array to hold the result
  */
-uint64_t sol_blake3(
-    const SolBytes *bytes,
+uint64_t pay_blake3(
+    const PayBytes *bytes,
     int bytes_len,
     const uint8_t *result
 );

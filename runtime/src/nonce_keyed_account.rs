@@ -1,6 +1,6 @@
 use {
-    solana_program_runtime::{ic_msg, invoke_context::InvokeContext},
-    solana_sdk::{
+    paychains_program_runtime::{ic_msg, invoke_context::InvokeContext},
+    paychains_sdk::{
         account::{ReadableAccount, WritableAccount},
         account_utils::State as AccountUtilsState,
         feature_set::{self, nonce_must_be_writable},
@@ -317,8 +317,8 @@ impl<'a> NonceKeyedAccount for KeyedAccount<'a> {
 mod test {
     use {
         super::*,
-        solana_program_runtime::invoke_context::InvokeContext,
-        solana_sdk::{
+        paychains_program_runtime::invoke_context::InvokeContext,
+        paychains_sdk::{
             account::ReadableAccount,
             account_utils::State as AccountUtilsState,
             hash::{hash, Hash},

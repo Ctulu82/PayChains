@@ -2,9 +2,9 @@
 title: Web3 JavaScript API
 ---
 
-## What is Solana-Web3.js?
+## What is PayChains-Web3.js?
 
-The Solana-Web3.js library aims to provide complete coverage of Solana. The library was built on top of the [Solana JSON RPC API](https://docs.solana.com/developing/clients/jsonrpc-api).
+The PayChains-Web3.js library aims to provide complete coverage of PayChains. The library was built on top of the [PayChains JSON RPC API](https://docs.paychains.com/developing/clients/jsonrpc-api).
 
 ## Common Terminology
 
@@ -14,7 +14,7 @@ The Solana-Web3.js library aims to provide complete coverage of Solana. The libr
 | Instruction | The smallest unit of a program that a client can include in a transaction. Within its processing code, an instruction may contain one or more cross-program invocations. |
 | Transaction | One or more instructions signed by the client using one or more Keypairs and executed atomically with only two possible outcomes: success or failure. |
 
-For the full list of terms, see [Solana terminology](https://docs.solana.com/terminology#cross-program-invocation)
+For the full list of terms, see [PayChains terminology](https://docs.paychains.com/terminology#cross-program-invocation)
 
 ## Getting Started
 
@@ -23,23 +23,23 @@ For the full list of terms, see [Solana terminology](https://docs.solana.com/ter
 #### yarn
 
 ```bash
-$ yarn add @solana/web3.js
+$ yarn add @paychains/web3.js
 ```
 
 #### npm
 
 ```bash
-$ npm install --save @solana/web3.js
+$ npm install --save @paychains/web3.js
 ```
 
 #### Bundle
 
 ```html
 <!-- Development (un-minified) -->
-<script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+<script src="https://unpkg.com/@paychains/web3.js@latest/lib/index.iife.js"></script>
 
 <!-- Production (minified) -->
-<script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+<script src="https://unpkg.com/@paychains/web3.js@latest/lib/index.iife.min.js"></script>
 ```
 
 ### Usage
@@ -47,31 +47,31 @@ $ npm install --save @solana/web3.js
 #### Javascript
 
 ```javascript
-const solanaWeb3 = require('@solana/web3.js');
-console.log(solanaWeb3);
+const paychainsWeb3 = require('@paychains/web3.js');
+console.log(paychainsWeb3);
 ```
 
 
 #### ES6
 
 ```javascript
-import * as solanaWeb3 from '@solana/web3.js';
-console.log(solanaWeb3);
+import * as paychainsWeb3 from '@paychains/web3.js';
+console.log(paychainsWeb3);
 ```
 
 
 #### Browser Bundle
 
 ```javascript
-// solanaWeb3 is provided in the global namespace by the bundle script
-console.log(solanaWeb3);
+// paychainsWeb3 is provided in the global namespace by the bundle script
+console.log(paychainsWeb3);
 ```
 
 ## Quickstart
 
 ### Connecting to a Wallet
 
-To allow users to use your dApp or application on Solana, they will need to get access to their Keypair. A Keypair is a private key with a matching public key, used to sign transactions.
+To allow users to use your dApp or application on PayChains, they will need to get access to their Keypair. A Keypair is a private key with a matching public key, used to sign transactions.
 
 There are two ways to obtain a Keypair:
 1. Generate a new Keypair
@@ -80,7 +80,7 @@ There are two ways to obtain a Keypair:
 You can obtain a new Keypair with the following:
 
 ```javascript
-const {Keypair} = require("@solana/web3.js");
+const {Keypair} = require("@paychains/web3.js");
 
 let keypair = Keypair.generate();
 ```
@@ -90,7 +90,7 @@ This will generate a brand new Keypair for a user to fund and use within your ap
 You can allow entry of the secretKey using a textbox, and obtain the Keypair with `Keypair.fromSecretKey(secretKey)`.
 
 ```javascript
-const {Keypair} = require("@solana/web3.js");
+const {Keypair} = require("@paychains/web3.js");
 
 let secretKey = Uint8Array.from([
   202, 171, 192, 129, 150, 189, 204, 241, 142,  71, 205,
@@ -104,18 +104,18 @@ let secretKey = Uint8Array.from([
 let keypair = Keypair.fromSecretKey(secretKey);
 ```
 
-Many wallets today allow users to bring their Keypair using a variety of extensions or web wallets. The general recommendation is to use wallets, not Keypairs, to sign transactions. The wallet creates a layer of separation between the dApp and the Keypair, ensuring that the dApp never has access to the secret key. You can find ways to connect to external wallets with the [wallet-adapter](https://github.com/solana-labs/wallet-adapter) library.
+Many wallets today allow users to bring their Keypair using a variety of extensions or web wallets. The general recommendation is to use wallets, not Keypairs, to sign transactions. The wallet creates a layer of separation between the dApp and the Keypair, ensuring that the dApp never has access to the secret key. You can find ways to connect to external wallets with the [wallet-adapter](https://github.com/paychains-labs/wallet-adapter) library.
 
 ### Creating and Sending Transactions
 
-To interact with programs on Solana, you create, sign, and send transactions to the network. Transactions are collections of instructions with signatures. The order that instructions exist in a transaction determines the order they are executed.
+To interact with programs on PayChains, you create, sign, and send transactions to the network. Transactions are collections of instructions with signatures. The order that instructions exist in a transaction determines the order they are executed.
 
-A transaction in Solana-Web3.js is created using the [`Transaction`](javascript-api.md#Transaction) object and adding desired messages, addresses, or instructions.
+A transaction in PayChains-Web3.js is created using the [`Transaction`](javascript-api.md#Transaction) object and adding desired messages, addresses, or instructions.
 
 Take the example of a transfer transaction:
 
 ```javascript
-const {Keypair, Transaction, SystemProgram, LAMPORTS_PER_SOL} = require("@solana/web3.js");
+const {Keypair, Transaction, SystemProgram, LAMPORTS_PER_PAY} = require("@paychains/web3.js");
 
 let fromKeypair = Keypair.generate();
 let toKeypair = Keypair.generate();
@@ -125,7 +125,7 @@ transaction.add(
   SystemProgram.transfer({
     fromPubkey: fromKeypair.publicKey,
     toPubkey: toKeypair.publicKey,
-    lamports: LAMPORTS_PER_SOL
+    lamports: LAMPORTS_PER_PAY
   })
 );
 ```
@@ -135,7 +135,7 @@ The above code achieves creating a transaction ready to be signed and broadcaste
 All that is left is to sign the transaction with keypair and send it over the network. You can accomplish sending a transaction by using `sendAndConfirmTransaction` if you wish to alert the user or do something after a transaction is finished, or use `sendTransaction` if you don't need to wait for the transaction to be confirmed.
 
 ```javascript
-const {sendAndConfirmTransaction, clusterApiUrl, Connection} = require("@solana/web3.js");
+const {sendAndConfirmTransaction, clusterApiUrl, Connection} = require("@paychains/web3.js");
 
 let keypair = Keypair.generate();
 let connection = new Connection(clusterApiUrl('testnet'));
@@ -147,13 +147,13 @@ sendAndConfirmTransaction(
 );
 ```
 
-The above code takes in a `TransactionInstruction` using `SystemProgram`, creates a `Transaction`, and sends it over the network. You use `Connection` in order to define with Solana network you are connecting to, namely `mainnet-beta`, `testnet`, or `devnet`.
+The above code takes in a `TransactionInstruction` using `SystemProgram`, creates a `Transaction`, and sends it over the network. You use `Connection` in order to define with PayChains network you are connecting to, namely `mainnet-beta`, `testnet`, or `devnet`.
 
 ### Interacting with Custom Programs
 
-The previous section visits sending basic transactions. In Solana everything you do interacts with different programs, including the previous section's transfer transaction. At the time of writing programs on Solana are either written in Rust or C.
+The previous section visits sending basic transactions. In PayChains everything you do interacts with different programs, including the previous section's transfer transaction. At the time of writing programs on PayChains are either written in Rust or C.
 
-Let's look at the `SystemProgram`. The method signature for allocating space in your account on Solana in Rust looks like this:
+Let's look at the `SystemProgram`. The method signature for allocating space in your account on PayChains in Rust looks like this:
 
 ```rust
 pub fn allocate(
@@ -162,13 +162,13 @@ pub fn allocate(
 ) -> Instruction
 ```
 
-In Solana when you want to interact with a program you must first know all the accounts you will be interacting with.
+In PayChains when you want to interact with a program you must first know all the accounts you will be interacting with.
 
 You must always provide every account that the program will be interacting within the instruction. Not only that, but you must provide whether or not the account is `isSigner` or `isWritable`.
 
 In the `allocate` method above, a single account `pubkey` is required, as well as an amount of `space` for allocation. We know that the `allocate` method writes to the account by allocating space within it, making the `pubkey` required to be `isWritable`. `isSigner` is required when you are designating the account that is running the instruction. In this case, the signer is the account calling to allocate space within itself.
 
-Let's look at how to call this instruction using solana-web3.js:
+Let's look at how to call this instruction using paychains-web3.js:
 
 ```javascript
 let keypair = web3.Keypair.generate();
@@ -177,7 +177,7 @@ let connection = new web3.Connection(web3.clusterApiUrl('testnet'));
 
 let airdropSignature = await connection.requestAirdrop(
   payer.publicKey,
-  web3.LAMPORTS_PER_SOL,
+  web3.LAMPORTS_PER_PAY,
 );
 
 await connection.confirmTransaction(airdropSignature);
@@ -205,7 +205,7 @@ let allocateStruct = {
 };
 ```
 
-The above is created using using u32 and ns64 from `@solana/buffer-layout` to facilitate the payload creation. The `allocate` function takes in the parameter `space`. To interact with the function we must provide the data as a Buffer format. The `buffer-layout` library helps with allocating the buffer and encoding it correctly for Rust programs on Solana to interpret.
+The above is created using using u32 and ns64 from `@paychains/buffer-layout` to facilitate the payload creation. The `allocate` function takes in the parameter `space`. To interact with the function we must provide the data as a Buffer format. The `buffer-layout` library helps with allocating the buffer and encoding it correctly for Rust programs on PayChains to interpret.
 
 Let's break down this struct.
 
@@ -222,7 +222,7 @@ Let's break down this struct.
 `index` is set to 8 because the function `allocate` is in the 8th position in the instruction enum for `SystemProgram`.
 
 ```rust
-/* https://github.com/solana-labs/solana/blob/21bc43ed58c63c827ba4db30426965ef3e807180/sdk/program/src/system_instruction.rs#L142-L305 */
+/* https://github.com/paychains-labs/paychains/blob/21bc43ed58c63c827ba4db30426965ef3e807180/sdk/program/src/system_instruction.rs#L142-L305 */
 pub enum SystemInstruction {
     /** 0 **/CreateAccount {/**/},
     /** 1 **/Assign {/**/},
@@ -263,7 +263,7 @@ The `layout` in the allocate struct must always have `u32('instruction')` first 
 }
 ```
 
-`ns64('space')` is the argument for the `allocate` function. You can see in the original `allocate` function in Rust that space was of the type `u64`. `u64` is an unsigned 64bit integer. Javascript by default only provides up to 53bit integers. `ns64` comes from `@solana/buffer-layout` to help with type conversions between Rust and Javascript. You can find more type conversions between Rust and Javascript at [solana-labs/buffer-layout](https://github.com/solana-labs/buffer-layout).
+`ns64('space')` is the argument for the `allocate` function. You can see in the original `allocate` function in Rust that space was of the type `u64`. `u64` is an unsigned 64bit integer. Javascript by default only provides up to 53bit integers. `ns64` comes from `@paychains/buffer-layout` to help with type conversions between Rust and Javascript. You can find more type conversions between Rust and Javascript at [paychains-labs/buffer-layout](https://github.com/paychains-labs/buffer-layout).
 
 ```javascript
 let data = Buffer.alloc(allocateStruct.layout.span);
@@ -288,9 +288,9 @@ Finally, we add the transaction instruction with all the account keys, payer, da
 The full code can be found below.
 
 ```javascript
-const {struct, u32, ns64} = require("@solana/buffer-layout");
+const {struct, u32, ns64} = require("@paychains/buffer-layout");
 const {Buffer} = require('buffer');
-const web3 = require("@solana/web3.js");
+const web3 = require("@paychains/web3.js");
 
 let keypair = web3.Keypair.generate();
 let payer = web3.Keypair.generate();
@@ -299,7 +299,7 @@ let connection = new web3.Connection(web3.clusterApiUrl('testnet'));
 
 let airdropSignature = await connection.requestAirdrop(
   payer.publicKey,
-  web3.LAMPORTS_PER_SOL,
+  web3.LAMPORTS_PER_PAY,
 );
 
 await connection.confirmTransaction(airdropSignature);

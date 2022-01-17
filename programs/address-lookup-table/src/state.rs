@@ -1,7 +1,7 @@
 use {
     serde::{Deserialize, Serialize},
-    solana_frozen_abi_macro::{AbiEnumVisitor, AbiExample},
-    solana_sdk::{
+    paychains_frozen_abi_macro::{AbiEnumVisitor, AbiExample},
+    paychains_sdk::{
         clock::Slot,
         instruction::InstructionError,
         pubkey::Pubkey,
@@ -219,7 +219,7 @@ impl<'a> AddressLookupTable<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use solana_sdk::hash::Hash;
+    use paychains_sdk::hash::Hash;
 
     impl AddressLookupTable<'_> {
         fn new_for_tests(meta: LookupTableMeta, num_addresses: usize) -> Self {

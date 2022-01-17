@@ -2,61 +2,61 @@
 
 set -e
 cd "$(dirname "$0")"
-SOLANA_ROOT="$(cd ../..; pwd)"
+PAYCHAINS_ROOT="$(cd ../..; pwd)"
 
 logDir="$PWD"/logs
 rm -rf "$logDir"
 mkdir "$logDir"
 
-solanaInstallDataDir=$PWD/releases
-solanaInstallGlobalOpts=(
-  --data-dir "$solanaInstallDataDir"
-  --config "$solanaInstallDataDir"/config.yml
+paychainsInstallDataDir=$PWD/releases
+paychainsInstallGlobalOpts=(
+  --data-dir "$paychainsInstallDataDir"
+  --config "$paychainsInstallDataDir"/config.yml
   --no-modify-path
 )
 
-# Install all the solana versions
+# Install all the paychains versions
 bootstrapInstall() {
   declare v=$1
-  if [[ ! -h $solanaInstallDataDir/active_release ]]; then
-    sh "$SOLANA_ROOT"/install/solana-install-init.sh "$v" "${solanaInstallGlobalOpts[@]}"
+  if [[ ! -h $paychainsInstallDataDir/active_release ]]; then
+    sh "$PAYCHAINS_ROOT"/install/paychains-install-init.sh "$v" "${paychainsInstallGlobalOpts[@]}"
   fi
-  export PATH="$solanaInstallDataDir/active_release/bin/:$PATH"
+  export PATH="$paychainsInstallDataDir/active_release/bin/:$PATH"
 }
 
 bootstrapInstall "edge"
-solana-install-init --version
-solana-install-init edge
-solana-gossip --version
-solana-dos --version
+paychains-install-init --version
+paychains-install-init edge
+paychains-gossip --version
+paychains-dos --version
 
-killall solana-gossip || true
-solana-gossip spy --gossip-port 8001 > "$logDir"/gossip.log 2>&1 &
-solanaGossipPid=$!
-echo "solana-gossip pid: $solanaGossipPid"
+killall paychains-gossip || true
+paychains-gossip spy --gossip-port 8001 > "$logDir"/gossip.log 2>&1 &
+paychainsGossipPid=$!
+echo "paychains-gossip pid: $paychainsGossipPid"
 sleep 5
-solana-dos --mode gossip --data-type random --data-size 1232 &
+paychains-dos --mode gossip --data-type random --data-size 1232 &
 dosPid=$!
-echo "solana-dos pid: $dosPid"
+echo "paychains-dos pid: $dosPid"
 
 pass=true
 
 SECONDS=
 while ((SECONDS < 600)); do
-  if ! kill -0 $solanaGossipPid; then
-    echo "solana-gossip is no longer running after $SECONDS seconds"
+  if ! kill -0 $paychainsGossipPid; then
+    echo "paychains-gossip is no longer running after $SECONDS seconds"
     pass=false
     break
   fi
   if ! kill -0 $dosPid; then
-    echo "solana-dos is no longer running after $SECONDS seconds"
+    echo "paychains-dos is no longer running after $SECONDS seconds"
     pass=false
     break
   fi
   sleep 1
 done
 
-kill $solanaGossipPid || true
+kill $paychainsGossipPid || true
 kill $dosPid || true
 wait || true
 

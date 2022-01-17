@@ -1,10 +1,10 @@
 use {
-    solana_entry::entry,
-    solana_ledger::{
+    paychains_entry::entry,
+    paychains_ledger::{
         blockstore::{self, Blockstore},
         get_tmp_ledger_path_auto_delete,
     },
-    solana_sdk::hash::Hash,
+    paychains_sdk::hash::Hash,
     std::{sync::Arc, thread::Builder},
 };
 

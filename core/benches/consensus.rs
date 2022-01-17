@@ -1,14 +1,14 @@
 #![feature(test)]
 
-extern crate solana_core;
+extern crate paychains_core;
 extern crate test;
 
 use {
-    solana_core::{
+    paychains_core::{
         consensus::Tower, tower_storage::FileTowerStorage, vote_simulator::VoteSimulator,
     },
-    solana_runtime::{bank::Bank, bank_forks::BankForks},
-    solana_sdk::{
+    paychains_runtime::{bank::Bank, bank_forks::BankForks},
+    paychains_sdk::{
         pubkey::Pubkey,
         signature::{Keypair, Signer},
     },

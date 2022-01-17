@@ -2,8 +2,8 @@ use {
     chrono::prelude::*,
     pickledb::{error::Error, PickleDb, PickleDbDumpPolicy},
     serde::{Deserialize, Serialize},
-    solana_sdk::{clock::Slot, pubkey::Pubkey, signature::Signature, transaction::Transaction},
-    solana_transaction_status::TransactionStatus,
+    paychains_sdk::{clock::Slot, pubkey::Pubkey, signature::Signature, transaction::Transaction},
+    paychains_transaction_status::TransactionStatus,
     std::{cmp::Ordering, fs, io, path::Path},
 };
 
@@ -209,8 +209,8 @@ mod tests {
     use {
         super::*,
         csv::{ReaderBuilder, Trim},
-        solana_sdk::transaction::TransactionError,
-        solana_transaction_status::TransactionConfirmationStatus,
+        paychains_sdk::transaction::TransactionError,
+        paychains_transaction_status::TransactionConfirmationStatus,
         tempfile::NamedTempFile,
     };
 
@@ -226,7 +226,7 @@ mod tests {
         };
         let info2 = TransactionInfo::default();
         let info3 = TransactionInfo {
-            recipient: solana_sdk::pubkey::new_rand(),
+            recipient: paychains_sdk::pubkey::new_rand(),
             ..TransactionInfo::default()
         };
 

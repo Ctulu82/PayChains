@@ -2,12 +2,12 @@ use {
     crate::cli::Config,
     log::*,
     rayon::prelude::*,
-    solana_client::perf_utils::{sample_txs, SampleStats},
-    solana_core::gen_keys::GenKeys,
-    solana_faucet::faucet::request_airdrop_transaction,
-    solana_measure::measure::Measure,
-    solana_metrics::{self, datapoint_info},
-    solana_sdk::{
+    paychains_client::perf_utils::{sample_txs, SampleStats},
+    paychains_core::gen_keys::GenKeys,
+    paychains_faucet::faucet::request_airdrop_transaction,
+    paychains_measure::measure::Measure,
+    paychains_metrics::{self, datapoint_info},
+    paychains_sdk::{
         client::Client,
         clock::{DEFAULT_MS_PER_SLOT, DEFAULT_S_PER_SLOT, MAX_PROCESSING_AGE},
         commitment_config::CommitmentConfig,
@@ -98,7 +98,7 @@ where
     let maxes = maxes.clone();
     let client = client.clone();
     Builder::new()
-        .name("solana-client-sample".to_string())
+        .name("paychains-client-sample".to_string())
         .spawn(move || {
             sample_txs(&exit_signal, &maxes, sample_period, &client);
         })
@@ -179,7 +179,7 @@ where
             let total_tx_sent_count = total_tx_sent_count.clone();
             let client = client.clone();
             Builder::new()
-                .name("solana-client-sender".to_string())
+                .name("paychains-client-sender".to_string())
                 .spawn(move || {
                     do_tx_transfers(
                         &exit_signal,
@@ -249,7 +249,7 @@ where
         let client = client.clone();
         let id = id.pubkey();
         Builder::new()
-            .name("solana-blockhash-poller".to_string())
+            .name("paychains-blockhash-poller".to_string())
             .spawn(move || {
                 poll_blockhash(&exit_signal, &blockhash, &client, &id);
             })
@@ -892,7 +892,7 @@ pub fn generate_and_fund_keypairs<T: 'static + Client + Send + Sync>(
     let (mut keypairs, extra) = generate_keypairs(funding_key, keypair_count as u64);
     info!("Get lamports...");
 
-    // Sample the first keypair, to prevent lamport loss on repeated solana-bench-tps executions
+    // Sample the first keypair, to prevent lamport loss on repeated paychains-bench-tps executions
     let first_key = keypairs[0].pubkey();
     let first_keypair_balance = client.get_balance(&first_key).unwrap_or(0);
 
@@ -950,8 +950,8 @@ pub fn generate_and_fund_keypairs<T: 'static + Client + Send + Sync>(
 mod tests {
     use {
         super::*,
-        solana_runtime::{bank::Bank, bank_client::BankClient},
-        solana_sdk::{
+        paychains_runtime::{bank::Bank, bank_client::BankClient},
+        paychains_sdk::{
             client::SyncClient, fee_calculator::FeeRateGovernor,
             genesis_config::create_genesis_config,
         },

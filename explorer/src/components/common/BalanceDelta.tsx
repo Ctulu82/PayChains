@@ -1,30 +1,30 @@
 import React from "react";
 import { BigNumber } from "bignumber.js";
-import { SolBalance } from "utils";
+import { PayBalance } from "utils";
 
 export function BalanceDelta({
   delta,
-  isSol = false,
+  isPay = false,
 }: {
   delta: BigNumber;
-  isSol?: boolean;
+  isPay?: boolean;
 }) {
   let sols;
 
-  if (isSol) {
-    sols = <SolBalance lamports={delta.toNumber()} />;
+  if (isPay) {
+    sols = <PayBalance lamports={delta.toNumber()} />;
   }
 
   if (delta.gt(0)) {
     return (
       <span className="badge bg-success-soft">
-        +{isSol ? sols : delta.toString()}
+        +{isPay ? sols : delta.toString()}
       </span>
     );
   } else if (delta.lt(0)) {
     return (
       <span className="badge bg-warning-soft">
-        {isSol ? <>-{sols}</> : delta.toString()}
+        {isPay ? <>-{sols}</> : delta.toString()}
       </span>
     );
   }

@@ -14,12 +14,12 @@ use {
     postgres::{Client, NoTls, Statement},
     postgres_client_block_metadata::DbBlockInfo,
     postgres_client_transaction::LogTransactionRequest,
-    solana_accountsdb_plugin_interface::accountsdb_plugin_interface::{
+    paychains_accountsdb_plugin_interface::accountsdb_plugin_interface::{
         AccountsDbPluginError, ReplicaAccountInfo, ReplicaBlockInfo, SlotStatus,
     },
-    solana_measure::measure::Measure,
-    solana_metrics::*,
-    solana_sdk::timing::AtomicInterval,
+    paychains_measure::measure::Measure,
+    paychains_metrics::*,
+    paychains_sdk::timing::AtomicInterval,
     std::{
         sync::{
             atomic::{AtomicBool, AtomicUsize, Ordering},

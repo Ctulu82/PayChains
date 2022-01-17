@@ -1,16 +1,16 @@
 [package]
-name = "solana-merkle-tree"
+name = "paychains-merkle-tree"
 version = "1.10.0"
-description = "Solana Merkle Tree"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana"
+description = "PayChains Merkle Tree"
+authors = ["PayChains Maintainers <maintainers@paychains.foundation>"]
+repository = "https://github.com/paychains-labs/paychains"
 license = "Apache-2.0"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-merkle-tree"
+homepage = "https://paychains.com/"
+documentation = "https://docs.rs/paychains-merkle-tree"
 edition = "2021"
 
 [dependencies]
-solana-program = { path = "../sdk/program", version = "=1.10.0" }
+paychains-program = { path = "../sdk/program", version = "=1.10.0" }
 fast-math = "0.1"
 
 # This can go once the BPF toolchain target Rust 1.42.0+
@@ -22,7 +22,7 @@ hex = "0.4.3"
 
 [lib]
 crate-type = ["lib"]
-name = "solana_merkle_tree"
+name = "paychains_merkle_tree"
 
 [package.metadata.docs.rs]
 targets = ["x86_64-unknown-linux-gnu"]

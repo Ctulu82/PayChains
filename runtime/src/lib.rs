@@ -62,9 +62,9 @@ pub mod vote_sender_types;
 pub mod waitable_condvar;
 
 #[macro_use]
-extern crate solana_metrics;
+extern crate paychains_metrics;
 #[macro_use]
 extern crate serde_derive;
 
 #[macro_use]
-extern crate solana_frozen_abi_macro;
+extern crate paychains_frozen_abi_macro;

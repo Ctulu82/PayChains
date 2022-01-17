@@ -1,4 +1,4 @@
-//! The `rpc` module implements the Solana RPC interface.
+//! The `rpc` module implements the PayChains RPC interface.
 
 use {
     crate::{
@@ -10,11 +10,11 @@ use {
     jsonrpc_core::{futures::future, types::error, BoxFuture, Error, Metadata, Result},
     jsonrpc_derive::rpc,
     serde::{Deserialize, Serialize},
-    solana_account_decoder::{
+    paychains_account_decoder::{
         parse_token::{spl_token_id, token_amount_to_ui_amount, UiTokenAmount},
         UiAccount, UiAccountEncoding, UiDataSliceConfig, MAX_BASE58_BYTES,
     },
-    solana_client::{
+    paychains_client::{
         rpc_cache::LargestAccountsCache,
         rpc_config::*,
         rpc_custom_error::RpcCustomError,
@@ -29,17 +29,17 @@ use {
         },
         rpc_response::{Response as RpcResponse, *},
     },
-    solana_faucet::faucet::request_airdrop_transaction,
-    solana_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfo},
-    solana_ledger::{
+    paychains_faucet::faucet::request_airdrop_transaction,
+    paychains_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfo},
+    paychains_ledger::{
         blockstore::{Blockstore, SignatureInfosForAddress},
         blockstore_db::BlockstoreError,
         get_tmp_ledger_path,
         leader_schedule_cache::LeaderScheduleCache,
     },
-    solana_metrics::inc_new_counter_info,
-    solana_perf::packet::PACKET_DATA_SIZE,
-    solana_runtime::{
+    paychains_metrics::inc_new_counter_info,
+    paychains_perf::packet::PACKET_DATA_SIZE,
+    paychains_runtime::{
         accounts::AccountAddressFilter,
         accounts_index::{AccountIndex, AccountSecondaryIndexes, IndexKey, ScanConfig},
         bank::{Bank, TransactionSimulationResult},
@@ -50,7 +50,7 @@ use {
         snapshot_config::SnapshotConfig,
         snapshot_utils,
     },
-    solana_sdk::{
+    paychains_sdk::{
         account::{AccountSharedData, ReadableAccount},
         account_utils::StateMut,
         clock::{Slot, UnixTimestamp, MAX_RECENT_BLOCKHASHES},
@@ -70,20 +70,20 @@ use {
         sysvar::stake_history,
         transaction::{self, SanitizedTransaction, TransactionError, VersionedTransaction},
     },
-    solana_send_transaction_service::{
+    paychains_send_transaction_service::{
         send_transaction_service::{SendTransactionService, TransactionInfo},
         tpu_info::NullTpuInfo,
     },
-    solana_storage_bigtable::Error as StorageError,
-    solana_streamer::socket::SocketAddrSpace,
-    solana_transaction_status::{
+    paychains_storage_bigtable::Error as StorageError,
+    paychains_streamer::socket::SocketAddrSpace,
+    paychains_transaction_status::{
         ConfirmedBlock, ConfirmedTransactionStatusWithSignature, Encodable,
         EncodedConfirmedTransactionWithStatusMeta, Reward, RewardType,
         TransactionConfirmationStatus, TransactionStatus, UiConfirmedBlock, UiTransactionEncoding,
     },
-    solana_vote_program::vote_state::{VoteState, MAX_LOCKOUT_HISTORY},
+    paychains_vote_program::vote_state::{VoteState, MAX_LOCKOUT_HISTORY},
     spl_token::{
-        solana_program::program_pack::Pack,
+        paychains_program::program_pack::Pack,
         state::{Account as TokenAccount, Mint},
     },
     std::{
@@ -166,7 +166,7 @@ pub struct JsonRpcRequestProcessor {
     cluster_info: Arc<ClusterInfo>,
     genesis_hash: Hash,
     transaction_sender: Arc<Mutex<Sender<TransactionInfo>>>,
-    bigtable_ledger_storage: Option<solana_storage_bigtable::LedgerStorage>,
+    bigtable_ledger_storage: Option<paychains_storage_bigtable::LedgerStorage>,
     optimistically_confirmed_bank: Arc<RwLock<OptimisticallyConfirmedBank>>,
     largest_accounts_cache: Arc<RwLock<LargestAccountsCache>>,
     max_slots: Arc<MaxSlots>,
@@ -231,7 +231,7 @@ impl JsonRpcRequestProcessor {
             // BlockCommitmentCache should hold an `Arc<Bank>` everywhere it currently holds
             // a slot.
             //
-            // For more information, see https://github.com/solana-labs/solana/issues/11078
+            // For more information, see https://github.com/paychains-labs/paychains/issues/11078
             warn!(
                 "Bank with {:?} not found at slot: {:?}",
                 commitment.commitment, slot
@@ -255,7 +255,7 @@ impl JsonRpcRequestProcessor {
         health: Arc<RpcHealth>,
         cluster_info: Arc<ClusterInfo>,
         genesis_hash: Hash,
-        bigtable_ledger_storage: Option<solana_storage_bigtable::LedgerStorage>,
+        bigtable_ledger_storage: Option<paychains_storage_bigtable::LedgerStorage>,
         optimistically_confirmed_bank: Arc<RwLock<OptimisticallyConfirmedBank>>,
         largest_accounts_cache: Arc<RwLock<LargestAccountsCache>>,
         max_slots: Arc<MaxSlots>,
@@ -950,14 +950,14 @@ impl JsonRpcRequestProcessor {
 
     fn check_bigtable_result<T>(
         &self,
-        result: &std::result::Result<T, solana_storage_bigtable::Error>,
+        result: &std::result::Result<T, paychains_storage_bigtable::Error>,
     ) -> Result<()>
     where
         T: std::fmt::Debug,
     {
         if result.is_err() {
             let err = result.as_ref().unwrap_err();
-            if let solana_storage_bigtable::Error::BlockNotFound(slot) = err {
+            if let paychains_storage_bigtable::Error::BlockNotFound(slot) = err {
                 return Err(RpcCustomError::LongTermStorageSlotSkipped { slot: *slot }.into());
             }
         }
@@ -1424,7 +1424,7 @@ impl JsonRpcRequestProcessor {
     ) -> Vec<Signature> {
         if self.config.enable_rpc_transaction_history {
             // TODO: Add bigtable_ledger_storage support as a part of
-            // https://github.com/solana-labs/solana/pull/10928
+            // https://github.com/paychains-labs/paychains/pull/10928
             let end_slot = min(
                 end_slot,
                 self.block_commitment_cache
@@ -1586,7 +1586,7 @@ impl JsonRpcRequestProcessor {
         let config = config.unwrap_or_default();
         let bank = self.bank(config.commitment);
         let epoch = config.epoch.unwrap_or_else(|| bank.epoch());
-        if bank.epoch().saturating_sub(epoch) > solana_sdk::stake_history::MAX_ENTRIES as u64 {
+        if bank.epoch().saturating_sub(epoch) > paychains_sdk::stake_history::MAX_ENTRIES as u64 {
             return Err(Error::invalid_params(format!(
                 "Invalid param: epoch {:?} is too far in the past",
                 epoch
@@ -1629,7 +1629,7 @@ impl JsonRpcRequestProcessor {
             .get_account(&stake_history::id())
             .ok_or_else(Error::internal_error)?;
         let stake_history =
-            solana_sdk::account::from_account::<StakeHistory, _>(&stake_history_account)
+            paychains_sdk::account::from_account::<StakeHistory, _>(&stake_history_account)
                 .ok_or_else(Error::internal_error)?;
 
         let StakeActivationStatus {
@@ -2411,7 +2411,7 @@ pub mod rpc_minimal {
         #[rpc(meta, name = "getVersion")]
         fn get_version(&self, meta: Self::Metadata) -> Result<RpcVersionInfo>;
 
-        // TODO: Refactor `solana-validator wait-for-restart-window` to not require this method, so
+        // TODO: Refactor `paychains-validator wait-for-restart-window` to not require this method, so
         //       it can be removed from rpc_minimal
         #[rpc(meta, name = "getVoteAccounts")]
         fn get_vote_accounts(
@@ -2420,7 +2420,7 @@ pub mod rpc_minimal {
             config: Option<RpcGetVoteAccountsConfig>,
         ) -> Result<RpcVoteAccountStatus>;
 
-        // TODO: Refactor `solana-validator wait-for-restart-window` to not require this method, so
+        // TODO: Refactor `paychains-validator wait-for-restart-window` to not require this method, so
         //       it can be removed from rpc_minimal
         #[rpc(meta, name = "getLeaderSchedule")]
         fn get_leader_schedule(
@@ -2533,14 +2533,14 @@ pub mod rpc_minimal {
 
         fn get_version(&self, _: Self::Metadata) -> Result<RpcVersionInfo> {
             debug!("get_version rpc request received");
-            let version = solana_version::Version::default();
+            let version = paychains_version::Version::default();
             Ok(RpcVersionInfo {
-                solana_core: version.to_string(),
+                paychains_core: version.to_string(),
                 feature_set: Some(version.feature_set),
             })
         }
 
-        // TODO: Refactor `solana-validator wait-for-restart-window` to not require this method, so
+        // TODO: Refactor `paychains-validator wait-for-restart-window` to not require this method, so
         //       it can be removed from rpc_minimal
         fn get_vote_accounts(
             &self,
@@ -2551,7 +2551,7 @@ pub mod rpc_minimal {
             meta.get_vote_accounts(config)
         }
 
-        // TODO: Refactor `solana-validator wait-for-restart-window` to not require this method, so
+        // TODO: Refactor `paychains-validator wait-for-restart-window` to not require this method, so
         //       it can be removed from rpc_minimal
         fn get_leader_schedule(
             &self,
@@ -2577,7 +2577,7 @@ pub mod rpc_minimal {
                 .get_epoch_leader_schedule(epoch)
                 .map(|leader_schedule| {
                     let mut schedule_by_identity =
-                        solana_ledger::leader_schedule_utils::leader_schedule_by_identity(
+                        paychains_ledger::leader_schedule_utils::leader_schedule_by_identity(
                             leader_schedule.get_slot_leaders().iter().enumerate(),
                         );
                     if let Some(identity) = config.identity {
@@ -2782,7 +2782,7 @@ pub mod rpc_bank {
                 }
 
                 let mut entry = block_production.entry(identity).or_default();
-                if slot_history.check(slot) == solana_sdk::slot_history::Check::Found {
+                if slot_history.check(slot) == paychains_sdk::slot_history::Check::Found {
                     entry.1 += 1; // Increment blocks_produced
                 }
                 entry.0 += 1; // Increment leader_slots
@@ -2869,7 +2869,7 @@ pub mod rpc_accounts {
         ) -> Result<RpcStakeActivation>;
 
         // SPL Token-specific RPC endpoints
-        // See https://github.com/solana-labs/solana-program-library/releases/tag/token-v2.0.0 for
+        // See https://github.com/paychains-labs/paychains-program-library/releases/tag/token-v2.0.0 for
         // program details
 
         #[rpc(meta, name = "getTokenAccountBalance")]
@@ -4277,35 +4277,35 @@ pub fn create_test_transactions_and_populate_blockstore(
 
     // Generate transactions for processing
     // Successful transaction
-    let success_tx = solana_sdk::system_transaction::transfer(
+    let success_tx = paychains_sdk::system_transaction::transfer(
         mint_keypair,
         &keypair1.pubkey(),
         rent_exempt_amount,
         blockhash,
     );
     let success_signature = success_tx.signatures[0];
-    let entry_1 = solana_entry::entry::next_entry(&blockhash, 1, vec![success_tx]);
+    let entry_1 = paychains_entry::entry::next_entry(&blockhash, 1, vec![success_tx]);
     // Failed transaction, InstructionError
-    let ix_error_tx = solana_sdk::system_transaction::transfer(
+    let ix_error_tx = paychains_sdk::system_transaction::transfer(
         keypair2,
         &keypair3.pubkey(),
         2 * rent_exempt_amount,
         blockhash,
     );
     let ix_error_signature = ix_error_tx.signatures[0];
-    let entry_2 = solana_entry::entry::next_entry(&entry_1.hash, 1, vec![ix_error_tx]);
+    let entry_2 = paychains_entry::entry::next_entry(&entry_1.hash, 1, vec![ix_error_tx]);
     // Failed transaction
-    let fail_tx = solana_sdk::system_transaction::transfer(
+    let fail_tx = paychains_sdk::system_transaction::transfer(
         mint_keypair,
         &keypair2.pubkey(),
         rent_exempt_amount,
         Hash::default(),
     );
-    let entry_3 = solana_entry::entry::next_entry(&entry_2.hash, 1, vec![fail_tx]);
+    let entry_3 = paychains_entry::entry::next_entry(&entry_2.hash, 1, vec![fail_tx]);
     let entries = vec![entry_1, entry_2, entry_3];
 
     let shreds =
-        solana_ledger::blockstore::entries_to_test_shreds(&entries, slot, previous_slot, true, 0);
+        paychains_ledger::blockstore::entries_to_test_shreds(&entries, slot, previous_slot, true, 0);
     blockstore.insert_shreds(shreds, None, false).unwrap();
     blockstore.set_roots(std::iter::once(&slot)).unwrap();
 
@@ -4323,12 +4323,12 @@ pub fn create_test_transactions_and_populate_blockstore(
 
     // Check that process_entries successfully writes can_commit transactions statuses, and
     // that they are matched properly by get_rooted_block
-    let _result = solana_ledger::blockstore_processor::process_entries_for_tests(
+    let _result = paychains_ledger::blockstore_processor::process_entries_for_tests(
         &bank,
         entries,
         true,
         Some(
-            &solana_ledger::blockstore_processor::TransactionStatusSender {
+            &paychains_ledger::blockstore_processor::TransactionStatusSender {
                 sender: transaction_status_sender,
                 enable_cpi_and_log_storage: false,
             },
@@ -4356,18 +4356,18 @@ pub mod tests {
         bincode::deserialize,
         jsonrpc_core::{futures, ErrorCode, MetaIoHandler, Output, Response, Value},
         jsonrpc_core_client::transports::local,
-        solana_client::rpc_filter::{Memcmp, MemcmpEncodedBytes},
-        solana_gossip::{contact_info::ContactInfo, socketaddr},
-        solana_ledger::{
+        paychains_client::rpc_filter::{Memcmp, MemcmpEncodedBytes},
+        paychains_gossip::{contact_info::ContactInfo, socketaddr},
+        paychains_ledger::{
             blockstore_meta::PerfSample,
             blockstore_processor::fill_blockstore_slot_with_ticks,
             genesis_utils::{create_genesis_config, GenesisConfigInfo},
         },
-        solana_runtime::{
+        paychains_runtime::{
             accounts_background_service::AbsRequestSender, commitment::BlockCommitment,
             non_circulating_supply::non_circulating_accounts,
         },
-        solana_sdk::{
+        paychains_sdk::{
             account::Account,
             clock::MAX_RECENT_BLOCKHASHES,
             fee_calculator::DEFAULT_BURN_PERCENT,
@@ -4380,16 +4380,16 @@ pub mod tests {
             timing::slot_duration_from_slots_per_year,
             transaction::{self, Transaction, TransactionError},
         },
-        solana_transaction_status::{
+        paychains_transaction_status::{
             EncodedConfirmedBlock, EncodedTransaction, EncodedTransactionWithStatusMeta,
             TransactionDetails, UiMessage,
         },
-        solana_vote_program::{
+        paychains_vote_program::{
             vote_instruction,
             vote_state::{BlockTimestamp, Vote, VoteInit, VoteStateVersions, MAX_LOCKOUT_HISTORY},
         },
         spl_token::{
-            solana_program::{program_option::COption, pubkey::Pubkey as SplTokenPubkey},
+            paychains_program::{program_option::COption, pubkey::Pubkey as SplTokenPubkey},
             state::{AccountState as TokenAccountState, Mint},
         },
         std::collections::HashMap,
@@ -4610,7 +4610,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_request_processor_new() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let genesis = create_genesis_config(100);
         let bank = Arc::new(Bank::new_for_tests(&genesis.genesis_config));
         bank.transfer(20, &genesis.mint_keypair, &bob_pubkey)
@@ -4679,7 +4679,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_get_cluster_nodes() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler {
             io,
             meta,
@@ -4706,7 +4706,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_get_recent_performance_samples() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler { io, meta, .. } = start_rpc_handler_with_tx(&bob_pubkey);
 
         let req = r#"{"jsonrpc":"2.0","id":1,"method":"getRecentPerformanceSamples"}"#;
@@ -4735,7 +4735,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_get_recent_performance_samples_invalid_limit() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler { io, meta, .. } = start_rpc_handler_with_tx(&bob_pubkey);
 
         let req =
@@ -4761,7 +4761,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_get_slot_leader() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler {
             io,
             meta,
@@ -4781,7 +4781,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_get_tx_count() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let genesis = create_genesis_config(10);
         let bank = Arc::new(Bank::new_for_tests(&genesis.genesis_config));
         // Add 4 transactions
@@ -4811,7 +4811,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_minimum_ledger_slot() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler { io, meta, .. } = start_rpc_handler_with_tx(&bob_pubkey);
 
         let req = r#"{"jsonrpc":"2.0","id":1,"method":"minimumLedgerSlot"}"#;
@@ -4826,7 +4826,7 @@ pub mod tests {
 
     #[test]
     fn test_get_supply() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler { io, meta, bank, .. } = start_rpc_handler_with_tx(&bob_pubkey);
         let req = r#"{"jsonrpc":"2.0","id":1,"method":"getSupply"}"#;
         let res = io.handle_request_sync(req, meta);
@@ -4854,7 +4854,7 @@ pub mod tests {
 
     #[test]
     fn test_get_supply_exclude_account_list() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler { io, meta, bank, .. } = start_rpc_handler_with_tx(&bob_pubkey);
         let req = r#"{"jsonrpc":"2.0","id":1,"method":"getSupply","params":[{"excludeNonCirculatingAccountsList":true}]}"#;
         let res = io.handle_request_sync(req, meta);
@@ -4872,7 +4872,7 @@ pub mod tests {
 
     #[test]
     fn test_get_largest_accounts() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler {
             io, meta, alice, ..
         } = start_rpc_handler_with_tx(&bob_pubkey);
@@ -4931,7 +4931,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_get_minimum_balance_for_rent_exemption() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let data_len = 50;
         let RpcHandler { io, meta, bank, .. } = start_rpc_handler_with_tx(&bob_pubkey);
 
@@ -4963,7 +4963,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_get_inflation() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler { io, meta, bank, .. } = start_rpc_handler_with_tx(&bob_pubkey);
 
         let req = r#"{"jsonrpc":"2.0","id":1,"method":"getInflationGovernor"}"#;
@@ -5009,7 +5009,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_get_epoch_schedule() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler { io, meta, bank, .. } = start_rpc_handler_with_tx(&bob_pubkey);
 
         let req = r#"{"jsonrpc":"2.0","id":1,"method":"getEpochSchedule"}"#;
@@ -5031,7 +5031,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_get_leader_schedule() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler { io, meta, bank, .. } = start_rpc_handler_with_tx(&bob_pubkey);
 
         for req in [
@@ -5069,7 +5069,7 @@ pub mod tests {
 
             assert_eq!(
                 bob_schedule.len(),
-                solana_ledger::leader_schedule_utils::leader_schedule(bank.epoch(), &bank)
+                paychains_ledger::leader_schedule_utils::leader_schedule(bank.epoch(), &bank)
                     .unwrap()
                     .get_slot_leaders()
                     .len()
@@ -5116,7 +5116,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_get_slot_leaders() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler { io, meta, bank, .. } = start_rpc_handler_with_tx(&bob_pubkey);
 
         // Test that slot leaders will be returned across epochs
@@ -5172,7 +5172,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_get_account_info() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler { io, meta, bank, .. } = start_rpc_handler_with_tx(&bob_pubkey);
 
         let req = format!(
@@ -5200,7 +5200,7 @@ pub mod tests {
             .expect("actual response deserialization");
         assert_eq!(expected, result);
 
-        let address = solana_sdk::pubkey::new_rand();
+        let address = paychains_sdk::pubkey::new_rand();
         let data = vec![1, 2, 3, 4, 5];
         let mut account = AccountSharedData::new(42, 5, &Pubkey::default());
         account.set_data(data.clone());
@@ -5254,7 +5254,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_get_multiple_accounts() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler { io, meta, bank, .. } = start_rpc_handler_with_tx(&bob_pubkey);
 
         let rent_exempt_amount = bank.get_minimum_balance_for_rent_exemption(0);
@@ -5383,7 +5383,7 @@ pub mod tests {
             ..
         } = start_rpc_handler_with_tx(&bob.pubkey());
 
-        let new_program_id = solana_sdk::pubkey::new_rand();
+        let new_program_id = paychains_sdk::pubkey::new_rand();
         let tx = system_transaction::assign(&bob, blockhash, &new_program_id);
         bank.process_transaction(&tx).unwrap();
         let req = format!(
@@ -5451,7 +5451,7 @@ pub mod tests {
         bank.process_transaction(&tx).unwrap();
 
         let nonce_keypair1 = Keypair::new();
-        let authority = solana_sdk::pubkey::new_rand();
+        let authority = paychains_sdk::pubkey::new_rand();
         let instruction = system_instruction::create_nonce_account(
             &alice.pubkey(),
             &nonce_keypair1.pubkey(),
@@ -5601,10 +5601,10 @@ pub mod tests {
             alice,
             bank,
             ..
-        } = start_rpc_handler_with_tx(&solana_sdk::pubkey::new_rand());
+        } = start_rpc_handler_with_tx(&paychains_sdk::pubkey::new_rand());
 
         let rent_exempt_amount = bank.get_minimum_balance_for_rent_exemption(0);
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let mut tx =
             system_transaction::transfer(&alice, &bob_pubkey, rent_exempt_amount, blockhash);
         let tx_serialized_encoded = bs58::encode(serialize(&tx).unwrap()).into_string();
@@ -5632,7 +5632,7 @@ pub mod tests {
                  ]
             }}"#,
             tx_serialized_encoded,
-            solana_sdk::pubkey::new_rand(),
+            paychains_sdk::pubkey::new_rand(),
             bob_pubkey,
         );
         let res = io.handle_request_sync(&req, meta.clone());
@@ -5864,7 +5864,7 @@ pub mod tests {
     #[test]
     #[should_panic]
     fn test_rpc_simulate_transaction_panic_on_unfrozen_bank() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler {
             io,
             meta,
@@ -5890,7 +5890,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_get_signature_statuses() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler {
             io,
             mut meta,
@@ -5966,7 +5966,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_get_recent_blockhash() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler {
             io,
             meta,
@@ -5997,7 +5997,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_get_fees() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler {
             io,
             meta,
@@ -6030,7 +6030,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_get_fee_calculator_for_blockhash() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler { io, meta, bank, .. } = start_rpc_handler_with_tx(&bob_pubkey);
 
         let blockhash = bank.last_blockhash();
@@ -6081,7 +6081,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_get_fee_rate_governor() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler { io, meta, .. } = start_rpc_handler_with_tx(&bob_pubkey);
 
         let req = r#"{"jsonrpc":"2.0","id":1,"method":"getFeeRateGovernor"}"#;
@@ -6110,7 +6110,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_fail_request_airdrop() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler { io, meta, .. } = start_rpc_handler_with_tx(&bob_pubkey);
 
         // Expect internal error because no faucet is available
@@ -6193,7 +6193,7 @@ pub mod tests {
 
         let mut bad_transaction = system_transaction::transfer(
             &mint_keypair,
-            &solana_sdk::pubkey::new_rand(),
+            &paychains_sdk::pubkey::new_rand(),
             42,
             Hash::default(),
         );
@@ -6228,7 +6228,7 @@ pub mod tests {
         );
         let mut bad_transaction = system_transaction::transfer(
             &mint_keypair,
-            &solana_sdk::pubkey::new_rand(),
+            &paychains_sdk::pubkey::new_rand(),
             42,
             recent_blockhash,
         );
@@ -6313,7 +6313,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_verify_pubkey() {
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = paychains_sdk::pubkey::new_rand();
         assert_eq!(verify_pubkey(&pubkey.to_string()).unwrap(), pubkey);
         let bad_pubkey = "a1b2c3d4";
         assert_eq!(
@@ -6326,7 +6326,7 @@ pub mod tests {
     fn test_rpc_verify_signature() {
         let tx = system_transaction::transfer(
             &Keypair::new(),
-            &solana_sdk::pubkey::new_rand(),
+            &paychains_sdk::pubkey::new_rand(),
             20,
             hash(&[0]),
         );
@@ -6364,7 +6364,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_get_identity() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler {
             io, meta, alice, ..
         } = start_rpc_handler_with_tx(&bob_pubkey);
@@ -6386,7 +6386,7 @@ pub mod tests {
     }
 
     fn test_basic_slot(method: &str, expected: Slot) {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler { io, meta, .. } = start_rpc_handler_with_tx(&bob_pubkey);
 
         let req = format!("{{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"{}\"}}", method);
@@ -6405,16 +6405,16 @@ pub mod tests {
 
     #[test]
     fn test_rpc_get_version() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler { io, meta, .. } = start_rpc_handler_with_tx(&bob_pubkey);
 
         let req = r#"{"jsonrpc":"2.0","id":1,"method":"getVersion"}"#;
         let res = io.handle_request_sync(req, meta);
-        let version = solana_version::Version::default();
+        let version = paychains_version::Version::default();
         let expected = json!({
             "jsonrpc": "2.0",
             "result": {
-                "solana-core": version.to_string(),
+                "paychains-core": version.to_string(),
                 "feature-set": version.feature_set,
             },
             "id": 1
@@ -6505,7 +6505,7 @@ pub mod tests {
 
     #[test]
     fn test_rpc_get_block_commitment() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler {
             io,
             meta,
@@ -6559,7 +6559,7 @@ pub mod tests {
 
     #[test]
     fn test_get_block() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler {
             io,
             mut meta,
@@ -6670,7 +6670,7 @@ pub mod tests {
 
     #[test]
     fn test_get_block_config() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler {
             io,
             meta,
@@ -6721,7 +6721,7 @@ pub mod tests {
 
     #[test]
     fn test_get_block_production() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let roots = vec![0, 1, 3, 4, 8];
         let RpcHandler {
             io,
@@ -6798,7 +6798,7 @@ pub mod tests {
 
     #[test]
     fn test_get_blocks() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let roots = vec![0, 1, 3, 4, 8];
         let RpcHandler {
             io,
@@ -6875,7 +6875,7 @@ pub mod tests {
 
     #[test]
     fn test_get_blocks_with_limit() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let roots = vec![0, 1, 3, 4, 8];
         let RpcHandler {
             io,
@@ -6935,7 +6935,7 @@ pub mod tests {
 
     #[test]
     fn test_get_block_time() {
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = paychains_sdk::pubkey::new_rand();
         let RpcHandler {
             io,
             meta,
@@ -7024,7 +7024,7 @@ pub mod tests {
             leader_vote_keypair,
             block_commitment_cache,
             ..
-        } = start_rpc_handler_with_tx(&solana_sdk::pubkey::new_rand());
+        } = start_rpc_handler_with_tx(&paychains_sdk::pubkey::new_rand());
 
         assert_eq!(bank.vote_accounts().len(), 1);
 
@@ -7286,7 +7286,7 @@ pub mod tests {
     #[test]
     fn test_token_rpcs() {
         let RpcHandler { io, meta, bank, .. } =
-            start_rpc_handler_with_tx(&solana_sdk::pubkey::new_rand());
+            start_rpc_handler_with_tx(&paychains_sdk::pubkey::new_rand());
 
         let mut account_data = vec![0; TokenAccount::get_packed_len()];
         let mint = SplTokenPubkey::new(&[2; 32]);
@@ -7309,7 +7309,7 @@ pub mod tests {
             owner: spl_token_id(),
             ..Account::default()
         });
-        let token_account_pubkey = solana_sdk::pubkey::new_rand();
+        let token_account_pubkey = paychains_sdk::pubkey::new_rand();
         bank.store_account(&token_account_pubkey, &token_account);
 
         // Add the mint
@@ -7348,7 +7348,7 @@ pub mod tests {
         // Test non-existent token account
         let req = format!(
             r#"{{"jsonrpc":"2.0","id":1,"method":"getTokenAccountBalance","params":["{}"]}}"#,
-            solana_sdk::pubkey::new_rand(),
+            paychains_sdk::pubkey::new_rand(),
         );
         let res = io.handle_request_sync(&req, meta.clone());
         let result: Value = serde_json::from_str(&res.expect("actual response"))
@@ -7374,7 +7374,7 @@ pub mod tests {
         // Test non-existent mint address
         let req = format!(
             r#"{{"jsonrpc":"2.0","id":1,"method":"getTokenSupply","params":["{}"]}}"#,
-            solana_sdk::pubkey::new_rand(),
+            paychains_sdk::pubkey::new_rand(),
         );
         let res = io.handle_request_sync(&req, meta.clone());
         let result: Value = serde_json::from_str(&res.expect("actual response"))
@@ -7382,7 +7382,7 @@ pub mod tests {
         assert!(result.get("error").is_some());
 
         // Add another token account with the same owner, delegate, and mint
-        let other_token_account_pubkey = solana_sdk::pubkey::new_rand();
+        let other_token_account_pubkey = paychains_sdk::pubkey::new_rand();
         bank.store_account(&other_token_account_pubkey, &token_account);
 
         // Add another token account with the same owner and delegate but different mint
@@ -7405,7 +7405,7 @@ pub mod tests {
             owner: spl_token_id(),
             ..Account::default()
         });
-        let token_with_different_mint_pubkey = solana_sdk::pubkey::new_rand();
+        let token_with_different_mint_pubkey = paychains_sdk::pubkey::new_rand();
         bank.store_account(&token_with_different_mint_pubkey, &token_account);
 
         // Test getTokenAccountsByOwner with Token program id returns all accounts, regardless of Mint address
@@ -7486,7 +7486,7 @@ pub mod tests {
                 "params":["{}", {{"programId": "{}"}}]
             }}"#,
             owner,
-            solana_sdk::pubkey::new_rand(),
+            paychains_sdk::pubkey::new_rand(),
         );
         let res = io.handle_request_sync(&req, meta.clone());
         let result: Value = serde_json::from_str(&res.expect("actual response"))
@@ -7500,7 +7500,7 @@ pub mod tests {
                 "params":["{}", {{"mint": "{}"}}]
             }}"#,
             owner,
-            solana_sdk::pubkey::new_rand(),
+            paychains_sdk::pubkey::new_rand(),
         );
         let res = io.handle_request_sync(&req, meta.clone());
         let result: Value = serde_json::from_str(&res.expect("actual response"))
@@ -7515,7 +7515,7 @@ pub mod tests {
                 "method":"getTokenAccountsByOwner",
                 "params":["{}", {{"programId": "{}"}}]
             }}"#,
-            solana_sdk::pubkey::new_rand(),
+            paychains_sdk::pubkey::new_rand(),
             spl_token_id(),
         );
         let res = io.handle_request_sync(&req, meta.clone());
@@ -7569,7 +7569,7 @@ pub mod tests {
                 "params":["{}", {{"programId": "{}"}}]
             }}"#,
             delegate,
-            solana_sdk::pubkey::new_rand(),
+            paychains_sdk::pubkey::new_rand(),
         );
         let res = io.handle_request_sync(&req, meta.clone());
         let result: Value = serde_json::from_str(&res.expect("actual response"))
@@ -7583,7 +7583,7 @@ pub mod tests {
                 "params":["{}", {{"mint": "{}"}}]
             }}"#,
             delegate,
-            solana_sdk::pubkey::new_rand(),
+            paychains_sdk::pubkey::new_rand(),
         );
         let res = io.handle_request_sync(&req, meta.clone());
         let result: Value = serde_json::from_str(&res.expect("actual response"))
@@ -7598,7 +7598,7 @@ pub mod tests {
                 "method":"getTokenAccountsByDelegate",
                 "params":["{}", {{"programId": "{}"}}]
             }}"#,
-            solana_sdk::pubkey::new_rand(),
+            paychains_sdk::pubkey::new_rand(),
             spl_token_id(),
         );
         let res = io.handle_request_sync(&req, meta.clone());
@@ -7646,7 +7646,7 @@ pub mod tests {
             owner: spl_token_id(),
             ..Account::default()
         });
-        let token_with_smaller_balance = solana_sdk::pubkey::new_rand();
+        let token_with_smaller_balance = paychains_sdk::pubkey::new_rand();
         bank.store_account(&token_with_smaller_balance, &token_account);
 
         // Test largest token accounts
@@ -7687,7 +7687,7 @@ pub mod tests {
     #[test]
     fn test_token_parsing() {
         let RpcHandler { io, meta, bank, .. } =
-            start_rpc_handler_with_tx(&solana_sdk::pubkey::new_rand());
+            start_rpc_handler_with_tx(&paychains_sdk::pubkey::new_rand());
 
         let mut account_data = vec![0; TokenAccount::get_packed_len()];
         let mint = SplTokenPubkey::new(&[2; 32]);
@@ -7710,7 +7710,7 @@ pub mod tests {
             owner: spl_token_id(),
             ..Account::default()
         });
-        let token_account_pubkey = solana_sdk::pubkey::new_rand();
+        let token_account_pubkey = paychains_sdk::pubkey::new_rand();
         bank.store_account(&token_account_pubkey, &token_account);
 
         // Add the mint
@@ -8009,7 +8009,7 @@ pub mod tests {
         let tx58 = bs58::encode(&tx_ser).into_string();
         let tx58_len = tx58.len();
         let expect58 = Error::invalid_params(format!(
-            "encoded solana_sdk::transaction::Transaction too large: {} bytes (max: encoded/raw {}/{})",
+            "encoded paychains_sdk::transaction::Transaction too large: {} bytes (max: encoded/raw {}/{})",
             tx58_len, MAX_BASE58_SIZE, PACKET_DATA_SIZE,
         ));
         assert_eq!(
@@ -8019,7 +8019,7 @@ pub mod tests {
         let tx64 = base64::encode(&tx_ser);
         let tx64_len = tx64.len();
         let expect64 = Error::invalid_params(format!(
-            "encoded solana_sdk::transaction::Transaction too large: {} bytes (max: encoded/raw {}/{})",
+            "encoded paychains_sdk::transaction::Transaction too large: {} bytes (max: encoded/raw {}/{})",
             tx64_len, MAX_BASE64_SIZE, PACKET_DATA_SIZE,
         ));
         assert_eq!(
@@ -8030,7 +8030,7 @@ pub mod tests {
         let tx_ser = vec![0x00u8; too_big];
         let tx58 = bs58::encode(&tx_ser).into_string();
         let expect = Error::invalid_params(format!(
-            "encoded solana_sdk::transaction::Transaction too large: {} bytes (max: {} bytes)",
+            "encoded paychains_sdk::transaction::Transaction too large: {} bytes (max: {} bytes)",
             too_big, PACKET_DATA_SIZE
         ));
         assert_eq!(

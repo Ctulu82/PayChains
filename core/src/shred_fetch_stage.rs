@@ -4,15 +4,15 @@ use {
     crate::packet_hasher::PacketHasher,
     crossbeam_channel::unbounded,
     lru::LruCache,
-    solana_ledger::shred::{get_shred_slot_index_type, ShredFetchStats},
-    solana_perf::{
+    paychains_ledger::shred::{get_shred_slot_index_type, ShredFetchStats},
+    paychains_perf::{
         cuda_runtime::PinnedVec,
         packet::{Packet, PacketBatchRecycler, PacketFlags},
         recycler::Recycler,
     },
-    solana_runtime::bank_forks::BankForks,
-    solana_sdk::clock::{Slot, DEFAULT_MS_PER_SLOT},
-    solana_streamer::streamer::{self, PacketBatchReceiver, PacketBatchSender},
+    paychains_runtime::bank_forks::BankForks,
+    paychains_sdk::clock::{Slot, DEFAULT_MS_PER_SLOT},
+    paychains_streamer::streamer::{self, PacketBatchReceiver, PacketBatchSender},
     std::{
         net::UdpSocket,
         sync::{atomic::AtomicBool, Arc, RwLock},
@@ -160,7 +160,7 @@ impl ShredFetchStage {
             .collect();
 
         let modifier_hdl = Builder::new()
-            .name("solana-tvu-fetch-stage-packet-modifier".to_string())
+            .name("paychains-tvu-fetch-stage-packet-modifier".to_string())
             .spawn(move || Self::modify_packets(packet_receiver, sender, bank_forks, name, modify))
             .unwrap();
         (streamers, modifier_hdl)
@@ -229,12 +229,12 @@ impl ShredFetchStage {
 mod tests {
     use {
         super::*,
-        solana_ledger::{blockstore::MAX_DATA_SHREDS_PER_SLOT, shred::Shred},
+        paychains_ledger::{blockstore::MAX_DATA_SHREDS_PER_SLOT, shred::Shred},
     };
 
     #[test]
     fn test_data_code_same_index() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let mut shreds_received = LruCache::new(DEFAULT_LRU_SIZE);
         let mut packet = Packet::default();
         let mut stats = ShredFetchStats::default();
@@ -268,7 +268,7 @@ mod tests {
             &hasher,
         );
         assert!(!packet.meta.discard());
-        let coding = solana_ledger::shred::Shredder::generate_coding_shreds(
+        let coding = paychains_ledger::shred::Shredder::generate_coding_shreds(
             &[shred],
             false, // is_last_in_slot
             3,     // next_code_index
@@ -289,7 +289,7 @@ mod tests {
 
     #[test]
     fn test_shred_filter() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let mut shreds_received = LruCache::new(DEFAULT_LRU_SIZE);
         let mut packet = Packet::default();
         let mut stats = ShredFetchStats::default();

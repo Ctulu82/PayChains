@@ -1,5 +1,5 @@
 import React from "react";
-import { SolBalance } from "utils";
+import { PayBalance } from "utils";
 import { Epoch } from "components/common/Epoch";
 import {
   SysvarAccount,
@@ -29,9 +29,9 @@ export function StakeHistoryCard({
             <thead>
               <tr>
                 <th className="w-1 text-muted">Epoch</th>
-                <th className="text-muted">Effective (SOL)</th>
-                <th className="text-muted">Activating (SOL)</th>
-                <th className="text-muted">Deactivating (SOL)</th>
+                <th className="text-muted">Effective (PAY)</th>
+                <th className="text-muted">Activating (PAY)</th>
+                <th className="text-muted">Deactivating (PAY)</th>
               </tr>
             </thead>
             <tbody className="list">
@@ -60,13 +60,13 @@ const renderAccountRow = (entry: StakeHistoryEntry, index: number) => {
         <Epoch epoch={entry.epoch} link />
       </td>
       <td className="font-monospace">
-        <SolBalance lamports={entry.stakeHistory.effective} />
+        <PayBalance lamports={entry.stakeHistory.effective} />
       </td>
       <td className="font-monospace">
-        <SolBalance lamports={entry.stakeHistory.activating} />
+        <PayBalance lamports={entry.stakeHistory.activating} />
       </td>
       <td className="font-monospace">
-        <SolBalance lamports={entry.stakeHistory.deactivating} />
+        <PayBalance lamports={entry.stakeHistory.deactivating} />
       </td>
     </tr>
   );

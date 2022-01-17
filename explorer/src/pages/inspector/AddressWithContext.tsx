@@ -1,5 +1,5 @@
 import React from "react";
-import { PublicKey, SystemProgram } from "@solana/web3.js";
+import { PublicKey, SystemProgram } from "@paychains/web3.js";
 import { Address } from "components/common/Address";
 import {
   Account,
@@ -8,7 +8,7 @@ import {
 } from "providers/accounts";
 import { ClusterStatus, useCluster } from "providers/cluster";
 import { addressLabel } from "utils/tx";
-import { lamportsToSolString } from "utils";
+import { lamportsToPayString } from "utils";
 
 type AccountValidator = (account: Account) => string | undefined;
 
@@ -94,7 +94,7 @@ function AccountInfo({
       {ownerAddress
         ? `Owned by ${
             ownerLabel || ownerAddress
-          }. Balance is ${lamportsToSolString(info.data.lamports)} SOL`
+          }. Balance is ${lamportsToPayString(info.data.lamports)} PAY`
         : "Account doesn't exist"}
     </span>
   );

@@ -33,7 +33,7 @@ version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0b613b8e1e3cf911a086f53f03bf286f52fd7a7258e4fa606f0ef220d39d8877"
 dependencies = [
- "generic-array 0.14.5",
+ "generic-array",
 ]
 
 [[package]]
@@ -121,12 +121,6 @@ name = "arrayref"
 version = "0.3.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a4c527152e37cf757a3f78aae5a06fbeefdb07ccc535c980a3208ee3060dd544"
-
-[[package]]
-name = "arrayvec"
-version = "0.5.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "23b62fc65de8e4e7f52534fb52b0f3ed04746ae267519eef2a83941e8085068b"
 
 [[package]]
 name = "arrayvec"
@@ -344,27 +338,12 @@ dependencies = [
 
 [[package]]
 name = "blake3"
-version = "0.3.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b64485778c4f16a6a5a9d335e80d449ac6c70cdd6a06d2af18a6f6f775a125b3"
-dependencies = [
- "arrayref",
- "arrayvec 0.5.2",
- "cc",
- "cfg-if 0.1.10",
- "constant_time_eq",
- "crypto-mac 0.8.0",
- "digest 0.9.0",
-]
-
-[[package]]
-name = "blake3"
 version = "1.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "882e99e4a0cb2ae6cb6e442102e8e6b7131718d94110e64c3e6a34ea9b106f37"
 dependencies = [
  "arrayref",
- "arrayvec 0.7.2",
+ "arrayvec",
  "cc",
  "cfg-if 1.0.0",
  "constant_time_eq",
@@ -378,7 +357,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4152116fd6e9dadb291ae18fc1ec3575ed6d84c29642d97890f4b4a3417297e4"
 dependencies = [
  "block-padding",
- "generic-array 0.14.5",
+ "generic-array",
 ]
 
 [[package]]
@@ -387,7 +366,7 @@ version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f1d36a02058e76b040de25a4464ba1c80935655595b661505c8b39b664828b95"
 dependencies = [
- "generic-array 0.14.5",
+ "generic-array",
 ]
 
 [[package]]
@@ -440,12 +419,6 @@ dependencies = [
  "quote 1.0.10",
  "syn 1.0.81",
 ]
-
-[[package]]
-name = "bs58"
-version = "0.3.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "476e9cd489f9e121e02ffa6014a8ef220ecb15c05ed23fc34cca13925dc283fb"
 
 [[package]]
 name = "bs58"
@@ -675,7 +648,7 @@ version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7ee52072ec15386f770805afd189a01c8841be8696bed250fa2f13c4c0d6dfb7"
 dependencies = [
- "generic-array 0.14.5",
+ "generic-array",
 ]
 
 [[package]]
@@ -956,7 +929,7 @@ version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "683d6b536309245c849479fba3da410962a43ed8e51c26b729208ec0ac2798d0"
 dependencies = [
- "generic-array 0.14.5",
+ "generic-array",
 ]
 
 [[package]]
@@ -965,7 +938,7 @@ version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b584a330336237c1eecd3e94266efb216c56ed91225d634cb2991c5f3fd1aeab"
 dependencies = [
- "generic-array 0.14.5",
+ "generic-array",
  "subtle",
 ]
 
@@ -975,7 +948,7 @@ version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "58bcd97a54c7ca5ce2f6eb16f6bede5b0ab5f0055fedc17d2f0b4466e21671ca"
 dependencies = [
- "generic-array 0.14.5",
+ "generic-array",
  "subtle",
 ]
 
@@ -985,7 +958,7 @@ version = "0.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b1d1a86f49236c215f271d40892d5fc950490551400b02ef360692c29815c714"
 dependencies = [
- "generic-array 0.14.5",
+ "generic-array",
  "subtle",
 ]
 
@@ -1028,19 +1001,6 @@ checksum = "a19c6cedffdc8c03a3346d723eb20bd85a13362bb96dc2ac000842c6381ec7bf"
 dependencies = [
  "nix",
  "winapi 0.3.9",
-]
-
-[[package]]
-name = "curve25519-dalek"
-version = "2.1.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4a9b85542f99a2dfa2a1b8e192662741c9859a846b296bef1c92ef9b58b5a216"
-dependencies = [
- "byteorder",
- "digest 0.8.1",
- "rand_core 0.5.1",
- "subtle",
- "zeroize",
 ]
 
 [[package]]
@@ -1122,20 +1082,11 @@ checksum = "6184e33543162437515c2e2b48714794e37845ec9851711914eec9d308f6ebe8"
 
 [[package]]
 name = "digest"
-version = "0.8.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f3d0c8c8752312f9713efd397ff63acb9f85585afbf179282e720e7704954dd5"
-dependencies = [
- "generic-array 0.12.4",
-]
-
-[[package]]
-name = "digest"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d3dd60d1080a57a05ab032377049e0591415d2b31afd7028356dbf3cc6dcb066"
 dependencies = [
- "generic-array 0.14.5",
+ "generic-array",
 ]
 
 [[package]]
@@ -1146,7 +1097,7 @@ checksum = "b697d66081d42af4fba142d56918a3cb21dc8eb63372c6b85d14f44fb9c5979b"
 dependencies = [
  "block-buffer 0.10.0",
  "crypto-common",
- "generic-array 0.14.5",
+ "generic-array",
  "subtle",
 ]
 
@@ -1230,7 +1181,7 @@ version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c762bae6dcaf24c4c84667b8579785430908723d5c889f469d76a41d59cc7a9d"
 dependencies = [
- "curve25519-dalek 3.2.0",
+ "curve25519-dalek",
  "ed25519",
  "rand 0.7.3",
  "serde",
@@ -1315,19 +1266,6 @@ dependencies = [
  "proc-macro2 1.0.32",
  "quote 1.0.10",
  "syn 1.0.81",
-]
-
-[[package]]
-name = "env_logger"
-version = "0.8.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a19187fea3ac7e84da7dacf48de0c45d63c6a76f9490dae389aead16c243fce3"
-dependencies = [
- "atty",
- "humantime",
- "log 0.4.14",
- "regex",
- "termcolor",
 ]
 
 [[package]]
@@ -1664,15 +1602,6 @@ dependencies = [
 
 [[package]]
 name = "generic-array"
-version = "0.12.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ffdf9f34f1447443d37393cc6c2b8313aebddcd96906caf34e54c68d8e57d7bd"
-dependencies = [
- "typenum",
-]
-
-[[package]]
-name = "generic-array"
 version = "0.14.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fd48d33ec7f05fbfa152300fdad764757cbded343c1aa1cff2fbaf4134851803"
@@ -1910,7 +1839,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "17ea0a1394df5b6574da6e0c1ade9e78868c9fb0a4e5ef4428e32da4676b85b1"
 dependencies = [
  "digest 0.9.0",
- "generic-array 0.14.5",
+ "generic-array",
  "hmac 0.8.1",
 ]
 
@@ -2117,15 +2046,6 @@ name = "ipnet"
 version = "2.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "68f2d64f2edebec4ce84ad108148e67e1064789bee435edc5b60ad398714a3a9"
-
-[[package]]
-name = "itertools"
-version = "0.9.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "284f18f85651fe11e8a991b2adb42cb078325c996ed026d994719efcfca1d54b"
-dependencies = [
- "either",
-]
 
 [[package]]
 name = "itertools"
@@ -2357,25 +2277,6 @@ dependencies = [
 
 [[package]]
 name = "libsecp256k1"
-version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bd1137239ab33b41aa9637a88a28249e5e70c40a42ccc92db7f12cc356c1fcd7"
-dependencies = [
- "arrayref",
- "base64 0.12.3",
- "digest 0.9.0",
- "hmac-drbg",
- "libsecp256k1-core",
- "libsecp256k1-gen-ecmult",
- "libsecp256k1-gen-genmult",
- "rand 0.7.3",
- "serde",
- "sha2 0.9.8",
- "typenum",
-]
-
-[[package]]
-name = "libsecp256k1"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c9d220bc1feda2ac231cb78c3d26f27676b8cf82c96971f7aeef3d0cf2797c73"
@@ -2501,15 +2402,6 @@ name = "memchr"
 version = "2.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "308cc39be01b73d0d18f82a0e7b2a3df85245f84af96fdddc5d202d27e47b86a"
-
-[[package]]
-name = "memmap2"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d9b70ca2a6103ac8b665dc150b142ef0e4e89df640c9e6cf295d189c3caebe5a"
-dependencies = [
- "libc",
-]
 
 [[package]]
 name = "memmap2"
@@ -3195,7 +3087,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5c6ce811d0b2e103743eec01db1c50612221f173084ce2f7941053e94b6bb474"
 dependencies = [
  "difflib",
- "itertools 0.10.3",
+ "itertools",
  "predicates-core",
 ]
 
@@ -3326,7 +3218,7 @@ checksum = "62941722fb675d463659e49c4f3fe1fe792ff24fe5bbaa9c08cd3b98a1c354f5"
 dependencies = [
  "bytes 1.1.0",
  "heck",
- "itertools 0.10.3",
+ "itertools",
  "lazy_static",
  "log 0.4.14",
  "multimap",
@@ -3345,7 +3237,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f9cc1a3263e07e0bf68e96268f37665207b49560d98739662cdfaae215c720fe"
 dependencies = [
  "anyhow",
- "itertools 0.10.3",
+ "itertools",
  "proc-macro2 1.0.32",
  "quote 1.0.10",
  "syn 1.0.81",
@@ -3663,11 +3555,11 @@ dependencies = [
  "clap 3.0.0-beta.5",
  "serde",
  "serde_json",
- "solana-bpf-loader-program",
- "solana-logger 1.10.0",
- "solana-program-runtime",
- "solana-sdk",
- "solana_rbpf",
+ "paychains-bpf-loader-program",
+ "paychains-logger 1.10.0",
+ "paychains-program-runtime",
+ "paychains-sdk",
+ "paychains_rbpf",
  "time 0.3.5",
 ]
 
@@ -4331,103 +4223,103 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-account-decoder"
+name = "paychains-account-decoder"
 version = "1.10.0"
 dependencies = [
  "Inflector",
  "base64 0.12.3",
  "bincode",
- "bs58 0.4.0",
+ "bs58",
  "bv",
  "lazy_static",
  "serde",
  "serde_derive",
  "serde_json",
- "solana-config-program",
- "solana-sdk",
- "solana-vote-program",
+ "paychains-config-program",
+ "paychains-sdk",
+ "paychains-vote-program",
  "spl-token",
  "thiserror",
  "zstd",
 ]
 
 [[package]]
-name = "solana-accounts-bench"
+name = "paychains-accounts-bench"
 version = "1.10.0"
 dependencies = [
  "clap 2.33.3",
  "log 0.4.14",
  "rayon",
- "solana-logger 1.10.0",
- "solana-measure",
- "solana-runtime",
- "solana-sdk",
- "solana-version",
+ "paychains-logger 1.10.0",
+ "paychains-measure",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-version",
 ]
 
 [[package]]
-name = "solana-accounts-cluster-bench"
+name = "paychains-accounts-cluster-bench"
 version = "1.10.0"
 dependencies = [
  "clap 2.33.3",
  "log 0.4.14",
  "rand 0.7.3",
  "rayon",
- "solana-account-decoder",
- "solana-clap-utils",
- "solana-client",
- "solana-core",
- "solana-faucet",
- "solana-gossip",
- "solana-local-cluster",
- "solana-logger 1.10.0",
- "solana-measure",
- "solana-net-utils",
- "solana-runtime",
- "solana-sdk",
- "solana-streamer",
- "solana-test-validator",
- "solana-transaction-status",
- "solana-version",
+ "paychains-account-decoder",
+ "paychains-clap-utils",
+ "paychains-client",
+ "paychains-core",
+ "paychains-faucet",
+ "paychains-gossip",
+ "paychains-local-cluster",
+ "paychains-logger 1.10.0",
+ "paychains-measure",
+ "paychains-net-utils",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-streamer",
+ "paychains-test-validator",
+ "paychains-transaction-status",
+ "paychains-version",
  "spl-token",
 ]
 
 [[package]]
-name = "solana-accountsdb-plugin-interface"
+name = "paychains-accountsdb-plugin-interface"
 version = "1.10.0"
 dependencies = [
  "log 0.4.14",
- "solana-sdk",
- "solana-transaction-status",
+ "paychains-sdk",
+ "paychains-transaction-status",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-accountsdb-plugin-manager"
+name = "paychains-accountsdb-plugin-manager"
 version = "1.10.0"
 dependencies = [
- "bs58 0.4.0",
+ "bs58",
  "crossbeam-channel",
  "libloading",
  "log 0.4.14",
  "serde",
  "serde_derive",
  "serde_json",
- "solana-accountsdb-plugin-interface",
- "solana-measure",
- "solana-metrics",
- "solana-rpc",
- "solana-runtime",
- "solana-sdk",
- "solana-transaction-status",
+ "paychains-accountsdb-plugin-interface",
+ "paychains-measure",
+ "paychains-metrics",
+ "paychains-rpc",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-transaction-status",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-accountsdb-plugin-postgres"
+name = "paychains-accountsdb-plugin-postgres"
 version = "1.10.0"
 dependencies = [
- "bs58 0.4.0",
+ "bs58",
  "chrono",
  "crossbeam-channel",
  "log 0.4.14",
@@ -4436,20 +4328,20 @@ dependencies = [
  "serde",
  "serde_derive",
  "serde_json",
- "solana-account-decoder",
- "solana-accountsdb-plugin-interface",
- "solana-logger 1.10.0",
- "solana-measure",
- "solana-metrics",
- "solana-runtime",
- "solana-sdk",
- "solana-transaction-status",
+ "paychains-account-decoder",
+ "paychains-accountsdb-plugin-interface",
+ "paychains-logger 1.10.0",
+ "paychains-measure",
+ "paychains-metrics",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-transaction-status",
  "thiserror",
  "tokio-postgres",
 ]
 
 [[package]]
-name = "solana-address-lookup-table-program"
+name = "paychains-address-lookup-table-program"
 version = "1.10.0"
 dependencies = [
  "bincode",
@@ -4459,26 +4351,26 @@ dependencies = [
  "num-traits",
  "rustc_version 0.4.0",
  "serde",
- "solana-frozen-abi 1.10.0",
- "solana-frozen-abi-macro 1.10.0",
- "solana-program-runtime",
- "solana-sdk",
+ "paychains-frozen-abi 1.10.0",
+ "paychains-frozen-abi-macro 1.10.0",
+ "paychains-program-runtime",
+ "paychains-sdk",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-address-lookup-table-program-tests"
+name = "paychains-address-lookup-table-program-tests"
 version = "1.10.0"
 dependencies = [
  "assert_matches",
  "bincode",
- "solana-address-lookup-table-program",
- "solana-program-test",
- "solana-sdk",
+ "paychains-address-lookup-table-program",
+ "paychains-program-test",
+ "paychains-sdk",
 ]
 
 [[package]]
-name = "solana-banking-bench"
+name = "paychains-banking-bench"
 version = "1.10.0"
 dependencies = [
  "clap 2.33.3",
@@ -4486,30 +4378,30 @@ dependencies = [
  "log 0.4.14",
  "rand 0.7.3",
  "rayon",
- "solana-core",
- "solana-gossip",
- "solana-ledger",
- "solana-logger 1.10.0",
- "solana-measure",
- "solana-perf",
- "solana-poh",
- "solana-runtime",
- "solana-sdk",
- "solana-streamer",
- "solana-version",
+ "paychains-core",
+ "paychains-gossip",
+ "paychains-ledger",
+ "paychains-logger 1.10.0",
+ "paychains-measure",
+ "paychains-perf",
+ "paychains-poh",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-streamer",
+ "paychains-version",
 ]
 
 [[package]]
-name = "solana-banks-client"
+name = "paychains-banks-client"
 version = "1.10.0"
 dependencies = [
  "borsh",
  "futures 0.3.19",
- "solana-banks-interface",
- "solana-banks-server",
- "solana-program 1.10.0",
- "solana-runtime",
- "solana-sdk",
+ "paychains-banks-interface",
+ "paychains-banks-server",
+ "paychains-program 1.10.0",
+ "paychains-runtime",
+ "paychains-sdk",
  "tarpc",
  "thiserror",
  "tokio",
@@ -4517,25 +4409,25 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-banks-interface"
+name = "paychains-banks-interface"
 version = "1.10.0"
 dependencies = [
  "serde",
- "solana-sdk",
+ "paychains-sdk",
  "tarpc",
 ]
 
 [[package]]
-name = "solana-banks-server"
+name = "paychains-banks-server"
 version = "1.10.0"
 dependencies = [
  "bincode",
  "crossbeam-channel",
  "futures 0.3.19",
- "solana-banks-interface",
- "solana-runtime",
- "solana-sdk",
- "solana-send-transaction-service",
+ "paychains-banks-interface",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-send-transaction-service",
  "tarpc",
  "tokio",
  "tokio-serde",
@@ -4543,18 +4435,18 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-bench-streamer"
+name = "paychains-bench-streamer"
 version = "1.10.0"
 dependencies = [
  "clap 2.33.3",
  "crossbeam-channel",
- "solana-net-utils",
- "solana-streamer",
- "solana-version",
+ "paychains-net-utils",
+ "paychains-streamer",
+ "paychains-version",
 ]
 
 [[package]]
-name = "solana-bench-tps"
+name = "paychains-bench-tps"
 version = "1.10.0"
 dependencies = [
  "clap 2.33.3",
@@ -4564,59 +4456,59 @@ dependencies = [
  "serde_json",
  "serde_yaml",
  "serial_test",
- "solana-client",
- "solana-core",
- "solana-faucet",
- "solana-genesis",
- "solana-gossip",
- "solana-local-cluster",
- "solana-logger 1.10.0",
- "solana-measure",
- "solana-metrics",
- "solana-net-utils",
- "solana-runtime",
- "solana-sdk",
- "solana-streamer",
- "solana-version",
+ "paychains-client",
+ "paychains-core",
+ "paychains-faucet",
+ "paychains-genesis",
+ "paychains-gossip",
+ "paychains-local-cluster",
+ "paychains-logger 1.10.0",
+ "paychains-measure",
+ "paychains-metrics",
+ "paychains-net-utils",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-streamer",
+ "paychains-version",
 ]
 
 [[package]]
-name = "solana-bpf-loader-program"
+name = "paychains-bpf-loader-program"
 version = "1.10.0"
 dependencies = [
  "bincode",
  "byteorder",
- "libsecp256k1 0.6.0",
+ "libsecp256k1",
  "log 0.4.14",
  "rand 0.7.3",
- "solana-measure",
- "solana-metrics",
- "solana-program-runtime",
- "solana-runtime",
- "solana-sdk",
- "solana-zk-token-sdk",
- "solana_rbpf",
+ "paychains-measure",
+ "paychains-metrics",
+ "paychains-program-runtime",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-zk-token-sdk",
+ "paychains_rbpf",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-bucket-map"
+name = "paychains-bucket-map"
 version = "1.10.0"
 dependencies = [
  "fs_extra",
  "log 0.4.14",
- "memmap2 0.5.2",
+ "memmap2",
  "modular-bitfield",
  "rand 0.7.3",
  "rayon",
- "solana-logger 1.10.0",
- "solana-measure",
- "solana-sdk",
+ "paychains-logger 1.10.0",
+ "paychains-measure",
+ "paychains-sdk",
  "tempfile",
 ]
 
 [[package]]
-name = "solana-cargo-build-bpf"
+name = "paychains-cargo-build-bpf"
 version = "1.10.0"
 dependencies = [
  "bzip2",
@@ -4624,13 +4516,13 @@ dependencies = [
  "clap 2.33.3",
  "regex",
  "serial_test",
- "solana-download-utils",
- "solana-sdk",
+ "paychains-download-utils",
+ "paychains-sdk",
  "tar",
 ]
 
 [[package]]
-name = "solana-cargo-test-bpf"
+name = "paychains-cargo-test-bpf"
 version = "1.10.0"
 dependencies = [
  "cargo_metadata",
@@ -4638,15 +4530,15 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-clap-utils"
+name = "paychains-clap-utils"
 version = "1.10.0"
 dependencies = [
  "chrono",
  "clap 2.33.3",
  "rpassword",
- "solana-perf",
- "solana-remote-wallet",
- "solana-sdk",
+ "paychains-perf",
+ "paychains-remote-wallet",
+ "paychains-sdk",
  "tempfile",
  "thiserror",
  "tiny-bip39",
@@ -4655,11 +4547,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-cli"
+name = "paychains-cli"
 version = "1.10.0"
 dependencies = [
  "bincode",
- "bs58 0.4.0",
+ "bs58",
  "clap 2.33.3",
  "console",
  "const_format",
@@ -4675,24 +4567,24 @@ dependencies = [
  "serde",
  "serde_derive",
  "serde_json",
- "solana-account-decoder",
- "solana-bpf-loader-program",
- "solana-clap-utils",
- "solana-cli-config",
- "solana-cli-output",
- "solana-client",
- "solana-config-program",
- "solana-faucet",
- "solana-logger 1.10.0",
- "solana-program-runtime",
- "solana-remote-wallet",
- "solana-sdk",
- "solana-streamer",
- "solana-test-validator",
- "solana-transaction-status",
- "solana-version",
- "solana-vote-program",
- "solana_rbpf",
+ "paychains-account-decoder",
+ "paychains-bpf-loader-program",
+ "paychains-clap-utils",
+ "paychains-cli-config",
+ "paychains-cli-output",
+ "paychains-client",
+ "paychains-config-program",
+ "paychains-faucet",
+ "paychains-logger 1.10.0",
+ "paychains-program-runtime",
+ "paychains-remote-wallet",
+ "paychains-sdk",
+ "paychains-streamer",
+ "paychains-test-validator",
+ "paychains-transaction-status",
+ "paychains-version",
+ "paychains-vote-program",
+ "paychains_rbpf",
  "spl-memo",
  "tempfile",
  "thiserror",
@@ -4700,7 +4592,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-cli-config"
+name = "paychains-cli-config"
 version = "1.10.0"
 dependencies = [
  "anyhow",
@@ -4713,7 +4605,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-cli-output"
+name = "paychains-cli-output"
 version = "1.10.0"
 dependencies = [
  "Inflector",
@@ -4725,23 +4617,23 @@ dependencies = [
  "indicatif",
  "serde",
  "serde_json",
- "solana-account-decoder",
- "solana-clap-utils",
- "solana-client",
- "solana-sdk",
- "solana-transaction-status",
- "solana-vote-program",
+ "paychains-account-decoder",
+ "paychains-clap-utils",
+ "paychains-client",
+ "paychains-sdk",
+ "paychains-transaction-status",
+ "paychains-vote-program",
  "spl-memo",
 ]
 
 [[package]]
-name = "solana-client"
+name = "paychains-client"
 version = "1.10.0"
 dependencies = [
  "assert_matches",
  "base64 0.13.0",
  "bincode",
- "bs58 0.4.0",
+ "bs58",
  "clap 2.33.3",
  "crossbeam-channel",
  "indicatif",
@@ -4754,16 +4646,16 @@ dependencies = [
  "serde",
  "serde_derive",
  "serde_json",
- "solana-account-decoder",
- "solana-clap-utils",
- "solana-faucet",
- "solana-logger 1.10.0",
- "solana-measure",
- "solana-net-utils",
- "solana-sdk",
- "solana-transaction-status",
- "solana-version",
- "solana-vote-program",
+ "paychains-account-decoder",
+ "paychains-clap-utils",
+ "paychains-faucet",
+ "paychains-logger 1.10.0",
+ "paychains-measure",
+ "paychains-net-utils",
+ "paychains-sdk",
+ "paychains-transaction-status",
+ "paychains-version",
+ "paychains-vote-program",
  "thiserror",
  "tokio",
  "tungstenite",
@@ -4771,65 +4663,65 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-client-test"
+name = "paychains-client-test"
 version = "1.10.0"
 dependencies = [
  "serde_json",
  "serial_test",
- "solana-client",
- "solana-ledger",
- "solana-logger 1.10.0",
- "solana-measure",
- "solana-merkle-tree",
- "solana-metrics",
- "solana-perf",
- "solana-rayon-threadlimit",
- "solana-rpc",
- "solana-runtime",
- "solana-sdk",
- "solana-streamer",
- "solana-test-validator",
- "solana-transaction-status",
- "solana-version",
+ "paychains-client",
+ "paychains-ledger",
+ "paychains-logger 1.10.0",
+ "paychains-measure",
+ "paychains-merkle-tree",
+ "paychains-metrics",
+ "paychains-perf",
+ "paychains-rayon-threadlimit",
+ "paychains-rpc",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-streamer",
+ "paychains-test-validator",
+ "paychains-transaction-status",
+ "paychains-version",
  "systemstat",
 ]
 
 [[package]]
-name = "solana-compute-budget-program"
+name = "paychains-compute-budget-program"
 version = "1.10.0"
 dependencies = [
- "solana-program-runtime",
- "solana-sdk",
+ "paychains-program-runtime",
+ "paychains-sdk",
 ]
 
 [[package]]
-name = "solana-config-program"
+name = "paychains-config-program"
 version = "1.10.0"
 dependencies = [
  "bincode",
  "chrono",
  "serde",
  "serde_derive",
- "solana-logger 1.10.0",
- "solana-program-runtime",
- "solana-sdk",
+ "paychains-logger 1.10.0",
+ "paychains-program-runtime",
+ "paychains-sdk",
 ]
 
 [[package]]
-name = "solana-core"
+name = "paychains-core"
 version = "1.10.0"
 dependencies = [
  "ahash 0.7.6",
  "base64 0.12.3",
  "bincode",
- "bs58 0.4.0",
+ "bs58",
  "chrono",
  "crossbeam-channel",
  "dashmap",
  "etcd-client",
  "fs_extra",
  "histogram",
- "itertools 0.10.3",
+ "itertools",
  "jsonrpc-core",
  "jsonrpc-core-client",
  "jsonrpc-derive",
@@ -4848,31 +4740,31 @@ dependencies = [
  "serde_derive",
  "serde_json",
  "serial_test",
- "solana-accountsdb-plugin-manager",
- "solana-client",
- "solana-entry",
- "solana-frozen-abi 1.10.0",
- "solana-frozen-abi-macro 1.10.0",
- "solana-gossip",
- "solana-ledger",
- "solana-logger 1.10.0",
- "solana-measure",
- "solana-metrics",
- "solana-net-utils",
- "solana-perf",
- "solana-poh",
- "solana-program-runtime",
- "solana-rayon-threadlimit",
- "solana-replica-lib",
- "solana-rpc",
- "solana-runtime",
- "solana-sdk",
- "solana-send-transaction-service",
- "solana-stake-program",
- "solana-streamer",
- "solana-transaction-status",
- "solana-version",
- "solana-vote-program",
+ "paychains-accountsdb-plugin-manager",
+ "paychains-client",
+ "paychains-entry",
+ "paychains-frozen-abi 1.10.0",
+ "paychains-frozen-abi-macro 1.10.0",
+ "paychains-gossip",
+ "paychains-ledger",
+ "paychains-logger 1.10.0",
+ "paychains-measure",
+ "paychains-metrics",
+ "paychains-net-utils",
+ "paychains-perf",
+ "paychains-poh",
+ "paychains-program-runtime",
+ "paychains-rayon-threadlimit",
+ "paychains-replica-lib",
+ "paychains-rpc",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-send-transaction-service",
+ "paychains-stake-program",
+ "paychains-streamer",
+ "paychains-transaction-status",
+ "paychains-version",
+ "paychains-vote-program",
  "static_assertions",
  "sys-info",
  "systemstat",
@@ -4883,38 +4775,38 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-dos"
+name = "paychains-dos"
 version = "1.10.0"
 dependencies = [
  "bincode",
  "clap 2.33.3",
  "log 0.4.14",
  "rand 0.7.3",
- "solana-client",
- "solana-core",
- "solana-gossip",
- "solana-logger 1.10.0",
- "solana-net-utils",
- "solana-perf",
- "solana-sdk",
- "solana-streamer",
- "solana-version",
+ "paychains-client",
+ "paychains-core",
+ "paychains-gossip",
+ "paychains-logger 1.10.0",
+ "paychains-net-utils",
+ "paychains-perf",
+ "paychains-sdk",
+ "paychains-streamer",
+ "paychains-version",
 ]
 
 [[package]]
-name = "solana-download-utils"
+name = "paychains-download-utils"
 version = "1.10.0"
 dependencies = [
  "console",
  "indicatif",
  "log 0.4.14",
  "reqwest",
- "solana-runtime",
- "solana-sdk",
+ "paychains-runtime",
+ "paychains-sdk",
 ]
 
 [[package]]
-name = "solana-entry"
+name = "paychains-entry"
 version = "1.10.0"
 dependencies = [
  "bincode",
@@ -4926,17 +4818,17 @@ dependencies = [
  "rand 0.7.3",
  "rayon",
  "serde",
- "solana-logger 1.10.0",
- "solana-measure",
- "solana-merkle-tree",
- "solana-metrics",
- "solana-perf",
- "solana-rayon-threadlimit",
- "solana-sdk",
+ "paychains-logger 1.10.0",
+ "paychains-measure",
+ "paychains-merkle-tree",
+ "paychains-metrics",
+ "paychains-perf",
+ "paychains-rayon-threadlimit",
+ "paychains-sdk",
 ]
 
 [[package]]
-name = "solana-faucet"
+name = "paychains-faucet"
 version = "1.10.0"
 dependencies = [
  "bincode",
@@ -4946,69 +4838,69 @@ dependencies = [
  "log 0.4.14",
  "serde",
  "serde_derive",
- "solana-clap-utils",
- "solana-cli-config",
- "solana-logger 1.10.0",
- "solana-metrics",
- "solana-sdk",
- "solana-version",
+ "paychains-clap-utils",
+ "paychains-cli-config",
+ "paychains-logger 1.10.0",
+ "paychains-metrics",
+ "paychains-sdk",
+ "paychains-version",
  "spl-memo",
  "thiserror",
  "tokio",
 ]
 
 [[package]]
-name = "solana-frozen-abi"
-version = "1.8.2"
+name = "paychains-frozen-abi"
+version = "1.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9ab31b4bda342736987ec16526a6cac4fa817f86ced9634f020ce1dcfac0867f"
+checksum = "c89bcde59ac3e8d4dbf7c4d990b0627b8ca0d25394c4ce17896dde7a1452e40c"
 dependencies = [
- "bs58 0.3.1",
+ "bs58",
  "bv",
- "generic-array 0.14.5",
+ "generic-array",
  "log 0.4.14",
- "memmap2 0.1.0",
- "rustc_version 0.2.3",
+ "memmap2",
+ "rustc_version 0.4.0",
  "serde",
  "serde_derive",
  "sha2 0.9.8",
- "solana-frozen-abi-macro 1.8.2",
- "solana-logger 1.8.2",
+ "paychains-frozen-abi-macro 1.9.4",
+ "paychains-logger 1.9.4",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-frozen-abi"
+name = "paychains-frozen-abi"
 version = "1.10.0"
 dependencies = [
- "bs58 0.4.0",
+ "bs58",
  "bv",
- "generic-array 0.14.5",
+ "generic-array",
  "log 0.4.14",
- "memmap2 0.5.2",
+ "memmap2",
  "rustc_version 0.4.0",
  "serde",
  "serde_derive",
  "sha2 0.10.1",
- "solana-frozen-abi-macro 1.10.0",
- "solana-logger 1.10.0",
+ "paychains-frozen-abi-macro 1.10.0",
+ "paychains-logger 1.10.0",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-frozen-abi-macro"
-version = "1.8.2"
+name = "paychains-frozen-abi-macro"
+version = "1.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d532b5214f70604ac067250a004478389c0ebea8923ae58a49fa7dadd0e69f61"
+checksum = "56a7d630da35993631ecc4dd155f92d0d58000cdde3d5e2764fe9fd49d20a3a8"
 dependencies = [
  "proc-macro2 1.0.32",
  "quote 1.0.10",
- "rustc_version 0.2.3",
+ "rustc_version 0.4.0",
  "syn 1.0.81",
 ]
 
 [[package]]
-name = "solana-frozen-abi-macro"
+name = "paychains-frozen-abi-macro"
 version = "1.10.0"
 dependencies = [
  "proc-macro2 1.0.32",
@@ -5018,7 +4910,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-genesis"
+name = "paychains-genesis"
 version = "1.10.0"
 dependencies = [
  "base64 0.12.3",
@@ -5026,30 +4918,30 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_yaml",
- "solana-clap-utils",
- "solana-cli-config",
- "solana-entry",
- "solana-ledger",
- "solana-logger 1.10.0",
- "solana-runtime",
- "solana-sdk",
- "solana-stake-program",
- "solana-version",
- "solana-vote-program",
+ "paychains-clap-utils",
+ "paychains-cli-config",
+ "paychains-entry",
+ "paychains-ledger",
+ "paychains-logger 1.10.0",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-stake-program",
+ "paychains-version",
+ "paychains-vote-program",
  "tempfile",
 ]
 
 [[package]]
-name = "solana-genesis-utils"
+name = "paychains-genesis-utils"
 version = "1.10.0"
 dependencies = [
- "solana-download-utils",
- "solana-runtime",
- "solana-sdk",
+ "paychains-download-utils",
+ "paychains-runtime",
+ "paychains-sdk",
 ]
 
 [[package]]
-name = "solana-gossip"
+name = "paychains-gossip"
 version = "1.10.0"
 dependencies = [
  "bincode",
@@ -5058,7 +4950,7 @@ dependencies = [
  "crossbeam-channel",
  "flate2",
  "indexmap",
- "itertools 0.10.3",
+ "itertools",
  "log 0.4.14",
  "lru",
  "matches",
@@ -5072,28 +4964,28 @@ dependencies = [
  "serde_bytes",
  "serde_derive",
  "serial_test",
- "solana-clap-utils",
- "solana-client",
- "solana-entry",
- "solana-frozen-abi 1.10.0",
- "solana-frozen-abi-macro 1.10.0",
- "solana-ledger",
- "solana-logger 1.10.0",
- "solana-measure",
- "solana-metrics",
- "solana-net-utils",
- "solana-perf",
- "solana-rayon-threadlimit",
- "solana-runtime",
- "solana-sdk",
- "solana-streamer",
- "solana-version",
- "solana-vote-program",
+ "paychains-clap-utils",
+ "paychains-client",
+ "paychains-entry",
+ "paychains-frozen-abi 1.10.0",
+ "paychains-frozen-abi-macro 1.10.0",
+ "paychains-ledger",
+ "paychains-logger 1.10.0",
+ "paychains-measure",
+ "paychains-metrics",
+ "paychains-net-utils",
+ "paychains-perf",
+ "paychains-rayon-threadlimit",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-streamer",
+ "paychains-version",
+ "paychains-vote-program",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-install"
+name = "paychains-install"
 version = "1.10.0"
 dependencies = [
  "atty",
@@ -5112,12 +5004,12 @@ dependencies = [
  "semver 1.0.4",
  "serde",
  "serde_yaml",
- "solana-clap-utils",
- "solana-client",
- "solana-config-program",
- "solana-logger 1.10.0",
- "solana-sdk",
- "solana-version",
+ "paychains-clap-utils",
+ "paychains-client",
+ "paychains-config-program",
+ "paychains-logger 1.10.0",
+ "paychains-sdk",
+ "paychains-version",
  "tar",
  "tempfile",
  "url 2.2.2",
@@ -5126,23 +5018,23 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-keygen"
+name = "paychains-keygen"
 version = "1.10.0"
 dependencies = [
- "bs58 0.4.0",
+ "bs58",
  "clap 2.33.3",
  "dirs-next",
  "num_cpus",
- "solana-clap-utils",
- "solana-cli-config",
- "solana-remote-wallet",
- "solana-sdk",
- "solana-version",
+ "paychains-clap-utils",
+ "paychains-cli-config",
+ "paychains-remote-wallet",
+ "paychains-sdk",
+ "paychains-version",
  "tiny-bip39",
 ]
 
 [[package]]
-name = "solana-ledger"
+name = "paychains-ledger"
 version = "1.10.0"
 dependencies = [
  "assert_matches",
@@ -5153,7 +5045,7 @@ dependencies = [
  "crossbeam-channel",
  "fs_extra",
  "futures 0.3.19",
- "itertools 0.10.3",
+ "itertools",
  "lazy_static",
  "libc",
  "log 0.4.14",
@@ -5171,23 +5063,23 @@ dependencies = [
  "serde",
  "serde_bytes",
  "sha2 0.10.1",
- "solana-account-decoder",
- "solana-bpf-loader-program",
- "solana-entry",
- "solana-frozen-abi 1.10.0",
- "solana-frozen-abi-macro 1.10.0",
- "solana-logger 1.10.0",
- "solana-measure",
- "solana-metrics",
- "solana-perf",
- "solana-program-runtime",
- "solana-rayon-threadlimit",
- "solana-runtime",
- "solana-sdk",
- "solana-storage-bigtable",
- "solana-storage-proto",
- "solana-transaction-status",
- "solana-vote-program",
+ "paychains-account-decoder",
+ "paychains-bpf-loader-program",
+ "paychains-entry",
+ "paychains-frozen-abi 1.10.0",
+ "paychains-frozen-abi-macro 1.10.0",
+ "paychains-logger 1.10.0",
+ "paychains-measure",
+ "paychains-metrics",
+ "paychains-perf",
+ "paychains-program-runtime",
+ "paychains-rayon-threadlimit",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-storage-bigtable",
+ "paychains-storage-proto",
+ "paychains-transaction-status",
+ "paychains-vote-program",
  "tempfile",
  "thiserror",
  "tokio",
@@ -5196,161 +5088,161 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-ledger-tool"
+name = "paychains-ledger-tool"
 version = "1.10.0"
 dependencies = [
  "assert_cmd",
- "bs58 0.4.0",
+ "bs58",
  "bytecount",
  "clap 2.33.3",
  "crossbeam-channel",
  "csv",
  "dashmap",
  "histogram",
- "itertools 0.10.3",
+ "itertools",
  "log 0.4.14",
  "regex",
  "serde",
  "serde_json",
  "signal-hook",
- "solana-clap-utils",
- "solana-cli-output",
- "solana-core",
- "solana-entry",
- "solana-ledger",
- "solana-logger 1.10.0",
- "solana-measure",
- "solana-runtime",
- "solana-sdk",
- "solana-stake-program",
- "solana-storage-bigtable",
- "solana-transaction-status",
- "solana-version",
- "solana-vote-program",
+ "paychains-clap-utils",
+ "paychains-cli-output",
+ "paychains-core",
+ "paychains-entry",
+ "paychains-ledger",
+ "paychains-logger 1.10.0",
+ "paychains-measure",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-stake-program",
+ "paychains-storage-bigtable",
+ "paychains-transaction-status",
+ "paychains-version",
+ "paychains-vote-program",
  "tikv-jemallocator",
  "tokio",
 ]
 
 [[package]]
-name = "solana-local-cluster"
+name = "paychains-local-cluster"
 version = "1.10.0"
 dependencies = [
  "assert_matches",
  "crossbeam-channel",
  "fs_extra",
  "gag",
- "itertools 0.10.3",
+ "itertools",
  "log 0.4.14",
  "rand 0.7.3",
  "rayon",
  "serial_test",
- "solana-client",
- "solana-config-program",
- "solana-core",
- "solana-download-utils",
- "solana-entry",
- "solana-gossip",
- "solana-ledger",
- "solana-logger 1.10.0",
- "solana-runtime",
- "solana-sdk",
- "solana-stake-program",
- "solana-streamer",
- "solana-vote-program",
+ "paychains-client",
+ "paychains-config-program",
+ "paychains-core",
+ "paychains-download-utils",
+ "paychains-entry",
+ "paychains-gossip",
+ "paychains-ledger",
+ "paychains-logger 1.10.0",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-stake-program",
+ "paychains-streamer",
+ "paychains-vote-program",
  "tempfile",
 ]
 
 [[package]]
-name = "solana-log-analyzer"
+name = "paychains-log-analyzer"
 version = "1.10.0"
 dependencies = [
  "byte-unit",
  "clap 2.33.3",
  "serde",
  "serde_json",
- "solana-logger 1.10.0",
- "solana-version",
+ "paychains-logger 1.10.0",
+ "paychains-version",
 ]
 
 [[package]]
-name = "solana-logger"
-version = "1.8.2"
+name = "paychains-logger"
+version = "1.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "356fc4bc5395d26e7d0f3c7e6272b1a28dc591a81f1ee6e577c1d8859e946422"
+checksum = "6eaf925bb665de46f96fcea2c8a900d0d870a96fd1f50cf2bad16e22a1da71c4"
 dependencies = [
- "env_logger 0.8.4",
+ "env_logger",
  "lazy_static",
  "log 0.4.14",
 ]
 
 [[package]]
-name = "solana-logger"
+name = "paychains-logger"
 version = "1.10.0"
 dependencies = [
- "env_logger 0.9.0",
+ "env_logger",
  "lazy_static",
  "log 0.4.14",
 ]
 
 [[package]]
-name = "solana-measure"
+name = "paychains-measure"
 version = "1.10.0"
 dependencies = [
  "log 0.4.14",
- "solana-sdk",
+ "paychains-sdk",
 ]
 
 [[package]]
-name = "solana-merkle-root-bench"
+name = "paychains-merkle-root-bench"
 version = "1.10.0"
 dependencies = [
  "clap 2.33.3",
  "log 0.4.14",
- "solana-logger 1.10.0",
- "solana-measure",
- "solana-runtime",
- "solana-sdk",
- "solana-version",
+ "paychains-logger 1.10.0",
+ "paychains-measure",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-version",
 ]
 
 [[package]]
-name = "solana-merkle-tree"
+name = "paychains-merkle-tree"
 version = "1.10.0"
 dependencies = [
  "fast-math",
  "hex",
  "matches",
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-metrics"
+name = "paychains-metrics"
 version = "1.10.0"
 dependencies = [
  "crossbeam-channel",
- "env_logger 0.9.0",
+ "env_logger",
  "gethostname",
  "lazy_static",
  "log 0.4.14",
  "rand 0.7.3",
  "reqwest",
  "serial_test",
- "solana-sdk",
+ "paychains-sdk",
 ]
 
 [[package]]
-name = "solana-net-shaper"
+name = "paychains-net-shaper"
 version = "1.10.0"
 dependencies = [
  "clap 2.33.3",
  "rand 0.7.3",
  "serde",
  "serde_json",
- "solana-logger 1.10.0",
+ "paychains-logger 1.10.0",
 ]
 
 [[package]]
-name = "solana-net-utils"
+name = "paychains-net-utils"
 version = "1.10.0"
 dependencies = [
  "bincode",
@@ -5362,15 +5254,15 @@ dependencies = [
  "serde",
  "serde_derive",
  "socket2",
- "solana-logger 1.10.0",
- "solana-sdk",
- "solana-version",
+ "paychains-logger 1.10.0",
+ "paychains-sdk",
+ "paychains-version",
  "tokio",
  "url 2.2.2",
 ]
 
 [[package]]
-name = "solana-notifier"
+name = "paychains-notifier"
 version = "1.10.0"
 dependencies = [
  "log 0.4.14",
@@ -5379,12 +5271,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-perf"
+name = "paychains-perf"
 version = "1.10.0"
 dependencies = [
  "bincode",
  "caps",
- "curve25519-dalek 3.2.0",
+ "curve25519-dalek",
  "dlopen",
  "dlopen_derive",
  "lazy_static",
@@ -5395,15 +5287,15 @@ dependencies = [
  "rand 0.7.3",
  "rayon",
  "serde",
- "solana-logger 1.10.0",
- "solana-metrics",
- "solana-rayon-threadlimit",
- "solana-sdk",
- "solana-vote-program",
+ "paychains-logger 1.10.0",
+ "paychains-metrics",
+ "paychains-rayon-threadlimit",
+ "paychains-sdk",
+ "paychains-vote-program",
 ]
 
 [[package]]
-name = "solana-poh"
+name = "paychains-poh"
 version = "1.10.0"
 dependencies = [
  "bincode",
@@ -5412,73 +5304,79 @@ dependencies = [
  "log 0.4.14",
  "matches",
  "rand 0.7.3",
- "solana-entry",
- "solana-ledger",
- "solana-logger 1.10.0",
- "solana-measure",
- "solana-metrics",
- "solana-perf",
- "solana-runtime",
- "solana-sdk",
- "solana-sys-tuner",
+ "paychains-entry",
+ "paychains-ledger",
+ "paychains-logger 1.10.0",
+ "paychains-measure",
+ "paychains-metrics",
+ "paychains-perf",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-sys-tuner",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-poh-bench"
+name = "paychains-poh-bench"
 version = "1.10.0"
 dependencies = [
  "clap 2.33.3",
  "log 0.4.14",
  "rand 0.7.3",
  "rayon",
- "solana-entry",
- "solana-logger 1.10.0",
- "solana-measure",
- "solana-perf",
- "solana-sdk",
- "solana-version",
+ "paychains-entry",
+ "paychains-logger 1.10.0",
+ "paychains-measure",
+ "paychains-perf",
+ "paychains-sdk",
+ "paychains-version",
 ]
 
 [[package]]
-name = "solana-program"
-version = "1.8.2"
+name = "paychains-program"
+version = "1.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a6ebce89024394bc7d9289978f14220ab3bd7dac568ec4e081c2d9eb35d92c8f"
+checksum = "2fc4d7a0baa649a3bda06d6a1cc30bd3d8ac692702a75fa8e76369cf7b3f6329"
 dependencies = [
  "base64 0.13.0",
  "bincode",
- "blake3 0.3.8",
+ "bitflags",
+ "blake3",
  "borsh",
  "borsh-derive",
- "bs58 0.3.1",
+ "bs58",
  "bv",
  "bytemuck",
- "curve25519-dalek 2.1.3",
- "hex",
- "itertools 0.9.0",
+ "console_error_panic_hook",
+ "console_log",
+ "curve25519-dalek",
+ "getrandom 0.1.16",
+ "itertools",
+ "js-sys",
  "lazy_static",
- "libsecp256k1 0.5.0",
+ "libsecp256k1",
  "log 0.4.14",
  "num-derive",
  "num-traits",
+ "parking_lot 0.11.2",
  "rand 0.7.3",
- "rustc_version 0.2.3",
+ "rustc_version 0.4.0",
  "rustversion",
  "serde",
  "serde_bytes",
  "serde_derive",
  "sha2 0.9.8",
  "sha3 0.9.1",
- "solana-frozen-abi 1.8.2",
- "solana-frozen-abi-macro 1.8.2",
- "solana-logger 1.8.2",
- "solana-sdk-macro 1.8.2",
+ "paychains-frozen-abi 1.9.4",
+ "paychains-frozen-abi-macro 1.9.4",
+ "paychains-logger 1.9.4",
+ "paychains-sdk-macro 1.9.4",
  "thiserror",
+ "wasm-bindgen",
 ]
 
 [[package]]
-name = "solana-program"
+name = "paychains-program"
 version = "1.10.0"
 dependencies = [
  "anyhow",
@@ -5486,20 +5384,20 @@ dependencies = [
  "base64 0.13.0",
  "bincode",
  "bitflags",
- "blake3 1.3.0",
+ "blake3",
  "borsh",
  "borsh-derive",
- "bs58 0.4.0",
+ "bs58",
  "bv",
  "bytemuck",
  "console_error_panic_hook",
  "console_log",
- "curve25519-dalek 3.2.0",
+ "curve25519-dalek",
  "getrandom 0.1.16",
- "itertools 0.10.3",
+ "itertools",
  "js-sys",
  "lazy_static",
- "libsecp256k1 0.6.0",
+ "libsecp256k1",
  "log 0.4.14",
  "num-derive",
  "num-traits",
@@ -5513,22 +5411,22 @@ dependencies = [
  "serde_json",
  "sha2 0.10.1",
  "sha3 0.10.0",
- "solana-frozen-abi 1.10.0",
- "solana-frozen-abi-macro 1.10.0",
- "solana-logger 1.10.0",
- "solana-sdk-macro 1.10.0",
+ "paychains-frozen-abi 1.10.0",
+ "paychains-frozen-abi-macro 1.10.0",
+ "paychains-logger 1.10.0",
+ "paychains-sdk-macro 1.10.0",
  "static_assertions",
  "thiserror",
  "wasm-bindgen",
 ]
 
 [[package]]
-name = "solana-program-runtime"
+name = "paychains-program-runtime"
 version = "1.10.0"
 dependencies = [
  "base64 0.13.0",
  "bincode",
- "itertools 0.10.3",
+ "itertools",
  "libc",
  "libloading",
  "log 0.4.14",
@@ -5536,16 +5434,16 @@ dependencies = [
  "num-traits",
  "rustc_version 0.4.0",
  "serde",
- "solana-frozen-abi 1.10.0",
- "solana-frozen-abi-macro 1.10.0",
- "solana-logger 1.10.0",
- "solana-measure",
- "solana-sdk",
+ "paychains-frozen-abi 1.10.0",
+ "paychains-frozen-abi-macro 1.10.0",
+ "paychains-logger 1.10.0",
+ "paychains-measure",
+ "paychains-sdk",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-program-test"
+name = "paychains-program-test"
 version = "1.10.0"
 dependencies = [
  "async-trait",
@@ -5554,20 +5452,20 @@ dependencies = [
  "chrono-humanize",
  "log 0.4.14",
  "serde",
- "solana-banks-client",
- "solana-banks-server",
- "solana-bpf-loader-program",
- "solana-logger 1.10.0",
- "solana-program-runtime",
- "solana-runtime",
- "solana-sdk",
- "solana-vote-program",
+ "paychains-banks-client",
+ "paychains-banks-server",
+ "paychains-bpf-loader-program",
+ "paychains-logger 1.10.0",
+ "paychains-program-runtime",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-vote-program",
  "thiserror",
  "tokio",
 ]
 
 [[package]]
-name = "solana-rayon-threadlimit"
+name = "paychains-rayon-threadlimit"
 version = "1.10.0"
 dependencies = [
  "lazy_static",
@@ -5575,7 +5473,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-remote-wallet"
+name = "paychains-remote-wallet"
 version = "1.10.0"
 dependencies = [
  "console",
@@ -5587,29 +5485,29 @@ dependencies = [
  "parking_lot 0.11.2",
  "qstring",
  "semver 1.0.4",
- "solana-sdk",
+ "paychains-sdk",
  "thiserror",
  "uriparse",
 ]
 
 [[package]]
-name = "solana-replica-lib"
+name = "paychains-replica-lib"
 version = "1.10.0"
 dependencies = [
  "crossbeam-channel",
  "futures-util",
  "log 0.4.14",
  "prost",
- "solana-rpc",
- "solana-runtime",
- "solana-sdk",
+ "paychains-rpc",
+ "paychains-runtime",
+ "paychains-sdk",
  "tokio",
  "tonic",
  "tonic-build",
 ]
 
 [[package]]
-name = "solana-replica-node"
+name = "paychains-replica-node"
 version = "1.10.0"
 dependencies = [
  "clap 2.33.3",
@@ -5617,37 +5515,37 @@ dependencies = [
  "log 0.4.14",
  "rand 0.7.3",
  "serial_test",
- "solana-clap-utils",
- "solana-core",
- "solana-download-utils",
- "solana-genesis-utils",
- "solana-gossip",
- "solana-ledger",
- "solana-local-cluster",
- "solana-logger 1.10.0",
- "solana-net-utils",
- "solana-replica-lib",
- "solana-rpc",
- "solana-runtime",
- "solana-sdk",
- "solana-send-transaction-service",
- "solana-streamer",
- "solana-validator",
- "solana-version",
+ "paychains-clap-utils",
+ "paychains-core",
+ "paychains-download-utils",
+ "paychains-genesis-utils",
+ "paychains-gossip",
+ "paychains-ledger",
+ "paychains-local-cluster",
+ "paychains-logger 1.10.0",
+ "paychains-net-utils",
+ "paychains-replica-lib",
+ "paychains-rpc",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-send-transaction-service",
+ "paychains-streamer",
+ "paychains-validator",
+ "paychains-version",
  "tempfile",
  "tonic-build",
 ]
 
 [[package]]
-name = "solana-rpc"
+name = "paychains-rpc"
 version = "1.10.0"
 dependencies = [
  "base64 0.12.3",
  "bincode",
- "bs58 0.4.0",
+ "bs58",
  "crossbeam-channel",
  "dashmap",
- "itertools 0.10.3",
+ "itertools",
  "jsonrpc-core",
  "jsonrpc-core-client",
  "jsonrpc-derive",
@@ -5662,27 +5560,27 @@ dependencies = [
  "serde_json",
  "serial_test",
  "soketto",
- "solana-account-decoder",
- "solana-client",
- "solana-entry",
- "solana-faucet",
- "solana-gossip",
- "solana-ledger",
- "solana-measure",
- "solana-metrics",
- "solana-net-utils",
- "solana-perf",
- "solana-poh",
- "solana-rayon-threadlimit",
- "solana-runtime",
- "solana-sdk",
- "solana-send-transaction-service",
- "solana-stake-program",
- "solana-storage-bigtable",
- "solana-streamer",
- "solana-transaction-status",
- "solana-version",
- "solana-vote-program",
+ "paychains-account-decoder",
+ "paychains-client",
+ "paychains-entry",
+ "paychains-faucet",
+ "paychains-gossip",
+ "paychains-ledger",
+ "paychains-measure",
+ "paychains-metrics",
+ "paychains-net-utils",
+ "paychains-perf",
+ "paychains-poh",
+ "paychains-rayon-threadlimit",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-send-transaction-service",
+ "paychains-stake-program",
+ "paychains-storage-bigtable",
+ "paychains-streamer",
+ "paychains-transaction-status",
+ "paychains-version",
+ "paychains-vote-program",
  "spl-token",
  "stream-cancel",
  "symlink",
@@ -5692,11 +5590,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-rpc-test"
+name = "paychains-rpc-test"
 version = "1.10.0"
 dependencies = [
  "bincode",
- "bs58 0.4.0",
+ "bs58",
  "crossbeam-channel",
  "jsonrpc-core",
  "jsonrpc-core-client",
@@ -5704,25 +5602,25 @@ dependencies = [
  "reqwest",
  "serde",
  "serde_json",
- "solana-account-decoder",
- "solana-client",
- "solana-logger 1.10.0",
- "solana-rpc",
- "solana-sdk",
- "solana-streamer",
- "solana-test-validator",
- "solana-transaction-status",
+ "paychains-account-decoder",
+ "paychains-client",
+ "paychains-logger 1.10.0",
+ "paychains-rpc",
+ "paychains-sdk",
+ "paychains-streamer",
+ "paychains-test-validator",
+ "paychains-transaction-status",
  "tokio",
 ]
 
 [[package]]
-name = "solana-runtime"
+name = "paychains-runtime"
 version = "1.10.0"
 dependencies = [
  "arrayref",
  "assert_matches",
  "bincode",
- "blake3 1.3.0",
+ "blake3",
  "bv",
  "byteorder",
  "bzip2",
@@ -5734,11 +5632,11 @@ dependencies = [
  "flate2",
  "fnv",
  "index_list",
- "itertools 0.10.3",
+ "itertools",
  "lazy_static",
- "libsecp256k1 0.6.0",
+ "libsecp256k1",
  "log 0.4.14",
- "memmap2 0.5.2",
+ "memmap2",
  "num-derive",
  "num-traits",
  "num_cpus",
@@ -5750,22 +5648,22 @@ dependencies = [
  "rustc_version 0.4.0",
  "serde",
  "serde_derive",
- "solana-address-lookup-table-program",
- "solana-bucket-map",
- "solana-compute-budget-program",
- "solana-config-program",
- "solana-frozen-abi 1.10.0",
- "solana-frozen-abi-macro 1.10.0",
- "solana-logger 1.10.0",
- "solana-measure",
- "solana-metrics",
- "solana-program-runtime",
- "solana-rayon-threadlimit",
- "solana-sdk",
- "solana-stake-program",
- "solana-vote-program",
- "solana-zk-token-proof-program",
- "solana-zk-token-sdk",
+ "paychains-address-lookup-table-program",
+ "paychains-bucket-map",
+ "paychains-compute-budget-program",
+ "paychains-config-program",
+ "paychains-frozen-abi 1.10.0",
+ "paychains-frozen-abi-macro 1.10.0",
+ "paychains-logger 1.10.0",
+ "paychains-measure",
+ "paychains-metrics",
+ "paychains-program-runtime",
+ "paychains-rayon-threadlimit",
+ "paychains-sdk",
+ "paychains-stake-program",
+ "paychains-vote-program",
+ "paychains-zk-token-proof-program",
+ "paychains-zk-token-sdk",
  "symlink",
  "tar",
  "tempfile",
@@ -5774,7 +5672,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-sdk"
+name = "paychains-sdk"
 version = "1.10.0"
 dependencies = [
  "assert_matches",
@@ -5782,23 +5680,23 @@ dependencies = [
  "bincode",
  "bitflags",
  "borsh",
- "bs58 0.4.0",
+ "bs58",
  "bytemuck",
  "byteorder",
  "chrono",
- "curve25519-dalek 3.2.0",
+ "curve25519-dalek",
  "derivation-path",
  "digest 0.10.1",
  "ed25519-dalek",
  "ed25519-dalek-bip32",
- "generic-array 0.14.5",
+ "generic-array",
  "hmac 0.12.0",
- "itertools 0.10.3",
+ "itertools",
  "js-sys",
  "lazy_static",
- "libsecp256k1 0.6.0",
+ "libsecp256k1",
  "log 0.4.14",
- "memmap2 0.5.2",
+ "memmap2",
  "num-derive",
  "num-traits",
  "pbkdf2 0.10.0",
@@ -5813,11 +5711,11 @@ dependencies = [
  "serde_json",
  "sha2 0.10.1",
  "sha3 0.10.0",
- "solana-frozen-abi 1.10.0",
- "solana-frozen-abi-macro 1.10.0",
- "solana-logger 1.10.0",
- "solana-program 1.10.0",
- "solana-sdk-macro 1.10.0",
+ "paychains-frozen-abi 1.10.0",
+ "paychains-frozen-abi-macro 1.10.0",
+ "paychains-logger 1.10.0",
+ "paychains-program 1.10.0",
+ "paychains-sdk-macro 1.10.0",
  "thiserror",
  "tiny-bip39",
  "uriparse",
@@ -5825,12 +5723,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-sdk-macro"
-version = "1.8.2"
+name = "paychains-sdk-macro"
+version = "1.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "49de94601f4af95d8834817ac6c6f3cbedac8fd582a5c5b940e78fe07803b78b"
+checksum = "ec22a924c73abe3376a2046715a2f6a9ae4094095b8ea08e8e56e8de198264ad"
 dependencies = [
- "bs58 0.3.1",
+ "bs58",
  "proc-macro2 1.0.32",
  "quote 1.0.10",
  "rustversion",
@@ -5838,10 +5736,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-sdk-macro"
+name = "paychains-sdk-macro"
 version = "1.10.0"
 dependencies = [
- "bs58 0.4.0",
+ "bs58",
  "proc-macro2 1.0.32",
  "quote 1.0.10",
  "rustversion",
@@ -5849,33 +5747,33 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-send-transaction-service"
+name = "paychains-send-transaction-service"
 version = "1.10.0"
 dependencies = [
  "crossbeam-channel",
  "log 0.4.14",
- "solana-logger 1.10.0",
- "solana-metrics",
- "solana-runtime",
- "solana-sdk",
+ "paychains-logger 1.10.0",
+ "paychains-metrics",
+ "paychains-runtime",
+ "paychains-sdk",
 ]
 
 [[package]]
-name = "solana-stake-accounts"
+name = "paychains-stake-accounts"
 version = "1.10.0"
 dependencies = [
  "clap 2.33.3",
- "solana-clap-utils",
- "solana-cli-config",
- "solana-client",
- "solana-remote-wallet",
- "solana-runtime",
- "solana-sdk",
- "solana-stake-program",
+ "paychains-clap-utils",
+ "paychains-cli-config",
+ "paychains-client",
+ "paychains-remote-wallet",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-stake-program",
 ]
 
 [[package]]
-name = "solana-stake-program"
+name = "paychains-stake-program"
 version = "1.10.0"
 dependencies = [
  "bincode",
@@ -5886,19 +5784,19 @@ dependencies = [
  "rustc_version 0.4.0",
  "serde",
  "serde_derive",
- "solana-config-program",
- "solana-frozen-abi 1.10.0",
- "solana-frozen-abi-macro 1.10.0",
- "solana-logger 1.10.0",
- "solana-metrics",
- "solana-program-runtime",
- "solana-sdk",
- "solana-vote-program",
+ "paychains-config-program",
+ "paychains-frozen-abi 1.10.0",
+ "paychains-frozen-abi-macro 1.10.0",
+ "paychains-logger 1.10.0",
+ "paychains-metrics",
+ "paychains-program-runtime",
+ "paychains-sdk",
+ "paychains-vote-program",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-storage-bigtable"
+name = "paychains-storage-bigtable"
 version = "1.10.0"
 dependencies = [
  "backoff",
@@ -5914,97 +5812,97 @@ dependencies = [
  "serde",
  "serde_derive",
  "smpl_jwt",
- "solana-metrics",
- "solana-sdk",
- "solana-storage-proto",
- "solana-transaction-status",
+ "paychains-metrics",
+ "paychains-sdk",
+ "paychains-storage-proto",
+ "paychains-transaction-status",
  "thiserror",
  "tonic",
  "zstd",
 ]
 
 [[package]]
-name = "solana-storage-proto"
+name = "paychains-storage-proto"
 version = "1.10.0"
 dependencies = [
  "bincode",
- "bs58 0.4.0",
+ "bs58",
  "enum-iterator",
  "prost",
  "serde",
- "solana-account-decoder",
- "solana-sdk",
- "solana-transaction-status",
+ "paychains-account-decoder",
+ "paychains-sdk",
+ "paychains-transaction-status",
  "tonic-build",
 ]
 
 [[package]]
-name = "solana-store-tool"
+name = "paychains-store-tool"
 version = "1.10.0"
 dependencies = [
  "clap 2.33.3",
  "log 0.4.14",
- "solana-logger 1.10.0",
- "solana-runtime",
- "solana-version",
+ "paychains-logger 1.10.0",
+ "paychains-runtime",
+ "paychains-version",
 ]
 
 [[package]]
-name = "solana-streamer"
+name = "paychains-streamer"
 version = "1.10.0"
 dependencies = [
  "crossbeam-channel",
  "histogram",
- "itertools 0.10.3",
+ "itertools",
  "libc",
  "log 0.4.14",
  "nix",
- "solana-logger 1.10.0",
- "solana-metrics",
- "solana-perf",
- "solana-sdk",
+ "paychains-logger 1.10.0",
+ "paychains-metrics",
+ "paychains-perf",
+ "paychains-sdk",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-sys-tuner"
+name = "paychains-sys-tuner"
 version = "1.10.0"
 dependencies = [
  "clap 2.33.3",
  "libc",
  "log 0.4.14",
  "nix",
- "solana-logger 1.10.0",
- "solana-version",
+ "paychains-logger 1.10.0",
+ "paychains-version",
  "sysctl",
  "unix_socket2",
  "users",
 ]
 
 [[package]]
-name = "solana-test-validator"
+name = "paychains-test-validator"
 version = "1.10.0"
 dependencies = [
  "base64 0.12.3",
  "log 0.4.14",
  "serde_derive",
  "serde_json",
- "solana-cli-output",
- "solana-client",
- "solana-core",
- "solana-gossip",
- "solana-ledger",
- "solana-logger 1.10.0",
- "solana-net-utils",
- "solana-program-test",
- "solana-rpc",
- "solana-runtime",
- "solana-sdk",
- "solana-streamer",
+ "paychains-cli-output",
+ "paychains-client",
+ "paychains-core",
+ "paychains-gossip",
+ "paychains-ledger",
+ "paychains-logger 1.10.0",
+ "paychains-net-utils",
+ "paychains-program-test",
+ "paychains-rpc",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-streamer",
 ]
 
 [[package]]
-name = "solana-tokens"
+name = "paychains-tokens"
 version = "1.10.0"
 dependencies = [
  "bincode",
@@ -6017,17 +5915,17 @@ dependencies = [
  "indicatif",
  "pickledb",
  "serde",
- "solana-account-decoder",
- "solana-clap-utils",
- "solana-cli-config",
- "solana-client",
- "solana-logger 1.10.0",
- "solana-remote-wallet",
- "solana-sdk",
- "solana-streamer",
- "solana-test-validator",
- "solana-transaction-status",
- "solana-version",
+ "paychains-account-decoder",
+ "paychains-clap-utils",
+ "paychains-cli-config",
+ "paychains-client",
+ "paychains-logger 1.10.0",
+ "paychains-remote-wallet",
+ "paychains-sdk",
+ "paychains-streamer",
+ "paychains-test-validator",
+ "paychains-transaction-status",
+ "paychains-version",
  "spl-associated-token-account",
  "spl-token",
  "tempfile",
@@ -6035,7 +5933,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-transaction-dos"
+name = "paychains-transaction-dos"
 version = "1.10.0"
 dependencies = [
  "bincode",
@@ -6043,42 +5941,42 @@ dependencies = [
  "log 0.4.14",
  "rand 0.7.3",
  "rayon",
- "solana-clap-utils",
- "solana-cli",
- "solana-client",
- "solana-core",
- "solana-faucet",
- "solana-gossip",
- "solana-local-cluster",
- "solana-logger 1.10.0",
- "solana-measure",
- "solana-net-utils",
- "solana-runtime",
- "solana-sdk",
- "solana-streamer",
- "solana-transaction-status",
- "solana-version",
+ "paychains-clap-utils",
+ "paychains-cli",
+ "paychains-client",
+ "paychains-core",
+ "paychains-faucet",
+ "paychains-gossip",
+ "paychains-local-cluster",
+ "paychains-logger 1.10.0",
+ "paychains-measure",
+ "paychains-net-utils",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-streamer",
+ "paychains-transaction-status",
+ "paychains-version",
 ]
 
 [[package]]
-name = "solana-transaction-status"
+name = "paychains-transaction-status"
 version = "1.10.0"
 dependencies = [
  "Inflector",
  "base64 0.12.3",
  "bincode",
- "bs58 0.4.0",
+ "bs58",
  "lazy_static",
  "log 0.4.14",
  "serde",
  "serde_derive",
  "serde_json",
- "solana-account-decoder",
- "solana-measure",
- "solana-metrics",
- "solana-runtime",
- "solana-sdk",
- "solana-vote-program",
+ "paychains-account-decoder",
+ "paychains-measure",
+ "paychains-metrics",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-vote-program",
  "spl-associated-token-account",
  "spl-memo",
  "spl-token",
@@ -6086,15 +5984,15 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-upload-perf"
+name = "paychains-upload-perf"
 version = "1.10.0"
 dependencies = [
  "serde_json",
- "solana-metrics",
+ "paychains-metrics",
 ]
 
 [[package]]
-name = "solana-validator"
+name = "paychains-validator"
 version = "1.10.0"
 dependencies = [
  "chrono",
@@ -6116,50 +6014,50 @@ dependencies = [
  "serde",
  "serde_json",
  "signal-hook",
- "solana-clap-utils",
- "solana-cli-config",
- "solana-client",
- "solana-core",
- "solana-download-utils",
- "solana-entry",
- "solana-faucet",
- "solana-genesis-utils",
- "solana-gossip",
- "solana-ledger",
- "solana-logger 1.10.0",
- "solana-metrics",
- "solana-net-utils",
- "solana-perf",
- "solana-poh",
- "solana-replica-lib",
- "solana-rpc",
- "solana-runtime",
- "solana-sdk",
- "solana-send-transaction-service",
- "solana-streamer",
- "solana-test-validator",
- "solana-version",
- "solana-vote-program",
+ "paychains-clap-utils",
+ "paychains-cli-config",
+ "paychains-client",
+ "paychains-core",
+ "paychains-download-utils",
+ "paychains-entry",
+ "paychains-faucet",
+ "paychains-genesis-utils",
+ "paychains-gossip",
+ "paychains-ledger",
+ "paychains-logger 1.10.0",
+ "paychains-metrics",
+ "paychains-net-utils",
+ "paychains-perf",
+ "paychains-poh",
+ "paychains-replica-lib",
+ "paychains-rpc",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-send-transaction-service",
+ "paychains-streamer",
+ "paychains-test-validator",
+ "paychains-version",
+ "paychains-vote-program",
  "symlink",
  "sysctl",
  "tikv-jemallocator",
 ]
 
 [[package]]
-name = "solana-version"
+name = "paychains-version"
 version = "1.10.0"
 dependencies = [
  "log 0.4.14",
  "rustc_version 0.4.0",
  "serde",
  "serde_derive",
- "solana-frozen-abi 1.10.0",
- "solana-frozen-abi-macro 1.10.0",
- "solana-sdk",
+ "paychains-frozen-abi 1.10.0",
+ "paychains-frozen-abi-macro 1.10.0",
+ "paychains-sdk",
 ]
 
 [[package]]
-name = "solana-vote-program"
+name = "paychains-vote-program"
 version = "1.10.0"
 dependencies = [
  "bincode",
@@ -6169,48 +6067,48 @@ dependencies = [
  "rustc_version 0.4.0",
  "serde",
  "serde_derive",
- "solana-frozen-abi 1.10.0",
- "solana-frozen-abi-macro 1.10.0",
- "solana-logger 1.10.0",
- "solana-metrics",
- "solana-program-runtime",
- "solana-sdk",
+ "paychains-frozen-abi 1.10.0",
+ "paychains-frozen-abi-macro 1.10.0",
+ "paychains-logger 1.10.0",
+ "paychains-metrics",
+ "paychains-program-runtime",
+ "paychains-sdk",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-watchtower"
+name = "paychains-watchtower"
 version = "1.10.0"
 dependencies = [
  "clap 2.33.3",
  "humantime",
  "log 0.4.14",
- "solana-clap-utils",
- "solana-cli-config",
- "solana-cli-output",
- "solana-client",
- "solana-logger 1.10.0",
- "solana-metrics",
- "solana-notifier",
- "solana-sdk",
- "solana-version",
+ "paychains-clap-utils",
+ "paychains-cli-config",
+ "paychains-cli-output",
+ "paychains-client",
+ "paychains-logger 1.10.0",
+ "paychains-metrics",
+ "paychains-notifier",
+ "paychains-sdk",
+ "paychains-version",
 ]
 
 [[package]]
-name = "solana-zk-token-proof-program"
+name = "paychains-zk-token-proof-program"
 version = "1.10.0"
 dependencies = [
  "bytemuck",
  "getrandom 0.1.16",
  "num-derive",
  "num-traits",
- "solana-program-runtime",
- "solana-sdk",
- "solana-zk-token-sdk",
+ "paychains-program-runtime",
+ "paychains-sdk",
+ "paychains-zk-token-sdk",
 ]
 
 [[package]]
-name = "solana-zk-token-sdk"
+name = "paychains-zk-token-sdk"
 version = "1.10.0"
 dependencies = [
  "aes-gcm-siv",
@@ -6220,7 +6118,7 @@ dependencies = [
  "bytemuck",
  "byteorder",
  "cipher",
- "curve25519-dalek 3.2.0",
+ "curve25519-dalek",
  "getrandom 0.1.16",
  "lazy_static",
  "merlin",
@@ -6230,8 +6128,8 @@ dependencies = [
  "serde",
  "serde_json",
  "sha3 0.9.1",
- "solana-program 1.10.0",
- "solana-sdk",
+ "paychains-program 1.10.0",
+ "paychains-sdk",
  "subtle",
  "thiserror",
  "time 0.1.43",
@@ -6239,7 +6137,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana_rbpf"
+name = "paychains_rbpf"
 version = "0.2.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8fb565d026461ba89d1d92cc36cf0882fba44076559c3bbed1e8a9888112b3d7"
@@ -6275,7 +6173,7 @@ version = "1.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "393e2240d521c3dd770806bff25c2c00d761ac962be106e14e22dd912007f428"
 dependencies = [
- "solana-program 1.8.2",
+ "paychains-program 1.9.4",
  "spl-token",
 ]
 
@@ -6285,7 +6183,7 @@ version = "3.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bd0dc6f70db6bacea7ff25870b016a65ba1d1b6013536f08e4fd79a8f9005325"
 dependencies = [
- "solana-program 1.8.2",
+ "paychains-program 1.9.4",
 ]
 
 [[package]]
@@ -6298,7 +6196,7 @@ dependencies = [
  "num-derive",
  "num-traits",
  "num_enum",
- "solana-program 1.8.2",
+ "paychains-program 1.9.4",
  "thiserror",
 ]
 
@@ -7230,7 +7128,7 @@ version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9f214e8f697e925001e66ec2c6e37a4ef93f0f78c2eed7814394e10c62025b05"
 dependencies = [
- "generic-array 0.14.5",
+ "generic-array",
  "subtle",
 ]
 

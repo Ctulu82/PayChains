@@ -9,8 +9,8 @@ use {
         sysvar_cache::SysvarCache,
         timings::{ExecuteDetailsTimings, ExecuteTimings},
     },
-    solana_measure::measure::Measure,
-    solana_sdk::{
+    paychains_measure::measure::Measure,
+    paychains_sdk::{
         account::{AccountSharedData, ReadableAccount},
         bpf_loader_upgradeable::{self, UpgradeableLoaderState},
         compute_budget::ComputeBudget,
@@ -886,7 +886,7 @@ impl<'a> InvokeContext<'a> {
             .map_err(|_| InstructionError::UnsupportedProgramId)?;
         let root_id = borrowed_root_account.get_key();
         let owner_id = borrowed_root_account.get_owner();
-        if solana_sdk::native_loader::check_id(owner_id) {
+        if paychains_sdk::native_loader::check_id(owner_id) {
             for entry in self.builtin_programs {
                 if entry.program_id == *root_id {
                     drop(borrowed_root_account);
@@ -1033,7 +1033,7 @@ pub fn with_mock_invoke_context<R, F: FnMut(&mut InvokeContext) -> R>(
     let transaction_accounts = vec![
         (
             loader_id,
-            AccountSharedData::new(0, 0, &solana_sdk::native_loader::id()),
+            AccountSharedData::new(0, 0, &paychains_sdk::native_loader::id()),
         ),
         (
             Pubkey::new_unique(),
@@ -1075,7 +1075,7 @@ pub fn mock_process_instruction_with_sysvars(
     program_indices.insert(0, transaction_accounts.len());
     let mut preparation =
         prepare_mock_invoke_context(transaction_accounts, instruction_accounts, &program_indices);
-    let processor_account = AccountSharedData::new(0, 0, &solana_sdk::native_loader::id());
+    let processor_account = AccountSharedData::new(0, 0, &paychains_sdk::native_loader::id());
     preparation
         .transaction_accounts
         .push((*loader_id, processor_account));
@@ -1143,7 +1143,7 @@ mod tests {
     use {
         super::*,
         serde::{Deserialize, Serialize},
-        solana_sdk::account::{ReadableAccount, WritableAccount},
+        paychains_sdk::account::{ReadableAccount, WritableAccount},
     };
 
     #[derive(Debug, Serialize, Deserialize)]
@@ -1230,11 +1230,11 @@ mod tests {
         }
         let builtin_programs = &[
             BuiltinProgram {
-                program_id: solana_sdk::pubkey::new_rand(),
+                program_id: paychains_sdk::pubkey::new_rand(),
                 process_instruction: mock_process_instruction,
             },
             BuiltinProgram {
-                program_id: solana_sdk::pubkey::new_rand(),
+                program_id: paychains_sdk::pubkey::new_rand(),
                 process_instruction: mock_ix_processor,
             },
         ];
@@ -1306,9 +1306,9 @@ mod tests {
         let mut accounts = vec![];
         let mut instruction_accounts = vec![];
         for index in 0..MAX_DEPTH {
-            invoke_stack.push(solana_sdk::pubkey::new_rand());
+            invoke_stack.push(paychains_sdk::pubkey::new_rand());
             accounts.push((
-                solana_sdk::pubkey::new_rand(),
+                paychains_sdk::pubkey::new_rand(),
                 AccountSharedData::new(index as u64, 1, &invoke_stack[index]),
             ));
             instruction_accounts.push(InstructionAccount {
@@ -1321,7 +1321,7 @@ mod tests {
         for (index, program_id) in invoke_stack.iter().enumerate() {
             accounts.push((
                 *program_id,
-                AccountSharedData::new(1, 1, &solana_sdk::pubkey::Pubkey::default()),
+                AccountSharedData::new(1, 1, &paychains_sdk::pubkey::Pubkey::default()),
             ));
             instruction_accounts.push(InstructionAccount {
                 index_in_transaction: index,
@@ -1406,7 +1406,7 @@ mod tests {
 
     #[test]
     fn test_invoke_context_verify() {
-        let accounts = vec![(solana_sdk::pubkey::new_rand(), AccountSharedData::default())];
+        let accounts = vec![(paychains_sdk::pubkey::new_rand(), AccountSharedData::default())];
         let instruction_accounts = vec![];
         let program_indices = vec![0];
         let mut transaction_context = TransactionContext::new(accounts, 1);
@@ -1421,24 +1421,24 @@ mod tests {
 
     #[test]
     fn test_process_instruction() {
-        let callee_program_id = solana_sdk::pubkey::new_rand();
+        let callee_program_id = paychains_sdk::pubkey::new_rand();
         let builtin_programs = &[BuiltinProgram {
             program_id: callee_program_id,
             process_instruction: mock_process_instruction,
         }];
 
         let owned_account = AccountSharedData::new(42, 1, &callee_program_id);
-        let not_owned_account = AccountSharedData::new(84, 1, &solana_sdk::pubkey::new_rand());
-        let readonly_account = AccountSharedData::new(168, 1, &solana_sdk::pubkey::new_rand());
+        let not_owned_account = AccountSharedData::new(84, 1, &paychains_sdk::pubkey::new_rand());
+        let readonly_account = AccountSharedData::new(168, 1, &paychains_sdk::pubkey::new_rand());
         let loader_account = AccountSharedData::new(0, 0, &native_loader::id());
         let mut program_account = AccountSharedData::new(1, 0, &native_loader::id());
         program_account.set_executable(true);
         let accounts = vec![
-            (solana_sdk::pubkey::new_rand(), owned_account),
-            (solana_sdk::pubkey::new_rand(), not_owned_account),
-            (solana_sdk::pubkey::new_rand(), readonly_account),
+            (paychains_sdk::pubkey::new_rand(), owned_account),
+            (paychains_sdk::pubkey::new_rand(), not_owned_account),
+            (paychains_sdk::pubkey::new_rand(), readonly_account),
             (callee_program_id, program_account),
-            (solana_sdk::pubkey::new_rand(), loader_account),
+            (paychains_sdk::pubkey::new_rand(), loader_account),
         ];
         let metas = vec![
             AccountMeta::new(accounts[0].0, false),
@@ -1572,7 +1572,7 @@ mod tests {
     #[test]
     fn test_invoke_context_compute_budget() {
         let accounts = vec![
-            (solana_sdk::pubkey::new_rand(), AccountSharedData::default()),
+            (paychains_sdk::pubkey::new_rand(), AccountSharedData::default()),
             (crate::neon_evm_program::id(), AccountSharedData::default()),
         ];
 
@@ -1612,7 +1612,7 @@ mod tests {
 
     #[test]
     fn test_process_instruction_accounts_data_meter() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let program_key = Pubkey::new_unique();
         let user_account_data_len = 123;
@@ -1711,7 +1711,7 @@ mod tests {
             assert!(result.is_err());
             assert!(matches!(
                 result,
-                Err(solana_sdk::instruction::InstructionError::AccountsDataBudgetExceeded)
+                Err(paychains_sdk::instruction::InstructionError::AccountsDataBudgetExceeded)
             ));
             assert_eq!(invoke_context.accounts_data_meter.remaining(), 0);
         }

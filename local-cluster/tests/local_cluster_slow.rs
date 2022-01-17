@@ -9,7 +9,7 @@ use {
     },
     log::*,
     serial_test::serial,
-    solana_core::{
+    paychains_core::{
         broadcast_stage::{
             broadcast_duplicates_run::BroadcastDuplicatesConfig, BroadcastStageType,
         },
@@ -17,25 +17,25 @@ use {
         replay_stage::DUPLICATE_THRESHOLD,
         validator::ValidatorConfig,
     },
-    solana_gossip::{
+    paychains_gossip::{
         crds::Cursor,
         gossip_service::{self, discover_cluster},
     },
-    solana_ledger::ancestor_iterator::AncestorIterator,
-    solana_local_cluster::{
+    paychains_ledger::ancestor_iterator::AncestorIterator,
+    paychains_local_cluster::{
         cluster::{Cluster, ClusterValidatorInfo},
         cluster_tests,
         local_cluster::{ClusterConfig, LocalCluster},
         validator_configs::*,
     },
-    solana_sdk::{
+    paychains_sdk::{
         clock::{Slot, MAX_PROCESSING_AGE},
         hash::Hash,
         pubkey::Pubkey,
         signature::{Keypair, Signer},
     },
-    solana_streamer::socket::SocketAddrSpace,
-    solana_vote_program::{vote_state::MAX_LOCKOUT_HISTORY, vote_transaction},
+    paychains_streamer::socket::SocketAddrSpace,
+    paychains_vote_program::{vote_state::MAX_LOCKOUT_HISTORY, vote_transaction},
     std::{
         collections::{BTreeSet, HashSet},
         path::Path,
@@ -77,7 +77,7 @@ mod common;
 // stalling the network.
 
 fn test_fork_choice_refresh_old_votes() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
     let max_switch_threshold_failure_pct = 1.0 - 2.0 * SWITCH_FORK_THRESHOLD;
     let total_stake = 100;
     let max_failures_stake = (max_switch_threshold_failure_pct * total_stake as f64) as u64;
@@ -598,7 +598,7 @@ fn test_duplicate_shreds_broadcast_leader() {
 #[test]
 #[serial]
 fn test_switch_threshold_uses_gossip_votes() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
     let total_stake = 100;
 
     // Minimum stake needed to generate a switching proof

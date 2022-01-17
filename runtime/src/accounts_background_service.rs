@@ -13,8 +13,8 @@ use {
     crossbeam_channel::{Receiver, SendError, Sender},
     log::*,
     rand::{thread_rng, Rng},
-    solana_measure::measure::Measure,
-    solana_sdk::{
+    paychains_measure::measure::Measure,
+    paychains_sdk::{
         clock::{BankId, Slot},
         hash::Hash,
     },
@@ -374,7 +374,7 @@ impl AccountsBackgroundService {
         let mut total_remove_slots_time = 0;
         let mut last_expiration_check_time = Instant::now();
         let t_background = Builder::new()
-            .name("solana-bg-accounts".to_string())
+            .name("paychains-bg-accounts".to_string())
             .spawn(move || {
                 let mut last_snapshot_end_time = None;
                 loop {
@@ -526,7 +526,7 @@ mod test {
         super::*,
         crate::genesis_utils::create_genesis_config,
         crossbeam_channel::unbounded,
-        solana_sdk::{account::AccountSharedData, pubkey::Pubkey},
+        paychains_sdk::{account::AccountSharedData, pubkey::Pubkey},
     };
 
     #[test]

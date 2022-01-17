@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @brief Solana logging utilities
+ * @brief PayChains logging utilities
  */
 
 #include <sol/types.h>
@@ -14,84 +14,84 @@ extern "C" {
 /**
  * Prints a string to stdout
  */
-void sol_log_(const char *, uint64_t);
-#define sol_log(message) sol_log_(message, sol_strlen(message))
+void pay_log_(const char *, uint64_t);
+#define pay_log(message) pay_log_(message, pay_strlen(message))
 
 /**
  * Prints a 64 bit values represented in hexadecimal to stdout
  */
-void sol_log_64_(uint64_t, uint64_t, uint64_t, uint64_t, uint64_t);
-#define sol_log_64 sol_log_64_
+void pay_log_64_(uint64_t, uint64_t, uint64_t, uint64_t, uint64_t);
+#define pay_log_64 pay_log_64_
 
 /**
  * Prints the current compute unit consumption to stdout
  */
-void sol_log_compute_units_();
-#define sol_log_compute_units() sol_log_compute_units_()
+void pay_log_compute_units_();
+#define pay_log_compute_units() pay_log_compute_units_()
 
 /**
  * Prints the hexadecimal representation of an array
  *
  * @param array The array to print
  */
-static void sol_log_array(const uint8_t *array, int len) {
+static void pay_log_array(const uint8_t *array, int len) {
   for (int j = 0; j < len; j++) {
-    sol_log_64(0, 0, 0, j, array[j]);
+    pay_log_64(0, 0, 0, j, array[j]);
   }
 }
 
 /**
  * Print the base64 representation of some arrays.
  */
-void sol_log_data(SolBytes *fields, uint64_t fields_len);
+void pay_log_data(PayBytes *fields, uint64_t fields_len);
 
 /**
  * Prints the program's input parameters
  *
- * @param params Pointer to a SolParameters structure
+ * @param params Pointer to a PayParameters structure
  */
-static void sol_log_params(const SolParameters *params) {
-  sol_log("- Program identifier:");
-  sol_log_pubkey(params->program_id);
+static void pay_log_params(const PayParameters *params) {
+  pay_log("- Program identifier:");
+  pay_log_pubkey(params->program_id);
 
-  sol_log("- Number of KeyedAccounts");
-  sol_log_64(0, 0, 0, 0, params->ka_num);
+  pay_log("- Number of KeyedAccounts");
+  pay_log_64(0, 0, 0, 0, params->ka_num);
   for (int i = 0; i < params->ka_num; i++) {
-    sol_log("  - Is signer");
-    sol_log_64(0, 0, 0, 0, params->ka[i].is_signer);
-    sol_log("  - Is writable");
-    sol_log_64(0, 0, 0, 0, params->ka[i].is_writable);
-    sol_log("  - Key");
-    sol_log_pubkey(params->ka[i].key);
-    sol_log("  - Lamports");
-    sol_log_64(0, 0, 0, 0, *params->ka[i].lamports);
-    sol_log("  - data");
-    sol_log_array(params->ka[i].data, params->ka[i].data_len);
-    sol_log("  - Owner");
-    sol_log_pubkey(params->ka[i].owner);
-    sol_log("  - Executable");
-    sol_log_64(0, 0, 0, 0, params->ka[i].executable);
-    sol_log("  - Rent Epoch");
-    sol_log_64(0, 0, 0, 0, params->ka[i].rent_epoch);
+    pay_log("  - Is signer");
+    pay_log_64(0, 0, 0, 0, params->ka[i].is_signer);
+    pay_log("  - Is writable");
+    pay_log_64(0, 0, 0, 0, params->ka[i].is_writable);
+    pay_log("  - Key");
+    pay_log_pubkey(params->ka[i].key);
+    pay_log("  - Lamports");
+    pay_log_64(0, 0, 0, 0, *params->ka[i].lamports);
+    pay_log("  - data");
+    pay_log_array(params->ka[i].data, params->ka[i].data_len);
+    pay_log("  - Owner");
+    pay_log_pubkey(params->ka[i].owner);
+    pay_log("  - Executable");
+    pay_log_64(0, 0, 0, 0, params->ka[i].executable);
+    pay_log("  - Rent Epoch");
+    pay_log_64(0, 0, 0, 0, params->ka[i].rent_epoch);
   }
-  sol_log("- Instruction data\0");
-  sol_log_array(params->data, params->data_len);
+  pay_log("- Instruction data\0");
+  pay_log_array(params->data, params->data_len);
 }
 
-#ifdef SOL_TEST
+#ifdef PAY_TEST
 /**
  * Stub functions when building tests
  */
 #include <stdio.h>
 
-void sol_log_(const char *s, uint64_t len) {
+void pay_log_(const char *s, uint64_t len) {
   printf("Program log: %s\n", s);
 }
-void sol_log_64(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg4, uint64_t arg5) {
+void pay_log_64(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg4, uint64_t arg5) {
   printf("Program log: %llu, %llu, %llu, %llu, %llu\n", arg1, arg2, arg3, arg4, arg5);
 }
 
-void sol_log_compute_units_() {
+void pay_log_compute_units_() {
   printf("Program consumption: __ units remaining\n");
 }
 #endif

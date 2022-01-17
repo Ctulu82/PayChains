@@ -2,16 +2,16 @@ use {
     bincode::{deserialize, serialize},
     crossbeam_channel::{unbounded, Receiver, Sender},
     futures::{future, prelude::stream::StreamExt},
-    solana_banks_interface::{
+    paychains_banks_interface::{
         Banks, BanksRequest, BanksResponse, BanksTransactionResultWithSimulation,
         TransactionConfirmationStatus, TransactionSimulationDetails, TransactionStatus,
     },
-    solana_runtime::{
+    paychains_runtime::{
         bank::{Bank, TransactionSimulationResult},
         bank_forks::BankForks,
         commitment::BlockCommitmentCache,
     },
-    solana_sdk::{
+    paychains_sdk::{
         account::Account,
         clock::Slot,
         commitment_config::CommitmentLevel,
@@ -23,7 +23,7 @@ use {
         signature::Signature,
         transaction::{self, SanitizedTransaction, Transaction},
     },
-    solana_send_transaction_service::{
+    paychains_send_transaction_service::{
         send_transaction_service::{SendTransactionService, TransactionInfo},
         tpu_info::NullTpuInfo,
     },
@@ -104,7 +104,7 @@ impl BanksServer {
         }
         let server_bank_forks = bank_forks.clone();
         Builder::new()
-            .name("solana-bank-forks-client".to_string())
+            .name("paychains-bank-forks-client".to_string())
             .spawn(move || Self::run(server_bank_forks, transaction_receiver))
             .unwrap();
         Self::new(

@@ -1,7 +1,7 @@
 use {
     crossbeam_channel::Receiver,
-    solana_measure::measure::Measure,
-    solana_runtime::bank::Bank,
+    paychains_measure::measure::Measure,
+    paychains_runtime::bank::Bank,
     std::{
         sync::Arc,
         thread::{self, Builder, JoinHandle},
@@ -15,7 +15,7 @@ pub struct DropBankService {
 impl DropBankService {
     pub fn new(bank_receiver: Receiver<Vec<Arc<Bank>>>) -> Self {
         let thread_hdl = Builder::new()
-            .name("sol-drop-b-service".to_string())
+            .name("pay-drop-b-service".to_string())
             .spawn(move || {
                 for banks in bank_receiver.iter() {
                     let len = banks.len();

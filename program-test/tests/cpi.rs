@@ -1,6 +1,6 @@
 use {
-    solana_program_test::{processor, ProgramTest},
-    solana_sdk::{
+    paychains_program_test::{processor, ProgramTest},
+    paychains_sdk::{
         account_info::{next_account_info, AccountInfo},
         entrypoint::ProgramResult,
         instruction::{AccountMeta, Instruction},

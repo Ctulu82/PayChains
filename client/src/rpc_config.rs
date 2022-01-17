@@ -1,11 +1,11 @@
 use {
     crate::rpc_filter::RpcFilterType,
-    solana_account_decoder::{UiAccountEncoding, UiDataSliceConfig},
-    solana_sdk::{
+    paychains_account_decoder::{UiAccountEncoding, UiDataSliceConfig},
+    paychains_sdk::{
         clock::{Epoch, Slot},
         commitment_config::{CommitmentConfig, CommitmentLevel},
     },
-    solana_transaction_status::{TransactionDetails, UiTransactionEncoding},
+    paychains_transaction_status::{TransactionDetails, UiTransactionEncoding},
 };
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]

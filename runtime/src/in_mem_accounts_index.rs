@@ -8,9 +8,9 @@ use {
         bucket_map_holder_stats::BucketMapHolderStats,
     },
     rand::{thread_rng, Rng},
-    solana_bucket_map::bucket_api::BucketApi,
-    solana_measure::measure::Measure,
-    solana_sdk::{clock::Slot, pubkey::Pubkey},
+    paychains_bucket_map::bucket_api::BucketApi,
+    paychains_measure::measure::Measure,
+    paychains_sdk::{clock::Slot, pubkey::Pubkey},
     std::{
         collections::{
             hash_map::{Entry, VacantEntry},
@@ -1077,7 +1077,7 @@ mod tests {
 
     #[test]
     fn test_should_remove_from_mem() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let bucket = new_for_test::<u64>();
         let mut startup = false;
         let mut current_age = 0;
@@ -1241,7 +1241,7 @@ mod tests {
 
     #[test]
     fn test_age() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let test = new_for_test::<u64>();
         assert!(test.get_should_age(test.storage.current_age()));
         assert_eq!(test.storage.count_ages_flushed(), 0);

@@ -26,18 +26,18 @@ use {
         voting_service::VotingService,
     },
     crossbeam_channel::{unbounded, Receiver},
-    solana_accountsdb_plugin_manager::block_metadata_notifier_interface::BlockMetadataNotifierLock,
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_ledger::{
+    paychains_accountsdb_plugin_manager::block_metadata_notifier_interface::BlockMetadataNotifierLock,
+    paychains_gossip::cluster_info::ClusterInfo,
+    paychains_ledger::{
         blockstore::Blockstore, blockstore_processor::TransactionStatusSender,
         leader_schedule_cache::LeaderScheduleCache,
     },
-    solana_poh::poh_recorder::PohRecorder,
-    solana_rpc::{
+    paychains_poh::poh_recorder::PohRecorder,
+    paychains_rpc::{
         max_slots::MaxSlots, optimistically_confirmed_bank_tracker::BankNotificationSender,
         rpc_subscriptions::RpcSubscriptions,
     },
-    solana_runtime::{
+    paychains_runtime::{
         accounts_background_service::{
             AbsRequestHandler, AbsRequestSender, AccountsBackgroundService, SnapshotRequestHandler,
         },
@@ -51,7 +51,7 @@ use {
         },
         vote_sender_types::ReplayVoteSender,
     },
-    solana_sdk::{clock::Slot, pubkey::Pubkey, signature::Keypair},
+    paychains_sdk::{clock::Slot, pubkey::Pubkey, signature::Keypair},
     std::{
         boxed::Box,
         collections::HashSet,
@@ -391,18 +391,18 @@ pub mod tests {
     use {
         super::*,
         serial_test::serial,
-        solana_gossip::cluster_info::{ClusterInfo, Node},
-        solana_ledger::{
+        paychains_gossip::cluster_info::{ClusterInfo, Node},
+        paychains_ledger::{
             blockstore::BlockstoreSignals,
             blockstore_db::BlockstoreOptions,
             create_new_tmp_ledger,
             genesis_utils::{create_genesis_config, GenesisConfigInfo},
         },
-        solana_poh::poh_recorder::create_test_recorder,
-        solana_rpc::optimistically_confirmed_bank_tracker::OptimisticallyConfirmedBank,
-        solana_runtime::bank::Bank,
-        solana_sdk::signature::{Keypair, Signer},
-        solana_streamer::socket::SocketAddrSpace,
+        paychains_poh::poh_recorder::create_test_recorder,
+        paychains_rpc::optimistically_confirmed_bank_tracker::OptimisticallyConfirmedBank,
+        paychains_runtime::bank::Bank,
+        paychains_sdk::signature::{Keypair, Signer},
+        paychains_streamer::socket::SocketAddrSpace,
         std::sync::atomic::AtomicU64,
         std::sync::atomic::Ordering,
     };
@@ -411,7 +411,7 @@ pub mod tests {
     #[test]
     #[serial]
     fn test_tvu_exit() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let leader = Node::new_localhost();
         let target1_keypair = Keypair::new();
         let target1 = Node::new_localhost_with_pubkey(&target1_keypair.pubkey());

@@ -1,4 +1,4 @@
-//! Solana precompiled programs
+//! PayChains precompiled programs
 
 #![cfg(feature = "full")]
 

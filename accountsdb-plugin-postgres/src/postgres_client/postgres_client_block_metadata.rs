@@ -10,7 +10,7 @@ use {
     chrono::Utc,
     log::*,
     postgres::{Client, Statement},
-    solana_accountsdb_plugin_interface::accountsdb_plugin_interface::{
+    paychains_accountsdb_plugin_interface::accountsdb_plugin_interface::{
         AccountsDbPluginError, ReplicaBlockInfo,
     },
 };

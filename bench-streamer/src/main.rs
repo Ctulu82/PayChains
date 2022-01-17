@@ -2,7 +2,7 @@
 use {
     clap::{crate_description, crate_name, App, Arg},
     crossbeam_channel::unbounded,
-    solana_streamer::{
+    paychains_streamer::{
         packet::{Packet, PacketBatch, PacketBatchRecycler, PACKET_DATA_SIZE},
         streamer::{receiver, PacketBatchReceiver},
     },
@@ -59,7 +59,7 @@ fn main() -> Result<()> {
 
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(paychains_version::version!())
         .arg(
             Arg::with_name("num-recv-sockets")
                 .long("num-recv-sockets")
@@ -83,7 +83,7 @@ fn main() -> Result<()> {
     let mut read_threads = Vec::new();
     let recycler = PacketBatchRecycler::default();
     for _ in 0..num_sockets {
-        let read = solana_net_utils::bind_to(ip_addr, port, false).unwrap();
+        let read = paychains_net_utils::bind_to(ip_addr, port, false).unwrap();
         read.set_read_timeout(Some(Duration::new(1, 0))).unwrap();
 
         addr = read.local_addr().unwrap();

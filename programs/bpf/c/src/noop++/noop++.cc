@@ -2,13 +2,13 @@
  * @brief Example C++ based BPF program that prints out the parameters
  * passed to it
  */
-#include <solana_sdk.h>
+#include <paychains_sdk.h>
 
 extern uint64_t entrypoint(const uint8_t *input) {
-  SolAccountInfo ka[1];
-  SolParameters params = (SolParameters) { .ka = ka };
+  PayAccountInfo ka[1];
+  PayParameters params = (PayParameters) { .ka = ka };
 
-  if (!sol_deserialize(input, &params, SOL_ARRAY_SIZE(ka))) {
+  if (!pay_deserialize(input, &params, PAY_ARRAY_SIZE(ka))) {
     return ERROR_INVALID_ARGUMENT;
   }
 

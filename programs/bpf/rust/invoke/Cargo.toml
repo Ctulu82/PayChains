@@ -1,12 +1,12 @@
 [package]
-name = "solana-bpf-rust-invoke"
+name = "paychains-bpf-rust-invoke"
 version = "1.10.0"
-description = "Solana BPF test program written in Rust"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana"
+description = "PayChains BPF test program written in Rust"
+authors = ["PayChains Maintainers <maintainers@paychains.foundation>"]
+repository = "https://github.com/paychains-labs/paychains"
 license = "Apache-2.0"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-bpf-rust-invoke"
+homepage = "https://paychains.com/"
+documentation = "https://docs.rs/paychains-bpf-rust-invoke"
 edition = "2021"
 
 [features]
@@ -14,8 +14,8 @@ default = ["program"]
 program = []
 
 [dependencies]
-solana-bpf-rust-invoked = { path = "../invoked", default-features = false }
-solana-program = { path = "../../../../sdk/program", version = "=1.10.0" }
+paychains-bpf-rust-invoked = { path = "../invoked", default-features = false }
+paychains-program = { path = "../../../../sdk/program", version = "=1.10.0" }
 
 [lib]
 crate-type = ["lib", "cdylib"]

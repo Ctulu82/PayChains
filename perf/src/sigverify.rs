@@ -5,7 +5,7 @@
 //!
 
 #[cfg(test)]
-use solana_sdk::transaction::Transaction;
+use paychains_sdk::transaction::Transaction;
 use {
     crate::{
         cuda_runtime::PinnedVec,
@@ -14,9 +14,9 @@ use {
         recycler::Recycler,
     },
     rayon::ThreadPool,
-    solana_metrics::inc_new_counter_debug,
-    solana_rayon_threadlimit::get_thread_count,
-    solana_sdk::{
+    paychains_metrics::inc_new_counter_debug,
+    paychains_rayon_threadlimit::get_thread_count,
+    paychains_sdk::{
         hash::Hash,
         message::{MESSAGE_HEADER_LENGTH, MESSAGE_VERSION_PREFIX},
         pubkey::Pubkey,
@@ -358,7 +358,7 @@ fn check_for_simple_vote_transaction(
         .ok_or(PacketError::InvalidLen)?;
 
     if &packet.data[instruction_program_id_start..instruction_program_id_end]
-        == solana_sdk::vote::program::id().as_ref()
+        == paychains_sdk::vote::program::id().as_ref()
     {
         packet.meta.flags |= PacketFlags::SIMPLE_VOTE_TX;
     }
@@ -602,7 +602,7 @@ mod tests {
             test_tx::{new_test_vote_tx, test_multisig_tx, test_tx},
         },
         bincode::{deserialize, serialize},
-        solana_sdk::{
+        paychains_sdk::{
             instruction::CompiledInstruction,
             message::{Message, MessageHeader},
             signature::{Keypair, Signature},
@@ -717,7 +717,7 @@ mod tests {
 
     #[test]
     fn test_pubkey_too_small() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let mut tx = test_tx();
         let sig = tx.signatures[0];
         const NUM_SIG: usize = 18;
@@ -742,8 +742,8 @@ mod tests {
     fn test_pubkey_len() {
         // See that the verify cannot walk off the end of the packet
         // trying to index into the account_keys to access pubkey.
-        use solana_sdk::signer::{keypair::Keypair, Signer};
-        solana_logger::setup();
+        use paychains_sdk::signer::{keypair::Keypair, Signer};
+        paychains_logger::setup();
 
         const NUM_SIG: usize = 17;
         let keypair1 = Keypair::new();
@@ -1015,7 +1015,7 @@ mod tests {
 
     #[test]
     fn test_verify_multisig() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let tx = test_multisig_tx();
         let mut packet = sigverify::make_packet_from_transaction(tx);
@@ -1051,7 +1051,7 @@ mod tests {
     #[test]
     fn test_verify_fuzz() {
         use rand::{thread_rng, Rng};
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let tx = test_multisig_tx();
         let packet = sigverify::make_packet_from_transaction(tx);
@@ -1095,7 +1095,7 @@ mod tests {
 
     #[test]
     fn test_get_checked_scalar() {
-        solana_logger::setup();
+        paychains_logger::setup();
         use {
             curve25519_dalek::scalar::Scalar,
             rand::{thread_rng, Rng},
@@ -1137,7 +1137,7 @@ mod tests {
 
     #[test]
     fn test_ge_small_order() {
-        solana_logger::setup();
+        paychains_logger::setup();
         use {
             curve25519_dalek::edwards::CompressedEdwardsY,
             rand::{thread_rng, Rng},
@@ -1186,7 +1186,7 @@ mod tests {
 
     #[test]
     fn test_is_simple_vote_transaction() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let mut rng = rand::thread_rng();
 
         // tansfer tx is not
@@ -1218,7 +1218,7 @@ mod tests {
                 &[&key],
                 &[key1, key2],
                 Hash::default(),
-                vec![solana_vote_program::id(), Pubkey::new_unique()],
+                vec![paychains_vote_program::id(), Pubkey::new_unique()],
                 vec![
                     CompiledInstruction::new(3, &(), vec![0, 1]),
                     CompiledInstruction::new(4, &(), vec![0, 2]),
@@ -1233,7 +1233,7 @@ mod tests {
 
     #[test]
     fn test_is_simple_vote_transaction_with_offsets() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let mut rng = rand::thread_rng();
 
         let mut current_offset = 0usize;

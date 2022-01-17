@@ -1,12 +1,12 @@
 #![allow(clippy::implicit_hasher)]
 use {
     crate::{sigverify, sigverify_stage::SigVerifier},
-    solana_ledger::{
+    paychains_ledger::{
         leader_schedule_cache::LeaderScheduleCache, shred::Shred,
         sigverify_shreds::verify_shreds_gpu,
     },
-    solana_perf::{self, packet::PacketBatch, recycler_cache::RecyclerCache},
-    solana_runtime::bank_forks::BankForks,
+    paychains_perf::{self, packet::PacketBatch, recycler_cache::RecyclerCache},
+    paychains_runtime::bank_forks::BankForks,
     std::{
         collections::{HashMap, HashSet},
         sync::{Arc, RwLock},
@@ -56,7 +56,7 @@ impl SigVerifier for ShredSigVerifier {
         leader_slots.insert(std::u64::MAX, [0u8; 32]);
 
         let r = verify_shreds_gpu(&batches, &leader_slots, &self.recycler_cache);
-        solana_perf::sigverify::mark_disabled(&mut batches, &r);
+        paychains_perf::sigverify::mark_disabled(&mut batches, &r);
         batches
     }
 }
@@ -65,18 +65,18 @@ impl SigVerifier for ShredSigVerifier {
 pub mod tests {
     use {
         super::*,
-        solana_ledger::{
+        paychains_ledger::{
             genesis_utils::create_genesis_config_with_leader,
             shred::{Shred, Shredder},
         },
-        solana_perf::packet::Packet,
-        solana_runtime::bank::Bank,
-        solana_sdk::signature::{Keypair, Signer},
+        paychains_perf::packet::Packet,
+        paychains_runtime::bank::Bank,
+        paychains_sdk::signature::{Keypair, Signer},
     };
 
     #[test]
     fn test_sigverify_shreds_read_slots() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let mut shred = Shred::new_from_data(
             0xdead_c0de,
             0xc0de,

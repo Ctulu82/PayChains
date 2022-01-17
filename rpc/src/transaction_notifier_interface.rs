@@ -1,6 +1,6 @@
 use {
-    solana_sdk::{clock::Slot, signature::Signature, transaction::SanitizedTransaction},
-    solana_transaction_status::TransactionStatusMeta,
+    paychains_sdk::{clock::Slot, signature::Signature, transaction::SanitizedTransaction},
+    paychains_transaction_status::TransactionStatusMeta,
     std::sync::{Arc, RwLock},
 };
 

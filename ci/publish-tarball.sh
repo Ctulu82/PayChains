@@ -66,7 +66,7 @@ windows)
   ;;
 esac
 
-RELEASE_BASENAME="${RELEASE_BASENAME:=solana-release}"
+RELEASE_BASENAME="${RELEASE_BASENAME:=paychains-release}"
 TARBALL_BASENAME="${TARBALL_BASENAME:="$RELEASE_BASENAME"}"
 
 echo --- Creating release tarball
@@ -91,7 +91,7 @@ echo --- Creating release tarball
 
   tar cvf "${TARBALL_BASENAME}"-$TARGET.tar "${RELEASE_BASENAME}"
   bzip2 "${TARBALL_BASENAME}"-$TARGET.tar
-  cp "${RELEASE_BASENAME}"/bin/solana-install-init solana-install-init-$TARGET
+  cp "${RELEASE_BASENAME}"/bin/paychains-install-init paychains-install-init-$TARGET
   cp "${RELEASE_BASENAME}"/version.yml "${TARBALL_BASENAME}"-$TARGET.yml
 )
 
@@ -108,7 +108,7 @@ fi
 
 source ci/upload-ci-artifact.sh
 
-for file in "${TARBALL_BASENAME}"-$TARGET.tar.bz2 "${TARBALL_BASENAME}"-$TARGET.yml solana-install-init-"$TARGET"* $MAYBE_TARBALLS; do
+for file in "${TARBALL_BASENAME}"-$TARGET.tar.bz2 "${TARBALL_BASENAME}"-$TARGET.yml paychains-install-init-"$TARGET"* $MAYBE_TARBALLS; do
   if [[ -n $DO_NOT_PUBLISH_TAR ]]; then
     upload-ci-artifact "$file"
     echo "Skipped $file due to DO_NOT_PUBLISH_TAR"
@@ -117,16 +117,16 @@ for file in "${TARBALL_BASENAME}"-$TARGET.tar.bz2 "${TARBALL_BASENAME}"-$TARGET.
 
   if [[ -n $BUILDKITE ]]; then
     echo --- AWS S3 Store: "$file"
-    upload-s3-artifact "/solana/$file" s3://release.solana.com/"$CHANNEL_OR_TAG"/"$file"
+    upload-s3-artifact "/paychains/$file" s3://release.paychains.com/"$CHANNEL_OR_TAG"/"$file"
 
     echo Published to:
-    $DRYRUN ci/format-url.sh https://release.solana.com/"$CHANNEL_OR_TAG"/"$file"
+    $DRYRUN ci/format-url.sh https://release.paychains.com/"$CHANNEL_OR_TAG"/"$file"
 
     if [[ -n $TAG ]]; then
       ci/upload-github-release-asset.sh "$file"
     fi
   elif [[ -n $TRAVIS ]]; then
-    # .travis.yml uploads everything in the travis-s3-upload/ directory to release.solana.com
+    # .travis.yml uploads everything in the travis-s3-upload/ directory to release.paychains.com
     mkdir -p travis-s3-upload/"$CHANNEL_OR_TAG"
     cp -v "$file" travis-s3-upload/"$CHANNEL_OR_TAG"/
 
@@ -143,21 +143,21 @@ for file in "${TARBALL_BASENAME}"-$TARGET.tar.bz2 "${TARBALL_BASENAME}"-$TARGET.
 done
 
 
-# Create install wrapper for release.solana.com
+# Create install wrapper for release.paychains.com
 if [[ -n $DO_NOT_PUBLISH_TAR ]]; then
   echo "Skipping publishing install wrapper"
 elif [[ -n $BUILDKITE ]]; then
-  cat > release.solana.com-install <<EOF
-SOLANA_RELEASE=$CHANNEL_OR_TAG
-SOLANA_INSTALL_INIT_ARGS=$CHANNEL_OR_TAG
-SOLANA_DOWNLOAD_ROOT=http://release.solana.com
+  cat > release.paychains.com-install <<EOF
+PAYCHAINS_RELEASE=$CHANNEL_OR_TAG
+PAYCHAINS_INSTALL_INIT_ARGS=$CHANNEL_OR_TAG
+PAYCHAINS_DOWNLOAD_ROOT=http://release.paychains.com
 EOF
-  cat install/solana-install-init.sh >> release.solana.com-install
+  cat install/paychains-install-init.sh >> release.paychains.com-install
 
   echo --- AWS S3 Store: "install"
-  $DRYRUN upload-s3-artifact "/solana/release.solana.com-install" "s3://release.solana.com/$CHANNEL_OR_TAG/install"
+  $DRYRUN upload-s3-artifact "/paychains/release.paychains.com-install" "s3://release.paychains.com/$CHANNEL_OR_TAG/install"
   echo Published to:
-  $DRYRUN ci/format-url.sh https://release.solana.com/"$CHANNEL_OR_TAG"/install
+  $DRYRUN ci/format-url.sh https://release.paychains.com/"$CHANNEL_OR_TAG"/install
 fi
 
 echo --- ok

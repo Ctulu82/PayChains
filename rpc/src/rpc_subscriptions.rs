@@ -14,8 +14,8 @@ use {
     crossbeam_channel::{Receiver, RecvTimeoutError, SendError, Sender},
     rayon::prelude::*,
     serde::Serialize,
-    solana_account_decoder::{parse_token::spl_token_id, UiAccount, UiAccountEncoding},
-    solana_client::{
+    paychains_account_decoder::{parse_token::spl_token_id, UiAccount, UiAccountEncoding},
+    paychains_client::{
         rpc_filter::RpcFilterType,
         rpc_response::{
             ProcessedSignatureResult, ReceivedSignatureResult, Response, RpcBlockUpdate,
@@ -23,15 +23,15 @@ use {
             RpcSignatureResult, RpcVote, SlotInfo, SlotUpdate,
         },
     },
-    solana_ledger::{blockstore::Blockstore, get_tmp_ledger_path},
-    solana_measure::measure::Measure,
-    solana_rayon_threadlimit::get_thread_count,
-    solana_runtime::{
+    paychains_ledger::{blockstore::Blockstore, get_tmp_ledger_path},
+    paychains_measure::measure::Measure,
+    paychains_rayon_threadlimit::get_thread_count,
+    paychains_runtime::{
         bank::{Bank, TransactionLogInfo},
         bank_forks::BankForks,
         commitment::{BlockCommitmentCache, CommitmentSlots},
     },
-    solana_sdk::{
+    paychains_sdk::{
         account::{AccountSharedData, ReadableAccount},
         clock::Slot,
         pubkey::Pubkey,
@@ -39,8 +39,8 @@ use {
         timing::timestamp,
         transaction,
     },
-    solana_transaction_status::ConfirmedBlock,
-    solana_vote_program::vote_state::VoteTransaction,
+    paychains_transaction_status::ConfirmedBlock,
+    paychains_vote_program::vote_state::VoteTransaction,
     std::{
         cell::RefCell,
         collections::{HashMap, VecDeque},
@@ -586,11 +586,11 @@ impl RpcSubscriptions {
         };
         let notification_threads = config.notification_threads;
         let t_cleanup = Builder::new()
-            .name("solana-rpc-notifications".to_string())
+            .name("paychains-rpc-notifications".to_string())
             .spawn(move || {
                 let pool = rayon::ThreadPoolBuilder::new()
                     .num_threads(notification_threads.unwrap_or_else(get_thread_count))
-                    .thread_name(|i| format!("sol-sub-notif-{}", i))
+                    .thread_name(|i| format!("pay-sub-notif-{}", i))
                     .build()
                     .unwrap();
                 pool.install(|| {
@@ -1175,26 +1175,26 @@ pub(crate) mod tests {
                 BankNotification, OptimisticallyConfirmedBank, OptimisticallyConfirmedBankTracker,
             },
             rpc::create_test_transactions_and_populate_blockstore,
-            rpc_pubsub::RpcSolPubSubInternal,
+            rpc_pubsub::RpcPayPubSubInternal,
             rpc_pubsub_service,
         },
         serial_test::serial,
-        solana_client::rpc_config::{
+        paychains_client::rpc_config::{
             RpcAccountInfoConfig, RpcProgramAccountsConfig, RpcSignatureSubscribeConfig,
             RpcTransactionLogsFilter, {RpcBlockSubscribeConfig, RpcBlockSubscribeFilter},
         },
-        solana_runtime::{
+        paychains_runtime::{
             commitment::BlockCommitment,
             genesis_utils::{create_genesis_config, GenesisConfigInfo},
         },
-        solana_sdk::{
+        paychains_sdk::{
             commitment_config::CommitmentConfig,
             message::Message,
             signature::{Keypair, Signer},
             stake, system_instruction, system_program, system_transaction,
             transaction::Transaction,
         },
-        solana_transaction_status::{TransactionDetails, UiTransactionEncoding},
+        paychains_transaction_status::{TransactionDetails, UiTransactionEncoding},
         std::{
             collections::HashSet,
             sync::atomic::{AtomicU64, Ordering::Relaxed},
@@ -2238,7 +2238,7 @@ pub(crate) mod tests {
 
         let next_bank = Bank::new_from_parent(
             &bank_forks.get(0).unwrap().clone(),
-            &solana_sdk::pubkey::new_rand(),
+            &paychains_sdk::pubkey::new_rand(),
             1,
         );
         bank_forks.insert(next_bank);

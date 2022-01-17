@@ -1,8 +1,8 @@
 use {
     crate::{banking_stage::BankingStageStats, packet_hasher::PacketHasher},
     lru::LruCache,
-    solana_measure::measure::Measure,
-    solana_perf::packet::PacketBatch,
+    paychains_measure::measure::Measure,
+    paychains_perf::packet::PacketBatch,
     std::{
         ops::DerefMut,
         sync::{atomic::Ordering, Arc, Mutex},

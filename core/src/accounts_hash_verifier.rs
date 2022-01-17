@@ -7,9 +7,9 @@
 use {
     crossbeam_channel::RecvTimeoutError,
     rayon::ThreadPool,
-    solana_gossip::cluster_info::{ClusterInfo, MAX_SNAPSHOT_HASHES},
-    solana_measure::measure::Measure,
-    solana_runtime::{
+    paychains_gossip::cluster_info::{ClusterInfo, MAX_SNAPSHOT_HASHES},
+    paychains_measure::measure::Measure,
+    paychains_runtime::{
         accounts_db::{self, AccountsDb},
         accounts_hash::HashStats,
         snapshot_config::SnapshotConfig,
@@ -19,7 +19,7 @@ use {
         },
         sorted_storages::SortedStorages,
     },
-    solana_sdk::{clock::Slot, hash::Hash, pubkey::Pubkey},
+    paychains_sdk::{clock::Slot, hash::Hash, pubkey::Pubkey},
     std::{
         collections::{HashMap, HashSet},
         path::{Path, PathBuf},
@@ -51,7 +51,7 @@ impl AccountsHashVerifier {
         let exit = exit.clone();
         let cluster_info = cluster_info.clone();
         let t_accounts_hash_verifier = Builder::new()
-            .name("solana-hash-accounts".to_string())
+            .name("paychains-hash-accounts".to_string())
             .spawn(move || {
                 let mut hashes = vec![];
                 let mut thread_pool = None;
@@ -167,7 +167,7 @@ impl AccountsHashVerifier {
             // For testing, publish an invalid hash to gossip.
             use {
                 rand::{thread_rng, Rng},
-                solana_sdk::hash::extend_and_hash,
+                paychains_sdk::hash::extend_and_hash,
             };
             warn!("inserting fault at slot: {}", accounts_package.slot);
             let rand = thread_rng().gen_range(0, 10);
@@ -283,14 +283,14 @@ impl AccountsHashVerifier {
 mod tests {
     use {
         super::*,
-        solana_gossip::{cluster_info::make_accounts_hashes_message, contact_info::ContactInfo},
-        solana_runtime::snapshot_utils::{ArchiveFormat, SnapshotVersion},
-        solana_sdk::{
+        paychains_gossip::{cluster_info::make_accounts_hashes_message, contact_info::ContactInfo},
+        paychains_runtime::snapshot_utils::{ArchiveFormat, SnapshotVersion},
+        paychains_sdk::{
             genesis_config::ClusterType,
             hash::hash,
             signature::{Keypair, Signer},
         },
-        solana_streamer::socket::SocketAddrSpace,
+        paychains_streamer::socket::SocketAddrSpace,
     };
 
     fn new_test_cluster_info(contact_info: ContactInfo) -> ClusterInfo {
@@ -336,7 +336,7 @@ mod tests {
 
     #[test]
     fn test_max_hashes() {
-        solana_logger::setup();
+        paychains_logger::setup();
         use {std::path::PathBuf, tempfile::TempDir};
         let keypair = Keypair::new();
 

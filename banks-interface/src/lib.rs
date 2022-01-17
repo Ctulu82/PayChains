@@ -2,7 +2,7 @@
 
 use {
     serde::{Deserialize, Serialize},
-    solana_sdk::{
+    paychains_sdk::{
         account::Account,
         clock::Slot,
         commitment_config::CommitmentLevel,

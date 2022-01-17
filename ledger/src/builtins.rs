@@ -1,6 +1,6 @@
 use {
-    solana_runtime::builtins::{ActivationType, Builtin, Builtins},
-    solana_sdk::pubkey::Pubkey,
+    paychains_runtime::builtins::{ActivationType, Builtin, Builtins},
+    paychains_sdk::pubkey::Pubkey,
 };
 
 macro_rules! to_builtin {
@@ -13,7 +13,7 @@ macro_rules! to_builtin {
 fn genesis_builtins(bpf_jit: bool) -> Vec<Builtin> {
     // Currently JIT is not supported on the BPF VM:
     // !x86_64: https://github.com/qmonnet/rbpf/issues/48
-    // Windows: https://github.com/solana-labs/rbpf/issues/217
+    // Windows: https://github.com/paychains-labs/rbpf/issues/217
     #[cfg(any(not(target_arch = "x86_64"), target_family = "windows"))]
     let bpf_jit = {
         if bpf_jit {
@@ -23,16 +23,16 @@ fn genesis_builtins(bpf_jit: bool) -> Vec<Builtin> {
     };
 
     vec![
-        to_builtin!(solana_bpf_loader_deprecated_program!()),
+        to_builtin!(paychains_bpf_loader_deprecated_program!()),
         if bpf_jit {
-            to_builtin!(solana_bpf_loader_program_with_jit!())
+            to_builtin!(paychains_bpf_loader_program_with_jit!())
         } else {
-            to_builtin!(solana_bpf_loader_program!())
+            to_builtin!(paychains_bpf_loader_program!())
         },
         if bpf_jit {
-            to_builtin!(solana_bpf_loader_upgradeable_program_with_jit!())
+            to_builtin!(paychains_bpf_loader_upgradeable_program_with_jit!())
         } else {
-            to_builtin!(solana_bpf_loader_upgradeable_program!())
+            to_builtin!(paychains_bpf_loader_upgradeable_program!())
         },
     ]
 }

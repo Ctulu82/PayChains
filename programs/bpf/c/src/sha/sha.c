@@ -20,12 +20,12 @@ extern uint64_t entrypoint(const uint8_t *input) {
     uint8_t bytes1[] = {'G', 'a', 'g', 'g', 'a', 'b', 'l', 'a',
                         'g', 'h', 'b', 'l', 'a', 'g', 'h', '!'};
     uint8_t bytes2[] = {'f', 'l', 'u', 'r', 'b', 'o', 's'};
-    const SolBytes bytes[] = {{bytes1, SOL_ARRAY_SIZE(bytes1)},
-                              {bytes2, SOL_ARRAY_SIZE(bytes2)}};
+    const PayBytes bytes[] = {{bytes1, PAY_ARRAY_SIZE(bytes1)},
+                              {bytes2, PAY_ARRAY_SIZE(bytes2)}};
 
-    sol_sha256(bytes, SOL_ARRAY_SIZE(bytes), result);
+    pay_sha256(bytes, PAY_ARRAY_SIZE(bytes), result);
 
-    sol_assert(0 == sol_memcmp(result, expected, SHA256_RESULT_LENGTH));
+    pay_assert(0 == pay_memcmp(result, expected, SHA256_RESULT_LENGTH));
   }
 
   // Keccak
@@ -39,12 +39,12 @@ extern uint64_t entrypoint(const uint8_t *input) {
     uint8_t bytes1[] = {'G', 'a', 'g', 'g', 'a', 'b', 'l', 'a',
                         'g', 'h', 'b', 'l', 'a', 'g', 'h', '!'};
     uint8_t bytes2[] = {'f', 'l', 'u', 'r', 'b', 'o', 's'};
-    const SolBytes bytes[] = {{bytes1, SOL_ARRAY_SIZE(bytes1)},
-                              {bytes2, SOL_ARRAY_SIZE(bytes2)}};
+    const PayBytes bytes[] = {{bytes1, PAY_ARRAY_SIZE(bytes1)},
+                              {bytes2, PAY_ARRAY_SIZE(bytes2)}};
 
-    sol_keccak256(bytes, SOL_ARRAY_SIZE(bytes), result);
+    pay_keccak256(bytes, PAY_ARRAY_SIZE(bytes), result);
 
-    sol_assert(0 == sol_memcmp(result, expected, KECCAK_RESULT_LENGTH));
+    pay_assert(0 == pay_memcmp(result, expected, KECCAK_RESULT_LENGTH));
   }
 
   // Blake3
@@ -58,12 +58,12 @@ extern uint64_t entrypoint(const uint8_t *input) {
     uint8_t bytes1[] = {'G', 'a', 'g', 'g', 'a', 'b', 'l', 'a',
                         'g', 'h', 'b', 'l', 'a', 'g', 'h', '!'};
     uint8_t bytes2[] = {'f', 'l', 'u', 'r', 'b', 'o', 's'};
-    const SolBytes bytes[] = {{bytes1, SOL_ARRAY_SIZE(bytes1)},
-                              {bytes2, SOL_ARRAY_SIZE(bytes2)}};
+    const PayBytes bytes[] = {{bytes1, PAY_ARRAY_SIZE(bytes1)},
+                              {bytes2, PAY_ARRAY_SIZE(bytes2)}};
 
-    sol_blake3(bytes, SOL_ARRAY_SIZE(bytes), result);
+    pay_blake3(bytes, PAY_ARRAY_SIZE(bytes), result);
 
-    sol_assert(0 == sol_memcmp(result, expected, BLAKE3_RESULT_LENGTH));
+    pay_assert(0 == pay_memcmp(result, expected, BLAKE3_RESULT_LENGTH));
   }
 
   return SUCCESS;

@@ -1,19 +1,19 @@
 use {
     clap::{crate_description, crate_name, value_t_or_exit, ArgMatches},
     console::style,
-    solana_clap_utils::{
+    paychains_clap_utils::{
         input_validators::normalize_to_url_if_moniker,
         keypair::{CliSigners, DefaultSigner},
         DisplayError,
     },
-    solana_cli::{
+    paychains_cli::{
         clap_app::get_clap_app,
         cli::{parse_command, process_command, CliCommandInfo, CliConfig, SettingType},
     },
-    solana_cli_config::Config,
-    solana_cli_output::{display::println_name_value, OutputFormat},
-    solana_client::rpc_config::RpcSendTransactionConfig,
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
+    paychains_cli_config::Config,
+    paychains_cli_output::{display::println_name_value, OutputFormat},
+    paychains_client::rpc_config::RpcSendTransactionConfig,
+    paychains_remote_wallet::remote_wallet::RemoteWalletManager,
     std::{collections::HashMap, error, path::PathBuf, sync::Arc, time::Duration},
 };
 
@@ -236,11 +236,11 @@ pub fn parse_args<'a>(
 }
 
 fn main() -> Result<(), Box<dyn error::Error>> {
-    solana_logger::setup_with_default("off");
+    paychains_logger::setup_with_default("off");
     let matches = get_clap_app(
         crate_name!(),
         crate_description!(),
-        solana_version::version!(),
+        paychains_version::version!(),
     )
     .get_matches();
 

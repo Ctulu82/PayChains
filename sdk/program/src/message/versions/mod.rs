@@ -20,7 +20,7 @@ pub mod v0;
 /// Bit mask that indicates whether a serialized message is versioned.
 pub const MESSAGE_VERSION_PREFIX: u8 = 0x80;
 
-/// Message versions supported by the Solana runtime.
+/// Message versions supported by the PayChains runtime.
 ///
 /// # Serialization
 ///
@@ -99,7 +99,7 @@ impl VersionedMessage {
     pub fn hash_raw_message(message_bytes: &[u8]) -> Hash {
         use blake3::traits::digest::Digest;
         let mut hasher = blake3::Hasher::new();
-        hasher.update(b"solana-tx-message-v1");
+        hasher.update(b"paychains-tx-message-v1");
         hasher.update(message_bytes);
         Hash(<[u8; crate::hash::HASH_BYTES]>::try_from(hasher.finalize().as_slice()).unwrap())
     }

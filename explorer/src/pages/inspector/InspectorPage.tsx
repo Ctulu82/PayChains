@@ -1,8 +1,8 @@
 import React from "react";
-import { Message, PACKET_DATA_SIZE } from "@solana/web3.js";
+import { Message, PACKET_DATA_SIZE } from "@paychains/web3.js";
 
 import { TableCardBody } from "components/common/TableCardBody";
-import { SolBalance } from "utils";
+import { PayBalance } from "utils";
 import { useQuery } from "utils/url";
 import { useHistory, useLocation } from "react-router";
 import {
@@ -336,7 +336,7 @@ function OverviewCard({
             <td>Fees</td>
             <td className="text-lg-end">
               <div className="d-flex align-items-end flex-column">
-                <SolBalance lamports={fee} />
+                <PayBalance lamports={fee} />
                 <span className="text-muted">
                   {`Each signature costs ${DEFAULT_FEES.lamportsPerSignature} lamports`}
                 </span>

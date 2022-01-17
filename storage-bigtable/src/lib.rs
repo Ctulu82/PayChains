@@ -2,8 +2,8 @@
 use {
     log::*,
     serde::{Deserialize, Serialize},
-    solana_metrics::inc_new_counter_debug,
-    solana_sdk::{
+    paychains_metrics::inc_new_counter_debug,
+    paychains_sdk::{
         clock::{Slot, UnixTimestamp},
         deserialize_utils::default_on_eof,
         pubkey::Pubkey,
@@ -11,8 +11,8 @@ use {
         sysvar::is_sysvar_id,
         transaction::{Transaction, TransactionError},
     },
-    solana_storage_proto::convert::{generated, tx_by_addr},
-    solana_transaction_status::{
+    paychains_storage_proto::convert::{generated, tx_by_addr},
+    paychains_transaction_status::{
         extract_and_fmt_memos, ConfirmedBlock, ConfirmedTransactionStatusWithSignature,
         ConfirmedTransactionWithStatusMeta, Reward, TransactionByAddrInfo,
         TransactionConfirmationStatus, TransactionStatus, TransactionStatusMeta,
@@ -26,7 +26,7 @@ use {
 };
 
 #[macro_use]
-extern crate solana_metrics;
+extern crate paychains_metrics;
 
 #[macro_use]
 extern crate serde_derive;
@@ -351,7 +351,7 @@ impl LedgerStorage {
         credential_path: Option<String>,
     ) -> Result<Self> {
         let connection =
-            bigtable::BigTableConnection::new("solana-ledger", read_only, timeout, credential_path)
+            bigtable::BigTableConnection::new("paychains-ledger", read_only, timeout, credential_path)
                 .await?;
         Ok(Self { connection })
     }

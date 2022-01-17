@@ -1,10 +1,10 @@
 use {
-    solana_ledger::{
+    paychains_ledger::{
         blockstore::Blockstore,
         shred::{Nonce, SIZE_OF_NONCE},
     },
-    solana_perf::packet::limited_deserialize,
-    solana_sdk::{clock::Slot, packet::Packet},
+    paychains_perf::packet::limited_deserialize,
+    paychains_sdk::{clock::Slot, packet::Packet},
     std::{io, net::SocketAddr},
 };
 
@@ -52,11 +52,11 @@ pub fn nonce(buf: &[u8]) -> Option<Nonce> {
 mod test {
     use {
         super::*,
-        solana_ledger::{
+        paychains_ledger::{
             shred::{Shred, Shredder},
             sigverify_shreds::verify_shred_cpu,
         },
-        solana_sdk::{
+        paychains_sdk::{
             packet::PacketFlags,
             signature::{Keypair, Signer},
         },
@@ -67,7 +67,7 @@ mod test {
     };
 
     fn run_test_sigverify_shred_cpu_repair(slot: Slot) {
-        solana_logger::setup();
+        paychains_logger::setup();
         let mut shred = Shred::new_from_data(
             slot,
             0xc0de,

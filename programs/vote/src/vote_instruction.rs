@@ -9,9 +9,9 @@ use {
     log::*,
     num_derive::{FromPrimitive, ToPrimitive},
     serde_derive::{Deserialize, Serialize},
-    solana_metrics::inc_new_counter_info,
-    solana_program_runtime::invoke_context::InvokeContext,
-    solana_sdk::{
+    paychains_metrics::inc_new_counter_info,
+    paychains_program_runtime::invoke_context::InvokeContext,
+    paychains_sdk::{
         decode_error::DecodeError,
         feature_set,
         hash::Hash,
@@ -394,7 +394,7 @@ fn verify_rent_exemption(
 /// These methods facilitate a transition from fetching sysvars from keyed
 /// accounts to fetching from the sysvar cache without breaking consensus. In
 /// order to keep consistent behavior, they continue to enforce the same checks
-/// as `solana_sdk::keyed_account::from_keyed_account` despite dynamically
+/// as `paychains_sdk::keyed_account::from_keyed_account` despite dynamically
 /// loading them instead of deserializing from account data.
 mod get_sysvar_with_keyed_account_check {
     use super::*;
@@ -544,11 +544,11 @@ mod tests {
     use {
         super::*,
         bincode::serialize,
-        solana_program_runtime::{
+        paychains_program_runtime::{
             invoke_context::{mock_process_instruction, mock_process_instruction_with_sysvars},
             sysvar_cache::SysvarCache,
         },
-        solana_sdk::account::{self, Account, AccountSharedData},
+        paychains_sdk::account::{self, Account, AccountSharedData},
         std::str::FromStr,
     };
 
@@ -656,7 +656,7 @@ mod tests {
 
     #[test]
     fn test_vote_process_instruction() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let instructions = create_account(
             &Pubkey::new_unique(),
             &Pubkey::new_unique(),

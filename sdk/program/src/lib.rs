@@ -2,8 +2,8 @@
 #![cfg_attr(RUSTC_WITH_SPECIALIZATION, feature(specialization))]
 #![cfg_attr(RUSTC_NEEDS_PROC_MACRO_HYGIENE, feature(proc_macro_hygiene))]
 
-// Allows macro expansion of `use ::solana_program::*` to work within this crate
-extern crate self as solana_program;
+// Allows macro expansion of `use ::paychains_program::*` to work within this crate
+extern crate self as paychains_program;
 
 pub mod account_info;
 pub(crate) mod atomic_u64;
@@ -55,7 +55,7 @@ pub mod sysvar;
 pub mod wasm;
 
 #[cfg(target_arch = "bpf")]
-pub use solana_sdk_macro::wasm_bindgen_stub as wasm_bindgen;
+pub use paychains_sdk_macro::wasm_bindgen_stub as wasm_bindgen;
 #[cfg(not(target_arch = "bpf"))]
 pub use wasm_bindgen::prelude::wasm_bindgen;
 
@@ -72,7 +72,7 @@ pub mod vote {
 }
 
 /// Same as `declare_id` except report that this id has been deprecated
-pub use solana_sdk_macro::program_declare_deprecated_id as declare_deprecated_id;
+pub use paychains_sdk_macro::program_declare_deprecated_id as declare_deprecated_id;
 /// Convenience macro to declare a static public key and functions to interact with it
 ///
 /// Input: a single literal base58 string representation of a program's id
@@ -83,10 +83,10 @@ pub use solana_sdk_macro::program_declare_deprecated_id as declare_deprecated_id
 /// # // wrapper is used so that the macro invocation occurs in the item position
 /// # // rather than in the statement position which isn't allowed.
 /// use std::str::FromStr;
-/// use solana_program::{declare_id, pubkey::Pubkey};
+/// use paychains_program::{declare_id, pubkey::Pubkey};
 ///
 /// # mod item_wrapper {
-/// #   use solana_program::declare_id;
+/// #   use paychains_program::declare_id;
 /// declare_id!("My11111111111111111111111111111111111111111");
 /// # }
 /// # use item_wrapper::id;
@@ -94,7 +94,7 @@ pub use solana_sdk_macro::program_declare_deprecated_id as declare_deprecated_id
 /// let my_id = Pubkey::from_str("My11111111111111111111111111111111111111111").unwrap();
 /// assert_eq!(id(), my_id);
 /// ```
-pub use solana_sdk_macro::program_declare_id as declare_id;
+pub use paychains_sdk_macro::program_declare_id as declare_id;
 /// Convenience macro to define a static public key
 ///
 /// Input: a single literal base58 string representation of a Pubkey
@@ -103,20 +103,20 @@ pub use solana_sdk_macro::program_declare_id as declare_id;
 ///
 /// ```
 /// use std::str::FromStr;
-/// use solana_program::{pubkey, pubkey::Pubkey};
+/// use paychains_program::{pubkey, pubkey::Pubkey};
 ///
 /// static ID: Pubkey = pubkey!("My11111111111111111111111111111111111111111");
 ///
 /// let my_id = Pubkey::from_str("My11111111111111111111111111111111111111111").unwrap();
 /// assert_eq!(ID, my_id);
 /// ```
-pub use solana_sdk_macro::program_pubkey as pubkey;
+pub use paychains_sdk_macro::program_pubkey as pubkey;
 
 #[macro_use]
 extern crate serde_derive;
 
 #[macro_use]
-extern crate solana_frozen_abi_macro;
+extern crate paychains_frozen_abi_macro;
 
 /// Convenience macro for doing integer division where the opersation's safety
 /// can be checked at compile-time
@@ -125,7 +125,7 @@ extern crate solana_frozen_abi_macro;
 /// doctests to cover failure modes
 /// Literal denominator div-by-zero fails
 /// ```compile_fail
-/// # use solana_program::unchecked_div_by_const;
+/// # use paychains_program::unchecked_div_by_const;
 /// # fn main() {
 /// # let _ = unchecked_div_by_const!(10, 0);
 /// # }
@@ -133,7 +133,7 @@ extern crate solana_frozen_abi_macro;
 /// #
 /// # Const denominator div-by-zero fails
 /// ```compile_fail
-/// # use solana_program::unchecked_div_by_const;
+/// # use paychains_program::unchecked_div_by_const;
 /// # fn main() {
 /// # const D: u64 = 0;
 /// # let _ = unchecked_div_by_const!(10, D);
@@ -142,7 +142,7 @@ extern crate solana_frozen_abi_macro;
 /// #
 /// # Non-const denominator fails
 /// ```compile_fail
-/// # use solana_program::unchecked_div_by_const;
+/// # use paychains_program::unchecked_div_by_const;
 /// # fn main() {
 /// # let d = 0;
 /// # let _ = unchecked_div_by_const!(10, d);
@@ -151,7 +151,7 @@ extern crate solana_frozen_abi_macro;
 /// #
 /// Literal denominator div-by-zero fails
 /// ```compile_fail
-/// # use solana_program::unchecked_div_by_const;
+/// # use paychains_program::unchecked_div_by_const;
 /// # fn main() {
 /// # const N: u64 = 10;
 /// # let _ = unchecked_div_by_const!(N, 0);
@@ -160,7 +160,7 @@ extern crate solana_frozen_abi_macro;
 /// #
 /// # Const denominator div-by-zero fails
 /// ```compile_fail
-/// # use solana_program::unchecked_div_by_const;
+/// # use paychains_program::unchecked_div_by_const;
 /// # fn main() {
 /// # const N: u64 = 10;
 /// # const D: u64 = 0;
@@ -170,7 +170,7 @@ extern crate solana_frozen_abi_macro;
 /// #
 /// # Non-const denominator fails
 /// ```compile_fail
-/// # use solana_program::unchecked_div_by_const;
+/// # use paychains_program::unchecked_div_by_const;
 /// # fn main() {
 /// # const N: u64 = 10;
 /// # let d = 0;
@@ -180,7 +180,7 @@ extern crate solana_frozen_abi_macro;
 /// #
 /// Literal denominator div-by-zero fails
 /// ```compile_fail
-/// # use solana_program::unchecked_div_by_const;
+/// # use paychains_program::unchecked_div_by_const;
 /// # fn main() {
 /// # let n = 10;
 /// # let _ = unchecked_div_by_const!(n, 0);
@@ -189,7 +189,7 @@ extern crate solana_frozen_abi_macro;
 /// #
 /// # Const denominator div-by-zero fails
 /// ```compile_fail
-/// # use solana_program::unchecked_div_by_const;
+/// # use paychains_program::unchecked_div_by_const;
 /// # fn main() {
 /// # let n = 10;
 /// # const D: u64 = 0;
@@ -199,7 +199,7 @@ extern crate solana_frozen_abi_macro;
 /// #
 /// # Non-const denominator fails
 /// ```compile_fail
-/// # use solana_program::unchecked_div_by_const;
+/// # use paychains_program::unchecked_div_by_const;
 /// # fn main() {
 /// # let n = 10;
 /// # let d = 0;

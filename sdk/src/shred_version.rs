@@ -1,6 +1,6 @@
 #![cfg(feature = "full")]
 
-use solana_sdk::{
+use paychains_sdk::{
     hard_forks::HardForks,
     hash::{extend_and_hash, Hash},
 };

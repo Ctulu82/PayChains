@@ -2619,7 +2619,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-account-decoder"
+name = "paychains-account-decoder"
 version = "1.10.0"
 dependencies = [
  "Inflector",
@@ -2631,16 +2631,16 @@ dependencies = [
  "serde",
  "serde_derive",
  "serde_json",
- "solana-config-program",
- "solana-sdk",
- "solana-vote-program",
+ "paychains-config-program",
+ "paychains-sdk",
+ "paychains-vote-program",
  "spl-token",
  "thiserror",
  "zstd",
 ]
 
 [[package]]
-name = "solana-address-lookup-table-program"
+name = "paychains-address-lookup-table-program"
 version = "1.10.0"
 dependencies = [
  "bincode",
@@ -2650,22 +2650,22 @@ dependencies = [
  "num-traits",
  "rustc_version 0.4.0",
  "serde",
- "solana-frozen-abi 1.10.0",
- "solana-frozen-abi-macro 1.10.0",
- "solana-program-runtime",
- "solana-sdk",
+ "paychains-frozen-abi 1.10.0",
+ "paychains-frozen-abi-macro 1.10.0",
+ "paychains-program-runtime",
+ "paychains-sdk",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-banks-client"
+name = "paychains-banks-client"
 version = "1.10.0"
 dependencies = [
  "borsh",
  "futures",
- "solana-banks-interface",
- "solana-program 1.10.0",
- "solana-sdk",
+ "paychains-banks-interface",
+ "paychains-program 1.10.0",
+ "paychains-sdk",
  "tarpc",
  "thiserror",
  "tokio",
@@ -2673,25 +2673,25 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-banks-interface"
+name = "paychains-banks-interface"
 version = "1.10.0"
 dependencies = [
  "serde",
- "solana-sdk",
+ "paychains-sdk",
  "tarpc",
 ]
 
 [[package]]
-name = "solana-banks-server"
+name = "paychains-banks-server"
 version = "1.10.0"
 dependencies = [
  "bincode",
  "crossbeam-channel",
  "futures",
- "solana-banks-interface",
- "solana-runtime",
- "solana-sdk",
- "solana-send-transaction-service",
+ "paychains-banks-interface",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-send-transaction-service",
  "tarpc",
  "tokio",
  "tokio-serde",
@@ -2699,24 +2699,24 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-bpf-loader-program"
+name = "paychains-bpf-loader-program"
 version = "1.10.0"
 dependencies = [
  "bincode",
  "byteorder 1.4.3",
  "libsecp256k1 0.6.0",
  "log",
- "solana-measure",
- "solana-metrics",
- "solana-program-runtime",
- "solana-sdk",
- "solana-zk-token-sdk",
- "solana_rbpf",
+ "paychains-measure",
+ "paychains-metrics",
+ "paychains-program-runtime",
+ "paychains-sdk",
+ "paychains-zk-token-sdk",
+ "paychains_rbpf",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-bpf-programs"
+name = "paychains-bpf-programs"
 version = "1.10.0"
 dependencies = [
  "bincode",
@@ -2726,362 +2726,362 @@ dependencies = [
  "log",
  "miow",
  "net2",
- "solana-account-decoder",
- "solana-bpf-loader-program",
- "solana-bpf-rust-invoke",
- "solana-bpf-rust-realloc",
- "solana-bpf-rust-realloc-invoke",
- "solana-cli-output",
- "solana-logger 1.10.0",
- "solana-measure",
- "solana-program-runtime",
- "solana-runtime",
- "solana-sdk",
- "solana-transaction-status",
- "solana_rbpf",
+ "paychains-account-decoder",
+ "paychains-bpf-loader-program",
+ "paychains-bpf-rust-invoke",
+ "paychains-bpf-rust-realloc",
+ "paychains-bpf-rust-realloc-invoke",
+ "paychains-cli-output",
+ "paychains-logger 1.10.0",
+ "paychains-measure",
+ "paychains-program-runtime",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-transaction-status",
+ "paychains_rbpf",
  "walkdir",
 ]
 
 [[package]]
-name = "solana-bpf-rust-128bit"
+name = "paychains-bpf-rust-128bit"
 version = "1.10.0"
 dependencies = [
- "solana-bpf-rust-128bit-dep",
- "solana-program 1.10.0",
+ "paychains-bpf-rust-128bit-dep",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-128bit-dep"
+name = "paychains-bpf-rust-128bit-dep"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-alloc"
+name = "paychains-bpf-rust-alloc"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-call-depth"
+name = "paychains-bpf-rust-call-depth"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-caller-access"
+name = "paychains-bpf-rust-caller-access"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-custom-heap"
+name = "paychains-bpf-rust-custom-heap"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-dep-crate"
+name = "paychains-bpf-rust-dep-crate"
 version = "1.10.0"
 dependencies = [
  "byteorder 1.4.3",
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-deprecated-loader"
+name = "paychains-bpf-rust-deprecated-loader"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-dup-accounts"
+name = "paychains-bpf-rust-dup-accounts"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-error-handling"
+name = "paychains-bpf-rust-error-handling"
 version = "1.10.0"
 dependencies = [
  "num-derive",
  "num-traits",
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-bpf-rust-external-spend"
+name = "paychains-bpf-rust-external-spend"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-finalize"
+name = "paychains-bpf-rust-finalize"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-instruction-introspection"
+name = "paychains-bpf-rust-instruction-introspection"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-invoke"
+name = "paychains-bpf-rust-invoke"
 version = "1.10.0"
 dependencies = [
- "solana-bpf-rust-invoked",
- "solana-program 1.10.0",
+ "paychains-bpf-rust-invoked",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-invoke-and-error"
+name = "paychains-bpf-rust-invoke-and-error"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-invoke-and-ok"
+name = "paychains-bpf-rust-invoke-and-ok"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-invoke-and-return"
+name = "paychains-bpf-rust-invoke-and-return"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-invoked"
+name = "paychains-bpf-rust-invoked"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-iter"
+name = "paychains-bpf-rust-iter"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-log-data"
+name = "paychains-bpf-rust-log-data"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-many-args"
+name = "paychains-bpf-rust-many-args"
 version = "1.10.0"
 dependencies = [
- "solana-bpf-rust-many-args-dep",
- "solana-program 1.10.0",
+ "paychains-bpf-rust-many-args-dep",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-many-args-dep"
+name = "paychains-bpf-rust-many-args-dep"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-mem"
+name = "paychains-bpf-rust-mem"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
- "solana-program-runtime",
- "solana-program-test",
- "solana-sdk",
+ "paychains-program 1.10.0",
+ "paychains-program-runtime",
+ "paychains-program-test",
+ "paychains-sdk",
 ]
 
 [[package]]
-name = "solana-bpf-rust-membuiltins"
+name = "paychains-bpf-rust-membuiltins"
 version = "1.10.0"
 dependencies = [
- "solana-bpf-rust-mem",
- "solana-program 1.10.0",
+ "paychains-bpf-rust-mem",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-noop"
+name = "paychains-bpf-rust-noop"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-panic"
+name = "paychains-bpf-rust-panic"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-param-passing"
+name = "paychains-bpf-rust-param-passing"
 version = "1.10.0"
 dependencies = [
- "solana-bpf-rust-param-passing-dep",
- "solana-program 1.10.0",
+ "paychains-bpf-rust-param-passing-dep",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-param-passing-dep"
+name = "paychains-bpf-rust-param-passing-dep"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-rand"
+name = "paychains-bpf-rust-rand"
 version = "1.10.0"
 dependencies = [
  "getrandom 0.1.14",
  "rand 0.7.3",
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-realloc"
+name = "paychains-bpf-rust-realloc"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-realloc-invoke"
+name = "paychains-bpf-rust-realloc-invoke"
 version = "1.10.0"
 dependencies = [
- "solana-bpf-rust-realloc",
- "solana-program 1.10.0",
+ "paychains-bpf-rust-realloc",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-ro-account_modify"
+name = "paychains-bpf-rust-ro-account_modify"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-ro-modify"
+name = "paychains-bpf-rust-ro-modify"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-sanity"
+name = "paychains-bpf-rust-sanity"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
- "solana-program-runtime",
- "solana-program-test",
- "solana-sdk",
+ "paychains-program 1.10.0",
+ "paychains-program-runtime",
+ "paychains-program-test",
+ "paychains-sdk",
 ]
 
 [[package]]
-name = "solana-bpf-rust-secp256k1-recover"
+name = "paychains-bpf-rust-secp256k1-recover"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-sha"
+name = "paychains-bpf-rust-sha"
 version = "1.10.0"
 dependencies = [
  "blake3 1.3.0",
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-spoof1"
+name = "paychains-bpf-rust-spoof1"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-spoof1-system"
+name = "paychains-bpf-rust-spoof1-system"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-sysvar"
+name = "paychains-bpf-rust-sysvar"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
- "solana-program-runtime",
- "solana-program-test",
- "solana-sdk",
+ "paychains-program 1.10.0",
+ "paychains-program-runtime",
+ "paychains-program-test",
+ "paychains-sdk",
 ]
 
 [[package]]
-name = "solana-bpf-rust-upgradeable"
+name = "paychains-bpf-rust-upgradeable"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-upgraded"
+name = "paychains-bpf-rust-upgraded"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
+ "paychains-program 1.10.0",
 ]
 
 [[package]]
-name = "solana-bpf-rust-zk_token_elgamal"
+name = "paychains-bpf-rust-zk_token_elgamal"
 version = "1.10.0"
 dependencies = [
- "solana-program 1.10.0",
- "solana-zk-token-sdk",
+ "paychains-program 1.10.0",
+ "paychains-zk-token-sdk",
 ]
 
 [[package]]
-name = "solana-bucket-map"
+name = "paychains-bucket-map"
 version = "1.10.0"
 dependencies = [
  "log",
  "memmap2 0.5.2",
  "modular-bitfield",
  "rand 0.7.3",
- "solana-measure",
- "solana-sdk",
+ "paychains-measure",
+ "paychains-sdk",
  "tempfile",
 ]
 
 [[package]]
-name = "solana-clap-utils"
+name = "paychains-clap-utils"
 version = "1.10.0"
 dependencies = [
  "chrono",
  "clap",
  "rpassword",
- "solana-perf",
- "solana-remote-wallet",
- "solana-sdk",
+ "paychains-perf",
+ "paychains-remote-wallet",
+ "paychains-sdk",
  "thiserror",
  "tiny-bip39",
  "uriparse",
@@ -3089,7 +3089,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-cli-config"
+name = "paychains-cli-config"
 version = "1.10.0"
 dependencies = [
  "dirs-next",
@@ -3101,7 +3101,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-cli-output"
+name = "paychains-cli-output"
 version = "1.10.0"
 dependencies = [
  "Inflector",
@@ -3113,17 +3113,17 @@ dependencies = [
  "indicatif",
  "serde",
  "serde_json",
- "solana-account-decoder",
- "solana-clap-utils",
- "solana-client",
- "solana-sdk",
- "solana-transaction-status",
- "solana-vote-program",
+ "paychains-account-decoder",
+ "paychains-clap-utils",
+ "paychains-client",
+ "paychains-sdk",
+ "paychains-transaction-status",
+ "paychains-vote-program",
  "spl-memo",
 ]
 
 [[package]]
-name = "solana-client"
+name = "paychains-client"
 version = "1.10.0"
 dependencies = [
  "base64 0.13.0",
@@ -3140,15 +3140,15 @@ dependencies = [
  "serde",
  "serde_derive",
  "serde_json",
- "solana-account-decoder",
- "solana-clap-utils",
- "solana-faucet",
- "solana-measure",
- "solana-net-utils",
- "solana-sdk",
- "solana-transaction-status",
- "solana-version",
- "solana-vote-program",
+ "paychains-account-decoder",
+ "paychains-clap-utils",
+ "paychains-faucet",
+ "paychains-measure",
+ "paychains-net-utils",
+ "paychains-sdk",
+ "paychains-transaction-status",
+ "paychains-version",
+ "paychains-vote-program",
  "thiserror",
  "tokio",
  "tungstenite",
@@ -3156,27 +3156,27 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-compute-budget-program"
+name = "paychains-compute-budget-program"
 version = "1.10.0"
 dependencies = [
- "solana-program-runtime",
- "solana-sdk",
+ "paychains-program-runtime",
+ "paychains-sdk",
 ]
 
 [[package]]
-name = "solana-config-program"
+name = "paychains-config-program"
 version = "1.10.0"
 dependencies = [
  "bincode",
  "chrono",
  "serde",
  "serde_derive",
- "solana-program-runtime",
- "solana-sdk",
+ "paychains-program-runtime",
+ "paychains-sdk",
 ]
 
 [[package]]
-name = "solana-faucet"
+name = "paychains-faucet"
 version = "1.10.0"
 dependencies = [
  "bincode",
@@ -3186,19 +3186,19 @@ dependencies = [
  "log",
  "serde",
  "serde_derive",
- "solana-clap-utils",
- "solana-cli-config",
- "solana-logger 1.10.0",
- "solana-metrics",
- "solana-sdk",
- "solana-version",
+ "paychains-clap-utils",
+ "paychains-cli-config",
+ "paychains-logger 1.10.0",
+ "paychains-metrics",
+ "paychains-sdk",
+ "paychains-version",
  "spl-memo",
  "thiserror",
  "tokio",
 ]
 
 [[package]]
-name = "solana-frozen-abi"
+name = "paychains-frozen-abi"
 version = "1.7.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b0b98d31e0662fedf3a1ee30919c655713874d578e19e65affe46109b1b927f9"
@@ -3212,13 +3212,13 @@ dependencies = [
  "serde",
  "serde_derive",
  "sha2 0.9.8",
- "solana-frozen-abi-macro 1.7.6",
- "solana-logger 1.7.6",
+ "paychains-frozen-abi-macro 1.7.6",
+ "paychains-logger 1.7.6",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-frozen-abi"
+name = "paychains-frozen-abi"
 version = "1.10.0"
 dependencies = [
  "bs58 0.4.0",
@@ -3230,12 +3230,12 @@ dependencies = [
  "serde",
  "serde_derive",
  "sha2 0.10.1",
- "solana-frozen-abi-macro 1.10.0",
+ "paychains-frozen-abi-macro 1.10.0",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-frozen-abi-macro"
+name = "paychains-frozen-abi-macro"
 version = "1.7.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ceac6e8ad1a784c92ff5f3d6ad68a8d664d389b08055b674c38b2b9abb69e6d4"
@@ -3247,7 +3247,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-frozen-abi-macro"
+name = "paychains-frozen-abi-macro"
 version = "1.10.0"
 dependencies = [
  "proc-macro2 1.0.24",
@@ -3257,7 +3257,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-logger"
+name = "paychains-logger"
 version = "1.7.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ec7c514fe57f8c5042fa88c19f5711c67f264db723d9d79379fcb78dd1f09bbf"
@@ -3268,7 +3268,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-logger"
+name = "paychains-logger"
 version = "1.10.0"
 dependencies = [
  "env_logger 0.9.0",
@@ -3277,15 +3277,15 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-measure"
+name = "paychains-measure"
 version = "1.10.0"
 dependencies = [
  "log",
- "solana-sdk",
+ "paychains-sdk",
 ]
 
 [[package]]
-name = "solana-metrics"
+name = "paychains-metrics"
 version = "1.10.0"
 dependencies = [
  "crossbeam-channel",
@@ -3293,11 +3293,11 @@ dependencies = [
  "lazy_static",
  "log",
  "reqwest",
- "solana-sdk",
+ "paychains-sdk",
 ]
 
 [[package]]
-name = "solana-net-utils"
+name = "paychains-net-utils"
 version = "1.10.0"
 dependencies = [
  "bincode",
@@ -3309,15 +3309,15 @@ dependencies = [
  "serde",
  "serde_derive",
  "socket2",
- "solana-logger 1.10.0",
- "solana-sdk",
- "solana-version",
+ "paychains-logger 1.10.0",
+ "paychains-sdk",
+ "paychains-version",
  "tokio",
  "url",
 ]
 
 [[package]]
-name = "solana-perf"
+name = "paychains-perf"
 version = "1.10.0"
 dependencies = [
  "bincode",
@@ -3332,14 +3332,14 @@ dependencies = [
  "rand 0.7.3",
  "rayon",
  "serde",
- "solana-metrics",
- "solana-rayon-threadlimit",
- "solana-sdk",
- "solana-vote-program",
+ "paychains-metrics",
+ "paychains-rayon-threadlimit",
+ "paychains-sdk",
+ "paychains-vote-program",
 ]
 
 [[package]]
-name = "solana-program"
+name = "paychains-program"
 version = "1.7.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3bfe6a5dfc5372c0a946018ecdd8115e38af78cea8275bac48cf3d105c6b1fb3"
@@ -3366,15 +3366,15 @@ dependencies = [
  "serde_derive",
  "sha2 0.9.8",
  "sha3 0.9.1",
- "solana-frozen-abi 1.7.6",
- "solana-frozen-abi-macro 1.7.6",
- "solana-logger 1.7.6",
- "solana-sdk-macro 1.7.6",
+ "paychains-frozen-abi 1.7.6",
+ "paychains-frozen-abi-macro 1.7.6",
+ "paychains-logger 1.7.6",
+ "paychains-sdk-macro 1.7.6",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-program"
+name = "paychains-program"
 version = "1.10.0"
 dependencies = [
  "base64 0.13.0",
@@ -3406,15 +3406,15 @@ dependencies = [
  "serde_derive",
  "sha2 0.10.1",
  "sha3 0.10.0",
- "solana-frozen-abi 1.10.0",
- "solana-frozen-abi-macro 1.10.0",
- "solana-sdk-macro 1.10.0",
+ "paychains-frozen-abi 1.10.0",
+ "paychains-frozen-abi-macro 1.10.0",
+ "paychains-sdk-macro 1.10.0",
  "thiserror",
  "wasm-bindgen",
 ]
 
 [[package]]
-name = "solana-program-runtime"
+name = "paychains-program-runtime"
 version = "1.10.0"
 dependencies = [
  "base64 0.13.0",
@@ -3427,15 +3427,15 @@ dependencies = [
  "num-traits",
  "rustc_version 0.4.0",
  "serde",
- "solana-frozen-abi 1.10.0",
- "solana-frozen-abi-macro 1.10.0",
- "solana-measure",
- "solana-sdk",
+ "paychains-frozen-abi 1.10.0",
+ "paychains-frozen-abi-macro 1.10.0",
+ "paychains-measure",
+ "paychains-sdk",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-program-test"
+name = "paychains-program-test"
 version = "1.10.0"
 dependencies = [
  "async-trait",
@@ -3444,20 +3444,20 @@ dependencies = [
  "chrono-humanize",
  "log",
  "serde",
- "solana-banks-client",
- "solana-banks-server",
- "solana-bpf-loader-program",
- "solana-logger 1.10.0",
- "solana-program-runtime",
- "solana-runtime",
- "solana-sdk",
- "solana-vote-program",
+ "paychains-banks-client",
+ "paychains-banks-server",
+ "paychains-bpf-loader-program",
+ "paychains-logger 1.10.0",
+ "paychains-program-runtime",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-vote-program",
  "thiserror",
  "tokio",
 ]
 
 [[package]]
-name = "solana-rayon-threadlimit"
+name = "paychains-rayon-threadlimit"
 version = "1.10.0"
 dependencies = [
  "lazy_static",
@@ -3465,7 +3465,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-remote-wallet"
+name = "paychains-remote-wallet"
 version = "1.10.0"
 dependencies = [
  "console",
@@ -3477,13 +3477,13 @@ dependencies = [
  "parking_lot",
  "qstring",
  "semver 1.0.4",
- "solana-sdk",
+ "paychains-sdk",
  "thiserror",
  "uriparse",
 ]
 
 [[package]]
-name = "solana-runtime"
+name = "paychains-runtime"
 version = "1.10.0"
 dependencies = [
  "arrayref",
@@ -3513,21 +3513,21 @@ dependencies = [
  "rustc_version 0.4.0",
  "serde",
  "serde_derive",
- "solana-address-lookup-table-program",
- "solana-bucket-map",
- "solana-compute-budget-program",
- "solana-config-program",
- "solana-frozen-abi 1.10.0",
- "solana-frozen-abi-macro 1.10.0",
- "solana-measure",
- "solana-metrics",
- "solana-program-runtime",
- "solana-rayon-threadlimit",
- "solana-sdk",
- "solana-stake-program",
- "solana-vote-program",
- "solana-zk-token-proof-program",
- "solana-zk-token-sdk",
+ "paychains-address-lookup-table-program",
+ "paychains-bucket-map",
+ "paychains-compute-budget-program",
+ "paychains-config-program",
+ "paychains-frozen-abi 1.10.0",
+ "paychains-frozen-abi-macro 1.10.0",
+ "paychains-measure",
+ "paychains-metrics",
+ "paychains-program-runtime",
+ "paychains-rayon-threadlimit",
+ "paychains-sdk",
+ "paychains-stake-program",
+ "paychains-vote-program",
+ "paychains-zk-token-proof-program",
+ "paychains-zk-token-sdk",
  "symlink",
  "tar",
  "tempfile",
@@ -3536,7 +3536,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-sdk"
+name = "paychains-sdk"
 version = "1.10.0"
 dependencies = [
  "assert_matches",
@@ -3574,18 +3574,18 @@ dependencies = [
  "serde_json",
  "sha2 0.10.1",
  "sha3 0.10.0",
- "solana-frozen-abi 1.10.0",
- "solana-frozen-abi-macro 1.10.0",
- "solana-logger 1.10.0",
- "solana-program 1.10.0",
- "solana-sdk-macro 1.10.0",
+ "paychains-frozen-abi 1.10.0",
+ "paychains-frozen-abi-macro 1.10.0",
+ "paychains-logger 1.10.0",
+ "paychains-program 1.10.0",
+ "paychains-sdk-macro 1.10.0",
  "thiserror",
  "uriparse",
  "wasm-bindgen",
 ]
 
 [[package]]
-name = "solana-sdk-macro"
+name = "paychains-sdk-macro"
 version = "1.7.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "84710ce45a21cccd9f2b09d8e9aad529080bb2540f27b1253874b6e732b465b9"
@@ -3598,7 +3598,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-sdk-macro"
+name = "paychains-sdk-macro"
 version = "1.10.0"
 dependencies = [
  "bs58 0.4.0",
@@ -3609,18 +3609,18 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-send-transaction-service"
+name = "paychains-send-transaction-service"
 version = "1.10.0"
 dependencies = [
  "crossbeam-channel",
  "log",
- "solana-metrics",
- "solana-runtime",
- "solana-sdk",
+ "paychains-metrics",
+ "paychains-runtime",
+ "paychains-sdk",
 ]
 
 [[package]]
-name = "solana-stake-program"
+name = "paychains-stake-program"
 version = "1.10.0"
 dependencies = [
  "bincode",
@@ -3630,18 +3630,18 @@ dependencies = [
  "rustc_version 0.4.0",
  "serde",
  "serde_derive",
- "solana-config-program",
- "solana-frozen-abi 1.10.0",
- "solana-frozen-abi-macro 1.10.0",
- "solana-metrics",
- "solana-program-runtime",
- "solana-sdk",
- "solana-vote-program",
+ "paychains-config-program",
+ "paychains-frozen-abi 1.10.0",
+ "paychains-frozen-abi-macro 1.10.0",
+ "paychains-metrics",
+ "paychains-program-runtime",
+ "paychains-sdk",
+ "paychains-vote-program",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-transaction-status"
+name = "paychains-transaction-status"
 version = "1.10.0"
 dependencies = [
  "Inflector",
@@ -3653,12 +3653,12 @@ dependencies = [
  "serde",
  "serde_derive",
  "serde_json",
- "solana-account-decoder",
- "solana-measure",
- "solana-metrics",
- "solana-runtime",
- "solana-sdk",
- "solana-vote-program",
+ "paychains-account-decoder",
+ "paychains-measure",
+ "paychains-metrics",
+ "paychains-runtime",
+ "paychains-sdk",
+ "paychains-vote-program",
  "spl-associated-token-account",
  "spl-memo",
  "spl-token",
@@ -3666,20 +3666,20 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-version"
+name = "paychains-version"
 version = "1.10.0"
 dependencies = [
  "log",
  "rustc_version 0.4.0",
  "serde",
  "serde_derive",
- "solana-frozen-abi 1.10.0",
- "solana-frozen-abi-macro 1.10.0",
- "solana-sdk",
+ "paychains-frozen-abi 1.10.0",
+ "paychains-frozen-abi-macro 1.10.0",
+ "paychains-sdk",
 ]
 
 [[package]]
-name = "solana-vote-program"
+name = "paychains-vote-program"
 version = "1.10.0"
 dependencies = [
  "bincode",
@@ -3689,29 +3689,29 @@ dependencies = [
  "rustc_version 0.4.0",
  "serde",
  "serde_derive",
- "solana-frozen-abi 1.10.0",
- "solana-frozen-abi-macro 1.10.0",
- "solana-metrics",
- "solana-program-runtime",
- "solana-sdk",
+ "paychains-frozen-abi 1.10.0",
+ "paychains-frozen-abi-macro 1.10.0",
+ "paychains-metrics",
+ "paychains-program-runtime",
+ "paychains-sdk",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-zk-token-proof-program"
+name = "paychains-zk-token-proof-program"
 version = "1.10.0"
 dependencies = [
  "bytemuck",
  "getrandom 0.1.14",
  "num-derive",
  "num-traits",
- "solana-program-runtime",
- "solana-sdk",
- "solana-zk-token-sdk",
+ "paychains-program-runtime",
+ "paychains-sdk",
+ "paychains-zk-token-sdk",
 ]
 
 [[package]]
-name = "solana-zk-token-sdk"
+name = "paychains-zk-token-sdk"
 version = "1.10.0"
 dependencies = [
  "aes-gcm-siv",
@@ -3731,15 +3731,15 @@ dependencies = [
  "serde",
  "serde_json",
  "sha3 0.9.1",
- "solana-program 1.10.0",
- "solana-sdk",
+ "paychains-program 1.10.0",
+ "paychains-sdk",
  "subtle",
  "thiserror",
  "zeroize",
 ]
 
 [[package]]
-name = "solana_rbpf"
+name = "paychains_rbpf"
 version = "0.2.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8fb565d026461ba89d1d92cc36cf0882fba44076559c3bbed1e8a9888112b3d7"
@@ -3769,7 +3769,7 @@ version = "1.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "393e2240d521c3dd770806bff25c2c00d761ac962be106e14e22dd912007f428"
 dependencies = [
- "solana-program 1.7.6",
+ "paychains-program 1.7.6",
  "spl-token",
 ]
 
@@ -3779,7 +3779,7 @@ version = "3.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bd0dc6f70db6bacea7ff25870b016a65ba1d1b6013536f08e4fd79a8f9005325"
 dependencies = [
- "solana-program 1.7.6",
+ "paychains-program 1.7.6",
 ]
 
 [[package]]
@@ -3792,7 +3792,7 @@ dependencies = [
  "num-derive",
  "num-traits",
  "num_enum",
- "solana-program 1.7.6",
+ "paychains-program 1.7.6",
  "thiserror",
 ]
 

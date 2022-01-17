@@ -1,6 +1,6 @@
 use {
     dashmap::DashMap,
-    solana_sdk::{
+    paychains_sdk::{
         account::{AccountSharedData, ReadableAccount},
         clock::Slot,
         hash::Hash,

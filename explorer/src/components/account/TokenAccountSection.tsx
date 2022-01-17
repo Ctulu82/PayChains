@@ -24,7 +24,7 @@ import { Copyable } from "components/common/Copyable";
 import { CoingeckoStatus, useCoinGecko } from "utils/coingecko";
 import { displayTimestampWithoutDate } from "utils/date";
 import { LoadingCard } from "components/common/LoadingCard";
-import { PublicKey } from "@solana/web3.js";
+import { PublicKey } from "@paychains/web3.js";
 import isMetaplexNFT from "providers/accounts/utils/isMetaplexNFT";
 
 const getEthAddress = (link?: string) => {
@@ -403,7 +403,7 @@ function TokenAccountCard({
 
   let unit, balance;
   if (info.isNative) {
-    unit = "SOL";
+    unit = "PAY";
     balance = (
       <>
         ◎
@@ -469,7 +469,7 @@ function TokenAccountCard({
         )}
         {info.rentExemptReserve && (
           <tr>
-            <td>Rent-exempt reserve (SOL)</td>
+            <td>Rent-exempt reserve (PAY)</td>
             <td className="text-lg-end">
               <>
                 ◎

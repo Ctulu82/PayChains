@@ -1,11 +1,11 @@
 [package]
-name = "solana-frozen-abi-macro"
+name = "paychains-frozen-abi-macro"
 version = "1.10.0"
-description = "Solana Frozen ABI Macro"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-frozen-abi-macro"
+description = "PayChains Frozen ABI Macro"
+authors = ["PayChains Maintainers <maintainers@paychains.foundation>"]
+repository = "https://github.com/paychains-labs/paychains"
+homepage = "https://paychains.com/"
+documentation = "https://docs.rs/paychains-frozen-abi-macro"
 license = "Apache-2.0"
 edition = "2021"
 

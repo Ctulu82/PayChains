@@ -9,4 +9,4 @@ pub mod streamer;
 extern crate log;
 
 #[macro_use]
-extern crate solana_metrics;
+extern crate paychains_metrics;

@@ -5,28 +5,28 @@ use {
     log::*,
     rand::{thread_rng, Rng},
     rayon::prelude::*,
-    solana_core::{banking_stage::BankingStage, packet_deduper::PacketDeduper},
-    solana_gossip::cluster_info::{ClusterInfo, Node},
-    solana_ledger::{
+    paychains_core::{banking_stage::BankingStage, packet_deduper::PacketDeduper},
+    paychains_gossip::cluster_info::{ClusterInfo, Node},
+    paychains_ledger::{
         blockstore::Blockstore,
         genesis_utils::{create_genesis_config, GenesisConfigInfo},
         get_tmp_ledger_path,
     },
-    solana_measure::measure::Measure,
-    solana_perf::packet::to_packet_batches,
-    solana_poh::poh_recorder::{create_test_recorder, PohRecorder, WorkingBankEntry},
-    solana_runtime::{
+    paychains_measure::measure::Measure,
+    paychains_perf::packet::to_packet_batches,
+    paychains_poh::poh_recorder::{create_test_recorder, PohRecorder, WorkingBankEntry},
+    paychains_runtime::{
         accounts_background_service::AbsRequestSender, bank::Bank, bank_forks::BankForks,
         cost_model::CostModel,
     },
-    solana_sdk::{
+    paychains_sdk::{
         hash::Hash,
         signature::{Keypair, Signature},
         system_transaction,
         timing::{duration_as_us, timestamp},
         transaction::Transaction,
     },
-    solana_streamer::socket::SocketAddrSpace,
+    paychains_streamer::socket::SocketAddrSpace,
     std::{
         sync::{atomic::Ordering, Arc, Mutex, RwLock},
         thread::sleep,
@@ -70,7 +70,7 @@ fn make_accounts_txs(
     hash: Hash,
     same_payer: bool,
 ) -> Vec<Transaction> {
-    let to_pubkey = solana_sdk::pubkey::new_rand();
+    let to_pubkey = paychains_sdk::pubkey::new_rand();
     let payer_key = Keypair::new();
     let dummy = system_transaction::transfer(&payer_key, &to_pubkey, 1, hash);
     (0..total_num_transactions)
@@ -79,9 +79,9 @@ fn make_accounts_txs(
             let mut new = dummy.clone();
             let sig: Vec<u8> = (0..64).map(|_| thread_rng().gen::<u8>()).collect();
             if !same_payer {
-                new.message.account_keys[0] = solana_sdk::pubkey::new_rand();
+                new.message.account_keys[0] = paychains_sdk::pubkey::new_rand();
             }
-            new.message.account_keys[1] = solana_sdk::pubkey::new_rand();
+            new.message.account_keys[1] = paychains_sdk::pubkey::new_rand();
             new.signatures = vec![Signature::new(&sig[0..64])];
             new
         })
@@ -106,11 +106,11 @@ fn bytes_as_usize(bytes: &[u8]) -> usize {
 
 #[allow(clippy::cognitive_complexity)]
 fn main() {
-    solana_logger::setup();
+    paychains_logger::setup();
 
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(paychains_version::version!())
         .arg(
             Arg::with_name("num_chunks")
                 .long("num-chunks")
@@ -252,7 +252,7 @@ fn main() {
         let base_tx_count = bank.transaction_count();
         let mut txs_processed = 0;
         let mut root = 1;
-        let collector = solana_sdk::pubkey::new_rand();
+        let collector = paychains_sdk::pubkey::new_rand();
         let config = Config {
             packets_per_batch: packets_per_chunk,
             chunk_len,

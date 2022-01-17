@@ -397,8 +397,8 @@ pub mod tests {
             blockstore::tests::make_slot_entries_with_transactions, get_tmp_ledger_path_auto_delete,
         },
         bincode::serialize,
-        solana_entry::entry::next_entry_mut,
-        solana_sdk::{
+        paychains_entry::entry::next_entry_mut,
+        paychains_sdk::{
             hash::{hash, Hash},
             message::Message,
             transaction::Transaction,

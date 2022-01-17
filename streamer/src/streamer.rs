@@ -9,7 +9,7 @@ use {
     },
     crossbeam_channel::{Receiver, RecvTimeoutError, SendError, Sender},
     histogram::Histogram,
-    solana_sdk::{packet::Packet, timing::timestamp},
+    paychains_sdk::{packet::Packet, timing::timestamp},
     std::{
         cmp::Reverse,
         collections::HashMap,
@@ -107,7 +107,7 @@ pub fn receiver(
     assert!(!res.is_err(), "streamer::receiver set_read_timeout error");
     let exit = exit.clone();
     Builder::new()
-        .name("solana-receiver".to_string())
+        .name("paychains-receiver".to_string())
         .spawn(move || {
             let _ = recv_loop(
                 &sock,
@@ -277,7 +277,7 @@ pub fn responder(
     stats_reporter_sender: Option<Sender<Box<dyn FnOnce() + Send>>>,
 ) -> JoinHandle<()> {
     Builder::new()
-        .name(format!("solana-responder-{}", name))
+        .name(format!("paychains-responder-{}", name))
         .spawn(move || {
             let mut errors = 0;
             let mut last_error = None;
@@ -325,7 +325,7 @@ mod test {
             streamer::{receiver, responder},
         },
         crossbeam_channel::unbounded,
-        solana_perf::recycler::Recycler,
+        paychains_perf::recycler::Recycler,
         std::{
             io,
             io::Write,

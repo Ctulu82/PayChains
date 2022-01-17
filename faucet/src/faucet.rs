@@ -1,6 +1,6 @@
-//! The `faucet` module provides an object for launching a Solana Faucet,
+//! The `faucet` module provides an object for launching a PayChains Faucet,
 //! which is the custodian of any remaining lamports in a mint.
-//! The Solana Faucet builds and sends airdrop transactions,
+//! The PayChains Faucet builds and sends airdrop transactions,
 //! checking requests against a single-request cap and a per-IP limit
 //! for a given time time_slice.
 
@@ -10,12 +10,12 @@ use {
     crossbeam_channel::{unbounded, Sender},
     log::*,
     serde_derive::{Deserialize, Serialize},
-    solana_metrics::datapoint_info,
-    solana_sdk::{
+    paychains_metrics::datapoint_info,
+    paychains_sdk::{
         hash::Hash,
         instruction::Instruction,
         message::Message,
-        native_token::lamports_to_sol,
+        native_token::lamports_to_pay,
         packet::PACKET_DATA_SIZE,
         pubkey::Pubkey,
         signature::{Keypair, Signer},
@@ -127,10 +127,10 @@ impl Faucet {
         if let Some((per_request_cap, per_time_cap)) = per_request_cap.zip(per_time_cap) {
             if per_time_cap < per_request_cap {
                 warn!(
-                    "per_time_cap {} SOL < per_request_cap {} SOL; \
+                    "per_time_cap {} PAY < per_request_cap {} PAY; \
                     maximum single requests will fail",
-                    lamports_to_sol(per_time_cap),
-                    lamports_to_sol(per_request_cap),
+                    lamports_to_pay(per_time_cap),
+                    lamports_to_pay(per_request_cap),
                 );
             }
         }
@@ -155,10 +155,10 @@ impl Faucet {
         if let Some(cap) = self.per_time_cap {
             if new_total > cap {
                 return Err(FaucetError::PerTimeCapExceeded(
-                    lamports_to_sol(request_amount),
+                    lamports_to_pay(request_amount),
                     to.to_string(),
-                    lamports_to_sol(new_total),
-                    lamports_to_sol(cap),
+                    lamports_to_pay(new_total),
+                    lamports_to_pay(cap),
                 ));
             }
         }
@@ -173,7 +173,7 @@ impl Faucet {
     /// Checks per-request and per-time-ip limits; if both pass, this method returns a signed
     /// SystemProgram::Transfer transaction from the faucet keypair to the requested recipient. If
     /// the request exceeds this per-request limit, this method returns a signed SPL Memo
-    /// transaction with the memo: "request too large; req: <REQUEST> SOL cap: <CAP> SOL"
+    /// transaction with the memo: "request too large; req: <REQUEST> PAY cap: <CAP> PAY"
     pub fn build_airdrop_transaction(
         &mut self,
         req: FaucetRequest,
@@ -188,8 +188,8 @@ impl Faucet {
             } => {
                 let mint_pubkey = self.faucet_keypair.pubkey();
                 info!(
-                    "Requesting airdrop of {} SOL to {:?}",
-                    lamports_to_sol(lamports),
+                    "Requesting airdrop of {} PAY to {:?}",
+                    lamports_to_pay(lamports),
                     to
                 );
 
@@ -198,8 +198,8 @@ impl Faucet {
                         let memo = format!(
                             "{}",
                             FaucetError::PerRequestCapExceeded(
-                                lamports_to_sol(lamports),
-                                lamports_to_sol(cap),
+                                lamports_to_pay(lamports),
+                                lamports_to_pay(cap),
                             )
                         );
                         let memo_instruction = Instruction {
@@ -271,7 +271,7 @@ impl Faucet {
 
 impl Drop for Faucet {
     fn drop(&mut self) {
-        solana_metrics::flush();
+        paychains_metrics::flush();
     }
 }
 
@@ -493,7 +493,7 @@ impl LimitByTime for Pubkey {
 
 #[cfg(test)]
 mod tests {
-    use {super::*, solana_sdk::system_instruction::SystemInstruction, std::time::Duration};
+    use {super::*, paychains_sdk::system_instruction::SystemInstruction, std::time::Duration};
 
     #[test]
     fn test_check_time_request_limit() {
@@ -650,7 +650,7 @@ mod tests {
 
     #[test]
     fn test_process_faucet_request() {
-        let to = solana_sdk::pubkey::new_rand();
+        let to = paychains_sdk::pubkey::new_rand();
         let blockhash = Hash::new(to.as_ref());
         let lamports = 50;
         let req = FaucetRequest::GetAirdrop {

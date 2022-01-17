@@ -2,7 +2,7 @@
 title: CLI Usage Reference
 ---
 
-The [solana-cli crate](https://crates.io/crates/solana-cli) provides a command-line interface tool for Solana
+The [paychains-cli crate](https://crates.io/crates/paychains-cli) provides a command-line interface tool for PayChains
 
 ## Examples
 
@@ -10,37 +10,37 @@ The [solana-cli crate](https://crates.io/crates/solana-cli) provides a command-l
 
 ```bash
 // Command
-$ solana-keygen pubkey
+$ paychains-keygen pubkey
 
 // Return
 <PUBKEY>
 ```
 
-### Airdrop SOL/Lamports
+### Airdrop PAY/Lamports
 
 ```bash
 // Command
-$ solana airdrop 1
+$ paychains airdrop 1
 
 // Return
-"1 SOL"
+"1 PAY"
 ```
 
 ### Get Balance
 
 ```bash
 // Command
-$ solana balance
+$ paychains balance
 
 // Return
-"3.00050001 SOL"
+"3.00050001 PAY"
 ```
 
 ### Confirm Transaction
 
 ```bash
 // Command
-$ solana confirm <TX_SIGNATURE>
+$ paychains confirm <TX_SIGNATURE>
 
 // Return
 "Confirmed" / "Not found" / "Transaction failed with error <ERR>"
@@ -50,7 +50,7 @@ $ solana confirm <TX_SIGNATURE>
 
 ```bash
 // Command
-$ solana program deploy <PATH>
+$ paychains program deploy <PATH>
 
 // Return
 <PROGRAM_ID>

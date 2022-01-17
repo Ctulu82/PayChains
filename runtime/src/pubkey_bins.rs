@@ -1,4 +1,4 @@
-use solana_sdk::pubkey::Pubkey;
+use paychains_sdk::pubkey::Pubkey;
 
 #[derive(Debug)]
 pub struct PubkeyBinCalculator24 {

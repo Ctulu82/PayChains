@@ -1,7 +1,7 @@
 #pragma once
-#include <solana_sdk.h>
+#include <paychains_sdk.h>
 
-#define memcpy sol_memcpy
-#define memset sol_memset
-#define strlen sol_strlen
+#define memcpy pay_memcpy
+#define memset pay_memset
+#define strlen pay_strlen
 

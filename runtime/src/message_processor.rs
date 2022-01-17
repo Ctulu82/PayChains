@@ -1,14 +1,14 @@
 use {
     serde::{Deserialize, Serialize},
-    solana_measure::measure::Measure,
-    solana_program_runtime::{
+    paychains_measure::measure::Measure,
+    paychains_program_runtime::{
         instruction_recorder::InstructionRecorder,
         invoke_context::{BuiltinProgram, Executors, InvokeContext},
         log_collector::LogCollector,
         sysvar_cache::SysvarCache,
         timings::ExecuteTimings,
     },
-    solana_sdk::{
+    paychains_sdk::{
         account::WritableAccount,
         compute_budget::ComputeBudget,
         feature_set::{prevent_calling_precompiles_as_programs, FeatureSet},
@@ -28,7 +28,7 @@ use {
 pub struct MessageProcessor {}
 
 #[cfg(RUSTC_WITH_SPECIALIZATION)]
-impl ::solana_frozen_abi::abi_example::AbiExample for MessageProcessor {
+impl ::paychains_frozen_abi::abi_example::AbiExample for MessageProcessor {
     fn example() -> Self {
         // MessageProcessor's fields are #[serde(skip)]-ed and not Serialize
         // so, just rely on Default anyway.
@@ -161,7 +161,7 @@ mod tests {
     use {
         super::*,
         crate::rent_collector::RentCollector,
-        solana_sdk::{
+        paychains_sdk::{
             account::{AccountSharedData, ReadableAccount},
             instruction::{AccountMeta, Instruction, InstructionError},
             message::Message,
@@ -230,11 +230,11 @@ mod tests {
 
         let accounts = vec![
             (
-                solana_sdk::pubkey::new_rand(),
+                paychains_sdk::pubkey::new_rand(),
                 AccountSharedData::new(100, 1, &mock_system_program_id),
             ),
             (
-                solana_sdk::pubkey::new_rand(),
+                paychains_sdk::pubkey::new_rand(),
                 AccountSharedData::new(0, 1, &mock_system_program_id),
             ),
             (
@@ -429,11 +429,11 @@ mod tests {
 
         let accounts = vec![
             (
-                solana_sdk::pubkey::new_rand(),
+                paychains_sdk::pubkey::new_rand(),
                 AccountSharedData::new(100, 1, &mock_program_id),
             ),
             (
-                solana_sdk::pubkey::new_rand(),
+                paychains_sdk::pubkey::new_rand(),
                 AccountSharedData::new(0, 1, &mock_program_id),
             ),
             (

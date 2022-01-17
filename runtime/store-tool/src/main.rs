@@ -1,14 +1,14 @@
 use {
     clap::{crate_description, crate_name, value_t_or_exit, App, Arg},
     log::*,
-    solana_runtime::append_vec::AppendVec,
+    paychains_runtime::append_vec::AppendVec,
 };
 
 fn main() {
-    solana_logger::setup_with_default("solana=info");
+    paychains_logger::setup_with_default("paychains=info");
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(paychains_version::version!())
         .arg(
             Arg::with_name("file")
                 .long("file")

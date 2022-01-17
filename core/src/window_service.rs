@@ -12,18 +12,18 @@ use {
     },
     crossbeam_channel::{unbounded, Receiver, RecvTimeoutError, Sender},
     rayon::{prelude::*, ThreadPool},
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_ledger::{
+    paychains_gossip::cluster_info::ClusterInfo,
+    paychains_ledger::{
         blockstore::{self, Blockstore, BlockstoreInsertionMetrics, MAX_DATA_SHREDS_PER_SLOT},
         leader_schedule_cache::LeaderScheduleCache,
         shred::{Nonce, Shred, ShredType},
     },
-    solana_measure::measure::Measure,
-    solana_metrics::{inc_new_counter_debug, inc_new_counter_error},
-    solana_perf::packet::{Packet, PacketBatch},
-    solana_rayon_threadlimit::get_thread_count,
-    solana_runtime::{bank::Bank, bank_forks::BankForks},
-    solana_sdk::{clock::Slot, packet::PACKET_DATA_SIZE, pubkey::Pubkey},
+    paychains_measure::measure::Measure,
+    paychains_metrics::{inc_new_counter_debug, inc_new_counter_error},
+    paychains_perf::packet::{Packet, PacketBatch},
+    paychains_rayon_threadlimit::get_thread_count,
+    paychains_runtime::{bank::Bank, bank_forks::BankForks},
+    paychains_sdk::{clock::Slot, packet::PACKET_DATA_SIZE, pubkey::Pubkey},
     std::{
         cmp::Reverse,
         collections::{HashMap, HashSet},
@@ -248,7 +248,7 @@ fn verify_repair(
                 .register_response(
                     repair_meta.nonce,
                     shred,
-                    solana_sdk::timing::timestamp(),
+                    paychains_sdk::timing::timestamp(),
                     |_| (),
                 )
                 .is_some()
@@ -533,10 +533,10 @@ impl WindowService {
         duplicate_slot_sender: DuplicateSlotSender,
     ) -> JoinHandle<()> {
         let handle_error = || {
-            inc_new_counter_error!("solana-check-duplicate-error", 1, 1);
+            inc_new_counter_error!("paychains-check-duplicate-error", 1, 1);
         };
         Builder::new()
-            .name("solana-check-duplicate".to_string())
+            .name("paychains-check-duplicate".to_string())
             .spawn(move || loop {
                 if exit.load(Ordering::Relaxed) {
                     break;
@@ -569,11 +569,11 @@ impl WindowService {
     ) -> JoinHandle<()> {
         let mut handle_timeout = || {};
         let handle_error = || {
-            inc_new_counter_error!("solana-window-insert-error", 1, 1);
+            inc_new_counter_error!("paychains-window-insert-error", 1, 1);
         };
 
         Builder::new()
-            .name("solana-window-insert".to_string())
+            .name("paychains-window-insert".to_string())
             .spawn(move || {
                 let handle_duplicate = |shred| {
                     let _ = check_duplicate_sender.send(shred);
@@ -634,7 +634,7 @@ impl WindowService {
     {
         let mut stats = ReceiveWindowStats::default();
         Builder::new()
-            .name("solana-window".to_string())
+            .name("paychains-window".to_string())
             .spawn(move || {
                 let _exit = Finalizer::new(exit.clone());
                 trace!("{}: RECV_WINDOW started", id);
@@ -644,7 +644,7 @@ impl WindowService {
                     .unwrap();
                 let mut now = Instant::now();
                 let handle_error = || {
-                    inc_new_counter_error!("solana-window-error", 1, 1);
+                    inc_new_counter_error!("paychains-window-error", 1, 1);
                 };
 
                 while !exit.load(Ordering::Relaxed) {
@@ -711,21 +711,21 @@ impl WindowService {
 mod test {
     use {
         super::*,
-        solana_entry::entry::{create_ticks, Entry},
-        solana_gossip::contact_info::ContactInfo,
-        solana_ledger::{
+        paychains_entry::entry::{create_ticks, Entry},
+        paychains_gossip::contact_info::ContactInfo,
+        paychains_ledger::{
             blockstore::{make_many_slot_entries, Blockstore},
             genesis_utils::create_genesis_config_with_leader,
             get_tmp_ledger_path,
             shred::{DataShredHeader, Shredder},
         },
-        solana_sdk::{
+        paychains_sdk::{
             epoch_schedule::MINIMUM_SLOTS_PER_EPOCH,
             hash::Hash,
             signature::{Keypair, Signer},
             timing::timestamp,
         },
-        solana_streamer::socket::SocketAddrSpace,
+        paychains_streamer::socket::SocketAddrSpace,
     };
 
     fn local_entries_to_shred(
@@ -763,7 +763,7 @@ mod test {
 
     #[test]
     fn test_should_retransmit_and_persist() {
-        let me_id = solana_sdk::pubkey::new_rand();
+        let me_id = paychains_sdk::pubkey::new_rand();
         let leader_keypair = Arc::new(Keypair::new());
         let leader_pubkey = leader_keypair.pubkey();
         let bank = Arc::new(Bank::new_for_tests(
@@ -958,7 +958,7 @@ mod test {
             crate::serve_repair::ShredRepairType,
             std::net::{IpAddr, Ipv4Addr},
         };
-        solana_logger::setup();
+        paychains_logger::setup();
         let (common, coding) = Shredder::new_coding_shred_header(
             5, // slot
             5, // index

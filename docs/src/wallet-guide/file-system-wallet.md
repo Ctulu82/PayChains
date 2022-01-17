@@ -3,24 +3,24 @@ title: File System Wallet
 ---
 
 This document describes how to create and use a file system wallet with the
-Solana CLI tools. A file system wallet exists as an unencrypted keypair file
+PayChains CLI tools. A file system wallet exists as an unencrypted keypair file
 on your computer system's filesystem.
 
-> File system wallets are the **least secure** method of storing SOL tokens. Storing large amounts of tokens in a file system wallet is **not recommended**.
+> File system wallets are the **least secure** method of storing PAY tokens. Storing large amounts of tokens in a file system wallet is **not recommended**.
 
 ## Before you Begin
 
 Make sure you have
-[installed the Solana Command Line Tools](../cli/install-solana-cli-tools.md)
+[installed the PayChains Command Line Tools](../cli/install-paychains-cli-tools.md)
 
 ## Generate a File System Wallet Keypair
 
-Use Solana's command-line tool `solana-keygen` to generate keypair files. For
+Use PayChains's command-line tool `paychains-keygen` to generate keypair files. For
 example, run the following from a command-line shell:
 
 ```bash
-mkdir ~/my-solana-wallet
-solana-keygen new --outfile ~/my-solana-wallet/my-keypair.json
+mkdir ~/my-paychains-wallet
+paychains-keygen new --outfile ~/my-paychains-wallet/my-keypair.json
 ```
 
 This file contains your **unencrypted** keypair. In fact, even if you specify
@@ -30,7 +30,7 @@ to all tokens sent to its public key. Instead, you should share only its public
 key. To display its public key, run:
 
 ```bash
-solana-keygen pubkey ~/my-solana-wallet/my-keypair.json
+paychains-keygen pubkey ~/my-paychains-wallet/my-keypair.json
 ```
 
 It will output a string of characters, such as:
@@ -40,16 +40,16 @@ ErRr1caKzK8L8nn4xmEWtimYRiTCAZXjBtVphuZ5vMKy
 ```
 
 This is the public key corresponding to the keypair in
-`~/my-solana-wallet/my-keypair.json`. The public key of the keypair file is
+`~/my-paychains-wallet/my-keypair.json`. The public key of the keypair file is
 your _wallet address_.
 
 ## Verify your Address against your Keypair file
 
 To verify you hold the private key for a given address, use
-`solana-keygen verify`:
+`paychains-keygen verify`:
 
 ```bash
-solana-keygen verify <PUBKEY> ~/my-solana-wallet/my-keypair.json
+paychains-keygen verify <PUBKEY> ~/my-paychains-wallet/my-keypair.json
 ```
 
 where `<PUBKEY>` is replaced with your wallet address.

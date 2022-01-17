@@ -9,25 +9,25 @@ use {
     bip39::{Language, Mnemonic, MnemonicType, Seed},
     clap::{App, AppSettings, Arg, ArgMatches, SubCommand},
     log::*,
-    solana_account_decoder::{UiAccountEncoding, UiDataSliceConfig},
-    solana_bpf_loader_program::{syscalls::register_syscalls, BpfError, ThisInstructionMeter},
-    solana_clap_utils::{self, input_parsers::*, input_validators::*, keypair::*},
-    solana_cli_output::{
+    paychains_account_decoder::{UiAccountEncoding, UiDataSliceConfig},
+    paychains_bpf_loader_program::{syscalls::register_syscalls, BpfError, ThisInstructionMeter},
+    paychains_clap_utils::{self, input_parsers::*, input_validators::*, keypair::*},
+    paychains_cli_output::{
         CliProgram, CliProgramAccountType, CliProgramAuthority, CliProgramBuffer, CliProgramId,
         CliUpgradeableBuffer, CliUpgradeableBuffers, CliUpgradeableProgram,
         CliUpgradeableProgramClosed, CliUpgradeablePrograms,
     },
-    solana_client::{
+    paychains_client::{
         client_error::ClientErrorKind,
         rpc_client::RpcClient,
         rpc_config::{RpcAccountInfoConfig, RpcProgramAccountsConfig, RpcSendTransactionConfig},
         rpc_filter::{Memcmp, MemcmpEncodedBytes, RpcFilterType},
         tpu_client::{TpuClient, TpuClientConfig},
     },
-    solana_program_runtime::invoke_context::InvokeContext,
-    solana_rbpf::{elf::Executable, verifier, vm::Config},
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_sdk::{
+    paychains_program_runtime::invoke_context::InvokeContext,
+    paychains_rbpf::{elf::Executable, verifier, vm::Config},
+    paychains_remote_wallet::remote_wallet::RemoteWalletManager,
+    paychains_sdk::{
         account::Account,
         account_utils::StateMut,
         bpf_loader, bpf_loader_deprecated,
@@ -35,7 +35,7 @@ use {
         instruction::{Instruction, InstructionError},
         loader_instruction,
         message::Message,
-        native_token::Sol,
+        native_token::Pay,
         packet::PACKET_DATA_SIZE,
         pubkey::Pubkey,
         signature::{keypair_from_seed, read_keypair_file, Keypair, Signature, Signer},
@@ -166,7 +166,7 @@ impl ProgramSubCommands for App<'_, '_> {
                             Arg::with_name("allow_excessive_balance")
                                 .long("allow-excessive-deploy-account-balance")
                                 .takes_value(false)
-                                .help("Use the designated program id even if the account already holds a large balance of SOL")
+                                .help("Use the designated program id even if the account already holds a large balance of PAY")
                         ),
                 )
                 .subcommand(
@@ -310,7 +310,7 @@ impl ProgramSubCommands for App<'_, '_> {
                             Arg::with_name("lamports")
                                 .long("lamports")
                                 .takes_value(false)
-                                .help("Display balance in lamports instead of SOL"),
+                                .help("Display balance in lamports instead of PAY"),
                         ),
                 )
                 .subcommand(
@@ -370,7 +370,7 @@ impl ProgramSubCommands for App<'_, '_> {
                             Arg::with_name("lamports")
                                 .long("lamports")
                                 .takes_value(false)
-                                .help("Display balance in lamports instead of SOL"),
+                                .help("Display balance in lamports instead of PAY"),
                         ),
                 )
         )
@@ -405,7 +405,7 @@ impl ProgramSubCommands for App<'_, '_> {
                     Arg::with_name("allow_excessive_balance")
                         .long("allow-excessive-deploy-account-balance")
                         .takes_value(false)
-                        .help("Use the designated program id, even if the account already holds a large balance of SOL")
+                        .help("Use the designated program id, even if the account already holds a large balance of PAY")
                 ),
         )
     }
@@ -2056,7 +2056,7 @@ fn complete_partial_program_init(
         {
             return Err(format!(
                 "Buffer account has a balance: {:?}; it may already be in use",
-                Sol(account.lamports)
+                Pay(account.lamports)
             )
             .into());
         }
@@ -2189,15 +2189,15 @@ fn report_ephemeral_mnemonic(words: usize, mnemonic: bip39::Mnemonic) {
         divider
     );
     eprintln!(
-        "`solana-keygen recover` and the following {}-word seed phrase:",
+        "`paychains-keygen recover` and the following {}-word seed phrase:",
         words
     );
     eprintln!("{}\n{}\n{}", divider, phrase, divider);
     eprintln!("To resume a deploy, pass the recovered keypair as the");
-    eprintln!("[BUFFER_SIGNER] to `solana program deploy` or `solana write-buffer'.");
+    eprintln!("[BUFFER_SIGNER] to `paychains program deploy` or `paychains write-buffer'.");
     eprintln!("Or to recover the account's lamports, pass it as the");
     eprintln!(
-        "[BUFFER_ACCOUNT_ADDRESS] argument to `solana program close`.\n{}",
+        "[BUFFER_ACCOUNT_ADDRESS] argument to `paychains program close`.\n{}",
         divider
     );
 }
@@ -2211,8 +2211,8 @@ mod tests {
             cli::{parse_command, process_command},
         },
         serde_json::Value,
-        solana_cli_output::OutputFormat,
-        solana_sdk::signature::write_keypair_file,
+        paychains_cli_output::OutputFormat,
+        paychains_sdk::signature::write_keypair_file,
     };
 
     fn make_tmp_path(name: &str) -> String {
@@ -2987,7 +2987,7 @@ mod tests {
 
     #[test]
     fn test_cli_keypair_file() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let default_keypair = Keypair::new();
         let program_pubkey = Keypair::new();

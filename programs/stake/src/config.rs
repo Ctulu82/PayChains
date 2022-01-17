@@ -2,13 +2,13 @@
 //!  carries variables that the stake program cares about
 #[deprecated(
     since = "1.8.0",
-    note = "Please use `solana_sdk::stake::config` or `solana_program::stake::config` instead"
+    note = "Please use `paychains_sdk::stake::config` or `paychains_program::stake::config` instead"
 )]
-pub use solana_sdk::stake::config::*;
+pub use paychains_sdk::stake::config::*;
 use {
     bincode::deserialize,
-    solana_config_program::{create_config_account, get_config_data},
-    solana_sdk::{
+    paychains_config_program::{create_config_account, get_config_data},
+    paychains_sdk::{
         account::{AccountSharedData, ReadableAccount, WritableAccount},
         genesis_config::GenesisConfig,
         instruction::InstructionError,
@@ -47,7 +47,7 @@ pub fn add_genesis_account(genesis_config: &mut GenesisConfig) -> u64 {
 
 #[cfg(test)]
 mod tests {
-    use {super::*, solana_sdk::pubkey::Pubkey, std::cell::RefCell};
+    use {super::*, paychains_sdk::pubkey::Pubkey, std::cell::RefCell};
 
     #[test]
     fn test() {

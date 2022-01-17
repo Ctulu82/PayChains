@@ -4,12 +4,12 @@
 #[no_mangle]
 fn custom_panic(info: &core::panic::PanicInfo<'_>) {
     // Note: Full panic reporting is included here for testing purposes
-    solana_program::msg!("program custom panic enabled");
-    solana_program::msg!(&format!("{}", info));
+    paychains_program::msg!("program custom panic enabled");
+    paychains_program::msg!(&format!("{}", info));
 }
 
-extern crate solana_program;
-use solana_program::{
+extern crate paychains_program;
+use paychains_program::{
     account_info::AccountInfo, entrypoint, entrypoint::ProgramResult, pubkey::Pubkey,
 };
 

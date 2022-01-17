@@ -15,10 +15,10 @@ import {
   PartiallyDecodedInstruction,
   ParsedInstruction,
   Secp256k1Program,
-} from "@solana/web3.js";
+} from "@paychains/web3.js";
 import { Cluster } from "providers/cluster";
 import { SerumMarketRegistry } from "serumMarketRegistry";
-import { TokenInfoMap } from "@solana/spl-token-registry";
+import { TokenInfoMap } from "@paychains/spl-token-registry";
 
 export type ProgramName =
   typeof PROGRAM_NAME_BY_ID[keyof typeof PROGRAM_NAME_BY_ID];
@@ -48,7 +48,7 @@ export enum PROGRAM_NAMES {
   // other
   ACUMEN = "Acumen Program",
   BONFIDA_POOL = "Bonfida Pool Program",
-  BREAK_SOLANA = "Break Solana Program",
+  BREAK_PAYCHAINS = "Break PayChains Program",
   MANGO_GOVERNANCE = "Mango Governance Program",
   MANGO_ICO = "Mango ICO Program",
   MANGO_1 = "Mango Program v1",
@@ -80,8 +80,8 @@ export enum PROGRAM_NAMES {
   SERUM_2 = "Serum Dex Program v2",
   SERUM_3 = "Serum Dex Program v3",
   SERUM_SWAP = "Serum Swap Program",
-  SOLEND = "Solend Program",
-  SOLIDO = "Lido for Solana Program",
+  PAYEND = "Solend Program",
+  PAYIDO = "Lido for PayChains Program",
   STEP_SWAP = "Step Finance Swap Program",
   SWITCHBOARD = "Switchboard Oracle Program",
   WORMHOLE = "Wormhole",
@@ -122,7 +122,7 @@ export const PROGRAM_DEPLOYMENTS = {
   // other
   [PROGRAM_NAMES.ACUMEN]: MAINNET_ONLY,
   [PROGRAM_NAMES.BONFIDA_POOL]: MAINNET_ONLY,
-  [PROGRAM_NAMES.BREAK_SOLANA]: LIVE_CLUSTERS,
+  [PROGRAM_NAMES.BREAK_PAYCHAINS]: LIVE_CLUSTERS,
   [PROGRAM_NAMES.MANGO_GOVERNANCE]: MAINNET_ONLY,
   [PROGRAM_NAMES.MANGO_ICO]: MAINNET_ONLY,
   [PROGRAM_NAMES.MANGO_1]: MAINNET_ONLY,
@@ -160,8 +160,8 @@ export const PROGRAM_DEPLOYMENTS = {
   [PROGRAM_NAMES.SERUM_2]: MAINNET_ONLY,
   [PROGRAM_NAMES.SERUM_3]: MAINNET_ONLY,
   [PROGRAM_NAMES.SERUM_SWAP]: MAINNET_ONLY,
-  [PROGRAM_NAMES.SOLEND]: MAINNET_ONLY,
-  [PROGRAM_NAMES.SOLIDO]: MAINNET_ONLY,
+  [PROGRAM_NAMES.PAYEND]: MAINNET_ONLY,
+  [PROGRAM_NAMES.PAYIDO]: MAINNET_ONLY,
   [PROGRAM_NAMES.STEP_SWAP]: MAINNET_ONLY,
   [PROGRAM_NAMES.SWITCHBOARD]: MAINNET_ONLY,
   [PROGRAM_NAMES.WORMHOLE]: MAINNET_ONLY,
@@ -192,7 +192,7 @@ export const PROGRAM_NAME_BY_ID = {
   // other
   C64kTdg1Hzv5KoQmZrQRcm2Qz7PkxtFBgw7EpFhvYn8W: PROGRAM_NAMES.ACUMEN,
   WvmTNLpGMVbwJVYztYL4Hnsy82cJhQorxjnnXcRm3b6: PROGRAM_NAMES.BONFIDA_POOL,
-  BrEAK7zGZ6dM71zUDACDqJnekihmwF15noTddWTsknjC: PROGRAM_NAMES.BREAK_SOLANA,
+  BrEAK7zGZ6dM71zUDACDqJnekihmwF15noTddWTsknjC: PROGRAM_NAMES.BREAK_PAYCHAINS,
   GqTPL6qRf5aUuqscLh8Rg2HTxPUXfhhAXDptTLhp1t2J: PROGRAM_NAMES.MANGO_GOVERNANCE,
   "7sPptkymzvayoSbLXzBsXEF8TSf3typNnAWkrKrDizNb": PROGRAM_NAMES.MANGO_ICO,
   JD3bq9hGdy38PuWQ4h2YJpELmHVGPPfFSuFkpzAd9zfu: PROGRAM_NAMES.MANGO_1,
@@ -225,8 +225,8 @@ export const PROGRAM_NAME_BY_ID = {
   EUqojwWA2rd19FZrzeBncJsm38Jm1hEhE3zsmX3bRc2o: PROGRAM_NAMES.SERUM_2,
   "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin": PROGRAM_NAMES.SERUM_3,
   "22Y43yTVxuUkoRKdm9thyRhQ3SdgQS7c7kB6UNCiaczD": PROGRAM_NAMES.SERUM_SWAP,
-  So1endDq2YkqhipRh3WViPa8hdiSpxWy6z3Z6tMCpAo: PROGRAM_NAMES.SOLEND,
-  CrX7kMhLC3cSsXJdT7JDgqrRVWGnUpX3gfEfxxU2NVLi: PROGRAM_NAMES.SOLIDO,
+  So1endDq2YkqhipRh3WViPa8hdiSpxWy6z3Z6tMCpAo: PROGRAM_NAMES.PAYEND,
+  CrX7kMhLC3cSsXJdT7JDgqrRVWGnUpX3gfEfxxU2NVLi: PROGRAM_NAMES.PAYIDO,
   SSwpMgqNDsyV7mAgN9ady4bDVu5ySjmmXejXvy2vLt1: PROGRAM_NAMES.STEP_SWAP,
   DtmE9D2CSB4L5D6A15mraeEjrGMm6auWVzgaD8hK2tZM: PROGRAM_NAMES.SWITCHBOARD,
   WormT3McKhFJ2RkiGpdw9GKvNCrB2aB54gb2uV9MfQC: PROGRAM_NAMES.WORMHOLE,

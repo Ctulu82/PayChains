@@ -56,12 +56,12 @@ use {
     num_traits::FromPrimitive,
     rayon::{prelude::*, ThreadPool},
     serde::{Deserialize, Deserializer, Serialize, Serializer},
-    solana_entry::entry::{create_ticks, Entry},
-    solana_measure::measure::Measure,
-    solana_perf::packet::{limited_deserialize, Packet},
-    solana_rayon_threadlimit::get_thread_count,
-    solana_runtime::bank::Bank,
-    solana_sdk::{
+    paychains_entry::entry::{create_ticks, Entry},
+    paychains_measure::measure::Measure,
+    paychains_perf::packet::{limited_deserialize, Packet},
+    paychains_rayon_threadlimit::get_thread_count,
+    paychains_runtime::bank::Bank,
+    paychains_sdk::{
         clock::Slot,
         feature_set,
         hash::{hashv, Hash},
@@ -1001,8 +1001,8 @@ impl Shredder {
 
     pub fn try_recovery(
         shreds: Vec<Shred>,
-    ) -> std::result::Result<Vec<Shred>, reed_solomon_erasure::Error> {
-        use reed_solomon_erasure::Error::InvalidIndex;
+    ) -> std::result::Result<Vec<Shred>, reed_payomon_erasure::Error> {
+        use reed_payomon_erasure::Error::InvalidIndex;
         Self::verify_consistent_shred_payload_sizes("try_recovery()", &shreds)?;
         let (slot, fec_set_index) = match shreds.first() {
             None => return Ok(Vec::default()),
@@ -1064,8 +1064,8 @@ impl Shredder {
     }
 
     /// Combines all shreds to recreate the original buffer
-    pub fn deshred(shreds: &[Shred]) -> std::result::Result<Vec<u8>, reed_solomon_erasure::Error> {
-        use reed_solomon_erasure::Error::TooFewDataShards;
+    pub fn deshred(shreds: &[Shred]) -> std::result::Result<Vec<u8>, reed_payomon_erasure::Error> {
+        use reed_payomon_erasure::Error::TooFewDataShards;
         const SHRED_DATA_OFFSET: usize = SIZE_OF_COMMON_SHRED_HEADER + SIZE_OF_DATA_SHRED_HEADER;
         Self::verify_consistent_shred_payload_sizes("deshred()", shreds)?;
         let index = shreds.first().ok_or(TooFewDataShards)?.index();
@@ -1100,9 +1100,9 @@ impl Shredder {
     fn verify_consistent_shred_payload_sizes(
         caller: &str,
         shreds: &[Shred],
-    ) -> std::result::Result<(), reed_solomon_erasure::Error> {
+    ) -> std::result::Result<(), reed_payomon_erasure::Error> {
         if shreds.is_empty() {
-            return Err(reed_solomon_erasure::Error::TooFewShardsPresent);
+            return Err(reed_payomon_erasure::Error::TooFewShardsPresent);
         }
         let slot = shreds[0].slot();
         for shred in shreds {
@@ -1114,7 +1114,7 @@ impl Shredder {
                     SHRED_PAYLOAD_SIZE,
                     shred.payload.len()
                 );
-                return Err(reed_solomon_erasure::Error::IncorrectShardSize);
+                return Err(reed_payomon_erasure::Error::IncorrectShardSize);
             }
         }
 
@@ -1240,7 +1240,7 @@ pub mod tests {
         bincode::serialized_size,
         matches::assert_matches,
         rand::{seq::SliceRandom, Rng},
-        solana_sdk::{
+        paychains_sdk::{
             hash::{self, hash},
             shred_version, system_transaction,
         },
@@ -1681,7 +1681,7 @@ pub mod tests {
         assert_eq!(shreds.len(), 3);
         assert_matches!(
             Shredder::deshred(&shreds),
-            Err(reed_solomon_erasure::Error::TooFewDataShards)
+            Err(reed_payomon_erasure::Error::TooFewDataShards)
         );
 
         // Test5: Try recovery/reassembly with non zero index full slot with 3 missing data shreds
@@ -1745,13 +1745,13 @@ pub mod tests {
         let mut rng = rand::thread_rng();
         let txs = repeat_with(|| {
             let from_pubkey = Pubkey::new_unique();
-            let instruction = solana_sdk::system_instruction::transfer(
+            let instruction = paychains_sdk::system_instruction::transfer(
                 &from_pubkey,
                 &Pubkey::new_unique(), // to
                 rng.gen(),             // lamports
             );
-            let message = solana_sdk::message::Message::new(&[instruction], Some(&from_pubkey));
-            let mut tx = solana_sdk::transaction::Transaction::new_unsigned(message);
+            let message = paychains_sdk::message::Message::new(&[instruction], Some(&from_pubkey));
+            let mut tx = paychains_sdk::transaction::Transaction::new_unsigned(message);
             // Also randomize the signatre bytes.
             let mut signature = [0u8; 64];
             rng.fill(&mut signature[..]);
@@ -2007,7 +2007,7 @@ pub mod tests {
 
     #[test]
     fn test_shred_offsets() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let mut packet = Packet::default();
         let shred = Shred::new_from_data(1, 3, 0, None, true, true, 0, 0, 0);
         shred.copy_to_packet(&mut packet);

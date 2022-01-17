@@ -2,10 +2,10 @@
 title: JSON RPC API
 ---
 
-Solana nodes accept HTTP requests using the [JSON-RPC 2.0](https://www.jsonrpc.org/specification) specification.
+PayChains nodes accept HTTP requests using the [JSON-RPC 2.0](https://www.jsonrpc.org/specification) specification.
 
-To interact with a Solana node inside a JavaScript application, use the
-[solana-web3.js](https://github.com/solana-labs/solana-web3.js) library, which
+To interact with a PayChains node inside a JavaScript application, use the
+[paychains-web3.js](https://github.com/paychains-labs/paychains-web3.js) library, which
 gives a convenient interface for the RPC methods.
 
 ## RPC HTTP Endpoint
@@ -142,12 +142,12 @@ Requests can be sent in batches by sending an array of JSON-RPC request objects 
 
 - Hash: A SHA-256 hash of a chunk of data.
 - Pubkey: The public key of a Ed25519 key-pair.
-- Transaction: A list of Solana instructions signed by a client keypair to authorize those actions.
+- Transaction: A list of PayChains instructions signed by a client keypair to authorize those actions.
 - Signature: An Ed25519 signature of transaction's payload data including instructions. This can be used to identify transactions.
 
 ## Configuring State Commitment
 
-For preflight checks and transaction processing, Solana nodes choose which bank
+For preflight checks and transaction processing, PayChains nodes choose which bank
 state to query based on a commitment requirement set by the client. The
 commitment describes how finalized a block is at that point in time.  When
 querying the ledger state, it's recommended to use lower levels of commitment
@@ -211,7 +211,7 @@ health-check mechanism for use by load balancers or other network
 infrastructure. This request will always return a HTTP 200 OK response with a body of
 "ok", "behind" or "unknown" based on the following conditions:
 
-1. If one or more `--known-validator` arguments are provided to `solana-validator`, "ok" is returned
+1. If one or more `--known-validator` arguments are provided to `paychains-validator`, "ok" is returned
    when the node has within `HEALTH_CHECK_SLOT_DISTANCE` slots of the highest
    known validator, otherwise "behind". "unknown" is returned when no slot
    information from known validators is not yet available.
@@ -389,7 +389,7 @@ The result field will be an object with the following fields:
   - `transactions: <array>` - present if "full" transaction details are requested; an array of JSON objects containing:
     - `transaction: <object|[string,encoding]>` - [Transaction](#transaction-structure) object, either in JSON format or encoded binary data, depending on encoding parameter
     - `meta: <object>` - transaction status metadata object, containing `null` or:
-      - `err: <object | null>` - Error if transaction failed, null if transaction succeeded. [TransactionError definitions](https://github.com/solana-labs/solana/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)
+      - `err: <object | null>` - Error if transaction failed, null if transaction succeeded. [TransactionError definitions](https://github.com/paychains-labs/paychains/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)
       - `fee: <u64>` - fee this transaction was charged, as u64 integer
       - `preBalances: <array>` - array of u64 account balances from before the transaction was processed
       - `postBalances: <array>` - array of u64 account balances after the transaction was processed
@@ -554,7 +554,7 @@ Result:
 
 #### Transaction Structure
 
-Transactions are quite different from those on other blockchains. Be sure to review [Anatomy of a Transaction](developing/programming-model/transactions.md) to learn about transactions on Solana.
+Transactions are quite different from those on other blockchains. Be sure to review [Anatomy of a Transaction](developing/programming-model/transactions.md) to learn about transactions on PayChains.
 
 The JSON structure of a transaction is defined as follows:
 
@@ -573,7 +573,7 @@ The JSON structure of a transaction is defined as follows:
 
 #### Inner Instructions Structure
 
-The Solana runtime records the cross-program instructions that are invoked during transaction processing and makes these available for greater transparency of what was executed on-chain per transaction instruction. Invoked instructions are grouped by the originating transaction instruction and are listed in order of processing.
+The PayChains runtime records the cross-program instructions that are invoked during transaction processing and makes these available for greater transparency of what was executed on-chain per transaction instruction. Invoked instructions are grouped by the originating transaction instruction and are listed in order of processing.
 
 The JSON structure of inner instructions is defined as a list of objects in the following structure:
 
@@ -992,8 +992,8 @@ Result:
 
 ### getFeeForMessage
 
-**NEW: This method is only available in solana-core v1.9 or newer. Please use
-[getFees](jsonrpc-api.md#getfees) for solana-core v1.8**
+**NEW: This method is only available in paychains-core v1.9 or newer. Please use
+[getFees](jsonrpc-api.md#getfees) for paychains-core v1.8**
 
 Get the fee the network will charge for a particular Message
 
@@ -1089,7 +1089,7 @@ Result:
 Returns the current health of the node.
 
 If one or more `--known-validator` arguments are provided to
-`solana-validator`, "ok" is returned when the node has within
+`paychains-validator`, "ok" is returned when the node has within
 `HEALTH_CHECK_SLOT_DISTANCE` slots of the highest known validator, otherwise
 an error is returned.  "ok" is always returned if no known validators are
 provided.
@@ -1149,8 +1149,8 @@ Unhealthy Result (if additional information is available)
 
 ### getHighestSnapshotSlot
 
-**NEW: This method is only available in solana-core v1.9 or newer. Please use
-[getSnapshotSlot](jsonrpc-api.md#getsnapshotslot) for solana-core v1.8**
+**NEW: This method is only available in paychains-core v1.9 or newer. Please use
+[getSnapshotSlot](jsonrpc-api.md#getsnapshotslot) for paychains-core v1.8**
 
 Returns the highest slot information that the node has snapshots for.
 
@@ -1458,8 +1458,8 @@ Result:
 
 ### getLatestBlockhash
 
-**NEW: This method is only available in solana-core v1.9 or newer. Please use
-[getRecentBlockhash](jsonrpc-api.md#getrecentblockhash) for solana-core v1.8**
+**NEW: This method is only available in paychains-core v1.9 or newer. Please use
+[getRecentBlockhash](jsonrpc-api.md#getrecentblockhash) for paychains-core v1.8**
 
 Returns the latest blockhash
 
@@ -1993,7 +1993,7 @@ from newest to oldest transaction:
 * `<object>`
   * `signature: <string>` - transaction signature as base-58 encoded string
   * `slot: <u64>` - The slot that contains the block with the transaction
-  * `err: <object | null>` - Error if transaction failed, null if transaction succeeded. [TransactionError definitions](https://github.com/solana-labs/solana/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)
+  * `err: <object | null>` - Error if transaction failed, null if transaction succeeded. [TransactionError definitions](https://github.com/paychains-labs/paychains/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)
   * `memo: <string |null>` - Memo associated with the transaction, null if no memo is present
   * `blockTime: <i64 | null>` - estimated production time, as Unix timestamp (seconds since the Unix epoch) of when transaction was processed. null if not available.
 
@@ -2043,7 +2043,7 @@ active slots plus `MAX_RECENT_BLOCKHASHES` rooted slots.
 
 - `<array>` - An array of transaction signatures to confirm, as base-58 encoded strings
 - `<object>` - (optional) Configuration object containing the following field:
-  - `searchTransactionHistory: <bool>` - if true, a Solana node will search its ledger cache for any signatures not found in the recent status cache
+  - `searchTransactionHistory: <bool>` - if true, a PayChains node will search its ledger cache for any signatures not found in the recent status cache
 
 #### Results:
 
@@ -2057,7 +2057,7 @@ An array of:
 - `<object>`
   - `slot: <u64>` - The slot the transaction was processed
   - `confirmations: <usize | null>` - Number of blocks since signature confirmation, null if rooted, as well as finalized by a supermajority of the cluster
-  - `err: <object | null>` - Error if transaction failed, null if transaction succeeded. [TransactionError definitions](https://github.com/solana-labs/solana/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)
+  - `err: <object | null>` - Error if transaction failed, null if transaction succeeded. [TransactionError definitions](https://github.com/paychains-labs/paychains/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)
   - `confirmationStatus: <string | null>` - The transaction's cluster confirmation status; either `processed`, `confirmed`, or `finalized`. See [Commitment](jsonrpc-api.md#configuring-state-commitment) for more on optimistic confirmation.
   - DEPRECATED: `status: <object>` - Transaction status
     - `"Ok": <null>` - Transaction was successful
@@ -2740,7 +2740,7 @@ Returns transaction details for a confirmed transaction
   - `transaction: <object|[string,encoding]>` - [Transaction](#transaction-structure) object, either in JSON format or encoded binary data, depending on encoding parameter
   - `blockTime: <i64 | null>` - estimated production time, as Unix timestamp (seconds since the Unix epoch) of when the transaction was processed. null if not available
   - `meta: <object | null>` - transaction status metadata object:
-    - `err: <object | null>` - Error if transaction failed, null if transaction succeeded. [TransactionError definitions](https://docs.rs/solana-sdk/VERSION_FOR_DOCS_RS/solana_sdk/transaction/enum.TransactionError.html)
+    - `err: <object | null>` - Error if transaction failed, null if transaction succeeded. [TransactionError definitions](https://docs.rs/paychains-sdk/VERSION_FOR_DOCS_RS/paychains_sdk/transaction/enum.TransactionError.html)
     - `fee: <u64>` - fee this transaction was charged, as u64 integer
     - `preBalances: <array>` - array of u64 account balances from before the transaction was processed
     - `postBalances: <array>` - array of u64 account balances after the transaction was processed
@@ -2926,7 +2926,7 @@ Result:
 
 ### getVersion
 
-Returns the current solana versions running on the node
+Returns the current paychains versions running on the node
 
 #### Parameters:
 
@@ -2936,7 +2936,7 @@ None
 
 The result field will be a JSON object with the following fields:
 
-- `solana-core`, software version of solana-core
+- `paychains-core`, software version of paychains-core
 - `feature-set`, unique identifier of the current software's feature set
 
 #### Example:
@@ -2950,7 +2950,7 @@ curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
 
 Result:
 ```json
-{"jsonrpc":"2.0","result":{"solana-core": "1.10.0"},"id":1}
+{"jsonrpc":"2.0","result":{"paychains-core": "1.10.0"},"id":1}
 ```
 
 ### getVoteAccounts
@@ -3066,8 +3066,8 @@ Result:
 
 ### isBlockhashValid
 
-**NEW: This method is only available in solana-core v1.9 or newer. Please use
-[getFeeCalculatorForBlockhash](jsonrpc-api.md#getfeecalculatorforblockhash) for solana-core v1.8**
+**NEW: This method is only available in paychains-core v1.9 or newer. Please use
+[getFeeCalculatorForBlockhash](jsonrpc-api.md#getfeecalculatorforblockhash) for paychains-core v1.8**
 
 Returns whether a blockhash is still valid or not
 
@@ -3254,7 +3254,7 @@ Simulate sending a transaction
 An RpcResponse containing a TransactionStatus object
 The result will be an RpcResponse JSON object with `value` set to a JSON object with the following fields:
 
-- `err: <object | string | null>` - Error if transaction failed, null if transaction succeeded. [TransactionError definitions](https://github.com/solana-labs/solana/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)
+- `err: <object | string | null>` - Error if transaction failed, null if transaction succeeded. [TransactionError definitions](https://github.com/paychains-labs/paychains/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)
 - `logs: <array | null>` - Array of log messages the transaction instructions output during execution, null if simulation failed before the transaction was able to execute (for example due to an invalid blockhash or signature verification failure)
 - `accounts: <array> | null>` - array of accounts with the same length as the `accounts.addresses` array in the request
   - `<null>` - if the account doesn't exist or if `err` is not null
@@ -3831,7 +3831,7 @@ Result:
 The notification will be an RpcResponse JSON object with value equal to:
 
 - `signature: <string>` - The transaction signature base58 encoded.
-- `err: <object | null>` - Error if transaction failed, null if transaction succeeded. [TransactionError definitions](https://github.com/solana-labs/solana/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)
+- `err: <object | null>` - Error if transaction failed, null if transaction succeeded. [TransactionError definitions](https://github.com/paychains-labs/paychains/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)
 - `logs: <array | null>` - Array of log messages the transaction instructions output during execution, null if simulation failed before the transaction was able to execute (for example due to an invalid blockhash or signature verification failure)
 
 Example:
@@ -4089,7 +4089,7 @@ Result:
 #### Notification Format:
 
 The notification will be an RpcResponse JSON object with value containing an object with:
-- `err: <object | null>` - Error if transaction failed, null if transaction succeeded. [TransactionError definitions](https://github.com/solana-labs/solana/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)
+- `err: <object | null>` - Error if transaction failed, null if transaction succeeded. [TransactionError definitions](https://github.com/paychains-labs/paychains/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)
 
 Example:
 ```json
@@ -4442,7 +4442,7 @@ Response:
 ### getConfirmedBlock
 
 **DEPRECATED: Please use [getBlock](jsonrpc-api.md#getblock) instead**
-This method is expected to be removed in solana-core v2.0
+This method is expected to be removed in paychains-core v2.0
 
 Returns identity and transaction information about a confirmed block in the ledger
 
@@ -4468,7 +4468,7 @@ The result field will be an object with the following fields:
   - `transactions: <array>` - present if "full" transaction details are requested; an array of JSON objects containing:
     - `transaction: <object|[string,encoding]>` - [Transaction](#transaction-structure) object, either in JSON format or encoded binary data, depending on encoding parameter
     - `meta: <object>` - transaction status metadata object, containing `null` or:
-      - `err: <object | null>` - Error if transaction failed, null if transaction succeeded. [TransactionError definitions](https://github.com/solana-labs/solana/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)
+      - `err: <object | null>` - Error if transaction failed, null if transaction succeeded. [TransactionError definitions](https://github.com/paychains-labs/paychains/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)
       - `fee: <u64>` - fee this transaction was charged, as u64 integer
       - `preBalances: <array>` - array of u64 account balances from before the transaction was processed
       - `postBalances: <array>` - array of u64 account balances after the transaction was processed
@@ -4636,7 +4636,7 @@ For more details on returned data:
 ### getConfirmedBlocks
 
 **DEPRECATED: Please use [getBlocks](jsonrpc-api.md#getblocks) instead**
-This method is expected to be removed in solana-core v2.0
+This method is expected to be removed in paychains-core v2.0
 
 Returns a list of confirmed blocks between two slots
 
@@ -4670,7 +4670,7 @@ Result:
 ### getConfirmedBlocksWithLimit
 
 **DEPRECATED: Please use [getBlocksWithLimit](jsonrpc-api.md#getblockswithlimit) instead**
-This method is expected to be removed in solana-core v2.0
+This method is expected to be removed in paychains-core v2.0
 
 Returns a list of confirmed blocks starting at the given slot
 
@@ -4702,7 +4702,7 @@ Result:
 ### getConfirmedSignaturesForAddress2
 
 **DEPRECATED: Please use [getSignaturesForAddress](jsonrpc-api.md#getsignaturesforaddress) instead**
-This method is expected to be removed in solana-core v2.0
+This method is expected to be removed in paychains-core v2.0
 
 Returns signatures for confirmed transactions that include the given address in
 their `accountKeys` list. Returns signatures backwards in time from the
@@ -4724,7 +4724,7 @@ from newest to oldest transaction:
 * `<object>`
   * `signature: <string>` - transaction signature as base-58 encoded string
   * `slot: <u64>` - The slot that contains the block with the transaction
-  * `err: <object | null>` - Error if transaction failed, null if transaction succeeded. [TransactionError definitions](https://github.com/solana-labs/solana/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)
+  * `err: <object | null>` - Error if transaction failed, null if transaction succeeded. [TransactionError definitions](https://github.com/paychains-labs/paychains/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)
   * `memo: <string |null>` - Memo associated with the transaction, null if no memo is present
   * `blockTime: <i64 | null>` - estimated production time, as Unix timestamp (seconds since the Unix epoch) of when transaction was processed. null if not available.
 
@@ -4766,7 +4766,7 @@ Result:
 ### getConfirmedTransaction
 
 **DEPRECATED: Please use [getTransaction](jsonrpc-api.md#gettransaction) instead**
-This method is expected to be removed in solana-core v2.0
+This method is expected to be removed in paychains-core v2.0
 
 Returns transaction details for a confirmed transaction
 
@@ -4786,7 +4786,7 @@ Returns transaction details for a confirmed transaction
   - `transaction: <object|[string,encoding]>` - [Transaction](#transaction-structure) object, either in JSON format or encoded binary data, depending on encoding parameter
   - `blockTime: <i64 | null>` - estimated production time, as Unix timestamp (seconds since the Unix epoch) of when the transaction was processed. null if not available
   - `meta: <object | null>` - transaction status metadata object:
-    - `err: <object | null>` - Error if transaction failed, null if transaction succeeded. [TransactionError definitions](https://docs.rs/solana-sdk/VERSION_FOR_DOCS_RS/solana_sdk/transaction/enum.TransactionError.html)
+    - `err: <object | null>` - Error if transaction failed, null if transaction succeeded. [TransactionError definitions](https://docs.rs/paychains-sdk/VERSION_FOR_DOCS_RS/paychains_sdk/transaction/enum.TransactionError.html)
     - `fee: <u64>` - fee this transaction was charged, as u64 integer
     - `preBalances: <array>` - array of u64 account balances from before the transaction was processed
     - `postBalances: <array>` - array of u64 account balances after the transaction was processed
@@ -4940,7 +4940,7 @@ Result:
 ### getFeeCalculatorForBlockhash
 
 **DEPRECATED: Please use [isBlockhashValid](jsonrpc-api.md#isblockhashvalid) or [getFeeForMessage](jsonrpc-api.md#getfeeformessage) instead**
-This method is expected to be removed in solana-core v2.0
+This method is expected to be removed in paychains-core v2.0
 
 Returns the fee calculator associated with the query blockhash, or `null` if the blockhash has expired
 
@@ -5043,7 +5043,7 @@ Result:
 ### getFees
 
 **DEPRECATED: Please use [getFeeForMessage](jsonrpc-api.md#getfeeformessage) instead**
-This method is expected to be removed in solana-core v2.0
+This method is expected to be removed in paychains-core v2.0
 
 Returns a recent block hash from the ledger, a fee schedule that can be used to
 compute the cost of submitting a transaction using it, and the last slot in
@@ -5095,7 +5095,7 @@ Result:
 ### getRecentBlockhash
 
 **DEPRECATED: Please use [getFeeForMessage](jsonrpc-api.md#getfeeformessage) instead**
-This method is expected to be removed in solana-core v2.0
+This method is expected to be removed in paychains-core v2.0
 
 Returns a recent block hash from the ledger, and a fee schedule that can be used to compute the cost of submitting a transaction using it.
 
@@ -5142,7 +5142,7 @@ Result:
 ### getSnapshotSlot
 
 **DEPRECATED: Please use [getHighestSnapshotSlot](jsonrpc-api.md#gethighestsnapshotslot) instead**
-This method is expected to be removed in solana-core v2.0
+This method is expected to be removed in paychains-core v2.0
 
 Returns the highest slot that the node has a snapshot for
 

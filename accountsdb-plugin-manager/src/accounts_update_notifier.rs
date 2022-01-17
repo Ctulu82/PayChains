@@ -2,16 +2,16 @@
 use {
     crate::accountsdb_plugin_manager::AccountsDbPluginManager,
     log::*,
-    solana_accountsdb_plugin_interface::accountsdb_plugin_interface::{
+    paychains_accountsdb_plugin_interface::accountsdb_plugin_interface::{
         ReplicaAccountInfo, ReplicaAccountInfoVersions,
     },
-    solana_measure::measure::Measure,
-    solana_metrics::*,
-    solana_runtime::{
+    paychains_measure::measure::Measure,
+    paychains_metrics::*,
+    paychains_runtime::{
         accounts_update_notifier_interface::AccountsUpdateNotifierInterface,
         append_vec::{StoredAccountMeta, StoredMeta},
     },
-    solana_sdk::{
+    paychains_sdk::{
         account::{AccountSharedData, ReadableAccount},
         clock::Slot,
     },

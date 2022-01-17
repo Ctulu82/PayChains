@@ -9,6 +9,6 @@ sudo apt-get install -y libssl-dev --allow-unauthenticated
 sudo apt-get install -y libssl1.1 --allow-unauthenticated
 clang-7 --version
 
-sh -c "$(curl -sSfL https://release.solana.com/edge/install)"
-PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
-solana --version
+sh -c "$(curl -sSfL https://release.paychains.com/edge/install)"
+PATH="$HOME/.local/share/paychains/install/active_release/bin:$PATH"
+paychains --version

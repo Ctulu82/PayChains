@@ -17,14 +17,14 @@ use {
         ping_pong::PingCache,
     },
     rayon::ThreadPool,
-    solana_ledger::shred::Shred,
-    solana_sdk::{
+    paychains_ledger::shred::Shred,
+    paychains_sdk::{
         hash::Hash,
         pubkey::Pubkey,
         signature::{Keypair, Signer},
         timing::timestamp,
     },
-    solana_streamer::socket::SocketAddrSpace,
+    paychains_streamer::socket::SocketAddrSpace,
     std::{
         collections::{HashMap, HashSet},
         net::SocketAddr,
@@ -369,7 +369,7 @@ mod test {
     use {
         super::*,
         crate::{contact_info::ContactInfo, crds_value::CrdsData},
-        solana_sdk::{hash::hash, timing::timestamp},
+        paychains_sdk::{hash::hash, timing::timestamp},
     };
 
     #[test]

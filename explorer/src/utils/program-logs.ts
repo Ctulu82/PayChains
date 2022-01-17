@@ -1,4 +1,4 @@
-import { TransactionError } from "@solana/web3.js";
+import { TransactionError } from "@paychains/web3.js";
 import { Cluster } from "providers/cluster";
 import { programLabel } from "utils/tx";
 import { getTransactionInstructionError } from "utils/program-err";

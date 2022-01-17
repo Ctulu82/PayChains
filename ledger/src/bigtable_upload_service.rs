@@ -1,6 +1,6 @@
 use {
     crate::{bigtable_upload, blockstore::Blockstore},
-    solana_runtime::commitment::BlockCommitmentCache,
+    paychains_runtime::commitment::BlockCommitmentCache,
     std::{
         cmp::min,
         sync::{
@@ -19,7 +19,7 @@ pub struct BigTableUploadService {
 impl BigTableUploadService {
     pub fn new(
         runtime: Arc<Runtime>,
-        bigtable_ledger_storage: solana_storage_bigtable::LedgerStorage,
+        bigtable_ledger_storage: paychains_storage_bigtable::LedgerStorage,
         blockstore: Arc<Blockstore>,
         block_commitment_cache: Arc<RwLock<BlockCommitmentCache>>,
         max_complete_transaction_status_slot: Arc<AtomicU64>,
@@ -45,7 +45,7 @@ impl BigTableUploadService {
 
     fn run(
         runtime: Arc<Runtime>,
-        bigtable_ledger_storage: solana_storage_bigtable::LedgerStorage,
+        bigtable_ledger_storage: paychains_storage_bigtable::LedgerStorage,
         blockstore: Arc<Blockstore>,
         block_commitment_cache: Arc<RwLock<BlockCommitmentCache>>,
         max_complete_transaction_status_slot: Arc<AtomicU64>,

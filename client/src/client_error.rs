@@ -1,8 +1,8 @@
 pub use reqwest;
 use {
     crate::{rpc_request, rpc_response},
-    solana_faucet::faucet::FaucetError,
-    solana_sdk::{
+    paychains_faucet::faucet::FaucetError,
+    paychains_sdk::{
         signature::SignerError, transaction::TransactionError, transport::TransportError,
     },
     std::io,

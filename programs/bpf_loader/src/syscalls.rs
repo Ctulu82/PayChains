@@ -2,13 +2,13 @@
 use {
     crate::{alloc, BpfError},
     alloc::Alloc,
-    solana_program_runtime::{
+    paychains_program_runtime::{
         ic_logger_msg, ic_msg,
         invoke_context::{ComputeMeter, InvokeContext},
         stable_log,
         timings::ExecuteTimings,
     },
-    solana_rbpf::{
+    paychains_rbpf::{
         aligned_memory::AlignedMemory,
         ebpf,
         error::EbpfError,
@@ -16,7 +16,7 @@ use {
         question_mark,
         vm::{EbpfVm, SyscallObject, SyscallRegistry},
     },
-    solana_sdk::{
+    paychains_sdk::{
         account::{ReadableAccount, WritableAccount},
         account_info::AccountInfo,
         blake3, bpf_loader, bpf_loader_deprecated, bpf_loader_upgradeable,
@@ -25,7 +25,7 @@ use {
             self, blake3_syscall_enabled, disable_fees_sysvar, do_support_realloc,
             fixed_memcpy_nonoverlapping_check, libsecp256k1_0_5_upgrade_enabled,
             prevent_calling_precompiles_as_programs, return_data_syscall_enabled,
-            secp256k1_recover_syscall_enabled, sol_log_data_syscall_enabled,
+            secp256k1_recover_syscall_enabled, pay_log_data_syscall_enabled,
         },
         hash::{Hasher, HASH_BYTES},
         instruction::{AccountMeta, Instruction, InstructionError},
@@ -120,40 +120,40 @@ pub fn register_syscalls(
     let mut syscall_registry = SyscallRegistry::default();
 
     syscall_registry.register_syscall_by_name(b"abort", SyscallAbort::call)?;
-    syscall_registry.register_syscall_by_name(b"sol_panic_", SyscallPanic::call)?;
-    syscall_registry.register_syscall_by_name(b"sol_log_", SyscallLog::call)?;
-    syscall_registry.register_syscall_by_name(b"sol_log_64_", SyscallLogU64::call)?;
+    syscall_registry.register_syscall_by_name(b"pay_panic_", SyscallPanic::call)?;
+    syscall_registry.register_syscall_by_name(b"pay_log_", SyscallLog::call)?;
+    syscall_registry.register_syscall_by_name(b"pay_log_64_", SyscallLogU64::call)?;
 
     syscall_registry
-        .register_syscall_by_name(b"sol_log_compute_units_", SyscallLogBpfComputeUnits::call)?;
+        .register_syscall_by_name(b"pay_log_compute_units_", SyscallLogBpfComputeUnits::call)?;
 
-    syscall_registry.register_syscall_by_name(b"sol_log_pubkey", SyscallLogPubkey::call)?;
+    syscall_registry.register_syscall_by_name(b"pay_log_pubkey", SyscallLogPubkey::call)?;
 
     syscall_registry.register_syscall_by_name(
-        b"sol_create_program_address",
+        b"pay_create_program_address",
         SyscallCreateProgramAddress::call,
     )?;
     syscall_registry.register_syscall_by_name(
-        b"sol_try_find_program_address",
+        b"pay_try_find_program_address",
         SyscallTryFindProgramAddress::call,
     )?;
 
-    syscall_registry.register_syscall_by_name(b"sol_sha256", SyscallSha256::call)?;
-    syscall_registry.register_syscall_by_name(b"sol_keccak256", SyscallKeccak256::call)?;
+    syscall_registry.register_syscall_by_name(b"pay_sha256", SyscallSha256::call)?;
+    syscall_registry.register_syscall_by_name(b"pay_keccak256", SyscallKeccak256::call)?;
 
     if invoke_context
         .feature_set
         .is_active(&secp256k1_recover_syscall_enabled::id())
     {
         syscall_registry
-            .register_syscall_by_name(b"sol_secp256k1_recover", SyscallSecp256k1Recover::call)?;
+            .register_syscall_by_name(b"pay_secp256k1_recover", SyscallSecp256k1Recover::call)?;
     }
 
     if invoke_context
         .feature_set
         .is_active(&blake3_syscall_enabled::id())
     {
-        syscall_registry.register_syscall_by_name(b"sol_blake3", SyscallBlake3::call)?;
+        syscall_registry.register_syscall_by_name(b"pay_blake3", SyscallBlake3::call)?;
     }
 
     if invoke_context
@@ -161,21 +161,21 @@ pub fn register_syscalls(
         .is_active(&feature_set::zk_token_sdk_enabled::id())
     {
         syscall_registry
-            .register_syscall_by_name(b"sol_zk_token_elgamal_op", SyscallZkTokenElgamalOp::call)?;
+            .register_syscall_by_name(b"pay_zk_token_elgamal_op", SyscallZkTokenElgamalOp::call)?;
         syscall_registry.register_syscall_by_name(
-            b"sol_zk_token_elgamal_op_with_lo_hi",
+            b"pay_zk_token_elgamal_op_with_lo_hi",
             SyscallZkTokenElgamalOpWithLoHi::call,
         )?;
         syscall_registry.register_syscall_by_name(
-            b"sol_zk_token_elgamal_op_with_scalar",
+            b"pay_zk_token_elgamal_op_with_scalar",
             SyscallZkTokenElgamalOpWithScalar::call,
         )?;
     }
 
     syscall_registry
-        .register_syscall_by_name(b"sol_get_clock_sysvar", SyscallGetClockSysvar::call)?;
+        .register_syscall_by_name(b"pay_get_clock_sysvar", SyscallGetClockSysvar::call)?;
     syscall_registry.register_syscall_by_name(
-        b"sol_get_epoch_schedule_sysvar",
+        b"pay_get_epoch_schedule_sysvar",
         SyscallGetEpochScheduleSysvar::call,
     )?;
     if !invoke_context
@@ -183,24 +183,24 @@ pub fn register_syscalls(
         .is_active(&disable_fees_sysvar::id())
     {
         syscall_registry
-            .register_syscall_by_name(b"sol_get_fees_sysvar", SyscallGetFeesSysvar::call)?;
+            .register_syscall_by_name(b"pay_get_fees_sysvar", SyscallGetFeesSysvar::call)?;
     }
     syscall_registry
-        .register_syscall_by_name(b"sol_get_rent_sysvar", SyscallGetRentSysvar::call)?;
+        .register_syscall_by_name(b"pay_get_rent_sysvar", SyscallGetRentSysvar::call)?;
 
-    syscall_registry.register_syscall_by_name(b"sol_memcpy_", SyscallMemcpy::call)?;
-    syscall_registry.register_syscall_by_name(b"sol_memmove_", SyscallMemmove::call)?;
-    syscall_registry.register_syscall_by_name(b"sol_memcmp_", SyscallMemcmp::call)?;
-    syscall_registry.register_syscall_by_name(b"sol_memset_", SyscallMemset::call)?;
+    syscall_registry.register_syscall_by_name(b"pay_memcpy_", SyscallMemcpy::call)?;
+    syscall_registry.register_syscall_by_name(b"pay_memmove_", SyscallMemmove::call)?;
+    syscall_registry.register_syscall_by_name(b"pay_memcmp_", SyscallMemcmp::call)?;
+    syscall_registry.register_syscall_by_name(b"pay_memset_", SyscallMemset::call)?;
 
     // Cross-program invocation syscalls
     syscall_registry
-        .register_syscall_by_name(b"sol_invoke_signed_c", SyscallInvokeSignedC::call)?;
+        .register_syscall_by_name(b"pay_invoke_signed_c", SyscallInvokeSignedC::call)?;
     syscall_registry
-        .register_syscall_by_name(b"sol_invoke_signed_rust", SyscallInvokeSignedRust::call)?;
+        .register_syscall_by_name(b"pay_invoke_signed_rust", SyscallInvokeSignedRust::call)?;
 
     // Memory allocator
-    syscall_registry.register_syscall_by_name(b"sol_alloc_free_", SyscallAllocFree::call)?;
+    syscall_registry.register_syscall_by_name(b"pay_alloc_free_", SyscallAllocFree::call)?;
 
     // Return data
     if invoke_context
@@ -208,17 +208,17 @@ pub fn register_syscalls(
         .is_active(&return_data_syscall_enabled::id())
     {
         syscall_registry
-            .register_syscall_by_name(b"sol_set_return_data", SyscallSetReturnData::call)?;
+            .register_syscall_by_name(b"pay_set_return_data", SyscallSetReturnData::call)?;
         syscall_registry
-            .register_syscall_by_name(b"sol_get_return_data", SyscallGetReturnData::call)?;
+            .register_syscall_by_name(b"pay_get_return_data", SyscallGetReturnData::call)?;
     }
 
     // Log data
     if invoke_context
         .feature_set
-        .is_active(&sol_log_data_syscall_enabled::id())
+        .is_active(&pay_log_data_syscall_enabled::id())
     {
-        syscall_registry.register_syscall_by_name(b"sol_log_data", SyscallLogData::call)?;
+        syscall_registry.register_syscall_by_name(b"pay_log_data", SyscallLogData::call)?;
     }
 
     Ok(syscall_registry)
@@ -255,9 +255,9 @@ pub fn bind_syscall_context_objects<'a, 'b>(
     let is_return_data_syscall_active = invoke_context
         .feature_set
         .is_active(&return_data_syscall_enabled::id());
-    let is_sol_log_data_syscall_active = invoke_context
+    let is_pay_log_data_syscall_active = invoke_context
         .feature_set
-        .is_active(&sol_log_data_syscall_enabled::id());
+        .is_active(&pay_log_data_syscall_enabled::id());
     let is_zk_token_sdk_enabled = invoke_context
         .feature_set
         .is_active(&feature_set::zk_token_sdk_enabled::id());
@@ -434,10 +434,10 @@ pub fn bind_syscall_context_objects<'a, 'b>(
         }),
     );
 
-    // sol_log_data
+    // pay_log_data
     bind_feature_gated_syscall_context_object!(
         vm,
-        is_sol_log_data_syscall_active,
+        is_pay_log_data_syscall_active,
         Box::new(SyscallLogData {
             invoke_context: invoke_context.clone(),
         }),
@@ -594,7 +594,7 @@ impl SyscallObject<BpfError> for SyscallAbort {
     }
 }
 
-/// Panic syscall function, called when the BPF program calls 'sol_panic_()`
+/// Panic syscall function, called when the BPF program calls 'pay_panic_()`
 /// Causes the BPF program to be halted immediately
 /// Log a user's info message
 pub struct SyscallPanic<'a, 'b> {
@@ -791,7 +791,7 @@ impl<'a, 'b> SyscallObject<BpfError> for SyscallLogPubkey<'a, 'b> {
 }
 
 /// Dynamic memory allocation syscall called when the BPF program calls
-/// `sol_alloc_free_()`.  The allocator is expected to allocate/free
+/// `pay_alloc_free_()`.  The allocator is expected to allocate/free
 /// from/to a given chunk of memory and enforce size restrictions.  The
 /// memory chunk is given to the allocator during allocator creation and
 /// information about that memory (start address and size) is passed
@@ -1649,7 +1649,7 @@ impl<'a, 'b> SyscallObject<BpfError> for SyscallZkTokenElgamalOp<'a, 'b> {
         memory_mapping: &MemoryMapping,
         result: &mut Result<u64, EbpfError<BpfError>>,
     ) {
-        use solana_zk_token_sdk::zk_token_elgamal::{ops, pod};
+        use paychains_zk_token_sdk::zk_token_elgamal::{ops, pod};
 
         let invoke_context = question_mark!(
             self.invoke_context
@@ -1712,7 +1712,7 @@ impl<'a, 'b> SyscallObject<BpfError> for SyscallZkTokenElgamalOpWithLoHi<'a, 'b>
         memory_mapping: &MemoryMapping,
         result: &mut Result<u64, EbpfError<BpfError>>,
     ) {
-        use solana_zk_token_sdk::zk_token_elgamal::{ops, pod};
+        use paychains_zk_token_sdk::zk_token_elgamal::{ops, pod};
 
         let invoke_context = question_mark!(
             self.invoke_context
@@ -1779,7 +1779,7 @@ impl<'a, 'b> SyscallObject<BpfError> for SyscallZkTokenElgamalOpWithScalar<'a, '
         memory_mapping: &MemoryMapping,
         result: &mut Result<u64, EbpfError<BpfError>>,
     ) {
-        use solana_zk_token_sdk::zk_token_elgamal::{ops, pod};
+        use paychains_zk_token_sdk::zk_token_elgamal::{ops, pod};
 
         let invoke_context = question_mark!(
             self.invoke_context
@@ -2171,9 +2171,9 @@ impl<'a, 'b> SyscallObject<BpfError> for SyscallInvokeSignedRust<'a, 'b> {
     }
 }
 
-/// Rust representation of C's SolInstruction
+/// Rust representation of C's PayInstruction
 #[derive(Debug)]
-struct SolInstruction {
+struct PayInstruction {
     program_id_addr: u64,
     accounts_addr: u64,
     accounts_len: usize,
@@ -2181,17 +2181,17 @@ struct SolInstruction {
     data_len: usize,
 }
 
-/// Rust representation of C's SolAccountMeta
+/// Rust representation of C's PayAccountMeta
 #[derive(Debug)]
-struct SolAccountMeta {
+struct PayAccountMeta {
     pubkey_addr: u64,
     is_writable: bool,
     is_signer: bool,
 }
 
-/// Rust representation of C's SolAccountInfo
+/// Rust representation of C's PayAccountInfo
 #[derive(Debug)]
-struct SolAccountInfo {
+struct PayAccountInfo {
     key_addr: u64,
     lamports_addr: u64,
     data_len: u64,
@@ -2205,16 +2205,16 @@ struct SolAccountInfo {
     executable: bool,
 }
 
-/// Rust representation of C's SolSignerSeed
+/// Rust representation of C's PaySignerSeed
 #[derive(Debug)]
-struct SolSignerSeedC {
+struct PaySignerSeedC {
     addr: u64,
     len: u64,
 }
 
-/// Rust representation of C's SolSignerSeeds
+/// Rust representation of C's PaySignerSeeds
 #[derive(Debug)]
-struct SolSignerSeedsC {
+struct PaySignerSeedsC {
     #[allow(dead_code)]
     addr: u64,
     #[allow(dead_code)]
@@ -2240,11 +2240,11 @@ impl<'a, 'b> SyscallInvokeSigned<'a, 'b> for SyscallInvokeSignedC<'a, 'b> {
         memory_mapping: &MemoryMapping,
         invoke_context: &mut InvokeContext,
     ) -> Result<Instruction, EbpfError<BpfError>> {
-        let ix_c = translate_type::<SolInstruction>(memory_mapping, addr, loader_id)?;
+        let ix_c = translate_type::<PayInstruction>(memory_mapping, addr, loader_id)?;
 
         check_instruction_size(ix_c.accounts_len, ix_c.data_len, invoke_context)?;
         let program_id = translate_type::<Pubkey>(memory_mapping, ix_c.program_id_addr, loader_id)?;
-        let meta_cs = translate_slice::<SolAccountMeta>(
+        let meta_cs = translate_slice::<PayAccountMeta>(
             memory_mapping,
             ix_c.accounts_addr,
             ix_c.accounts_len as u64,
@@ -2287,7 +2287,7 @@ impl<'a, 'b> SyscallInvokeSigned<'a, 'b> for SyscallInvokeSignedC<'a, 'b> {
         memory_mapping: &MemoryMapping,
         invoke_context: &mut InvokeContext,
     ) -> Result<TranslatedAccounts<'c>, EbpfError<BpfError>> {
-        let account_infos = translate_slice::<SolAccountInfo>(
+        let account_infos = translate_slice::<PayAccountInfo>(
             memory_mapping,
             account_infos_addr,
             account_infos_len,
@@ -2301,7 +2301,7 @@ impl<'a, 'b> SyscallInvokeSigned<'a, 'b> for SyscallInvokeSignedC<'a, 'b> {
             })
             .collect::<Result<Vec<_>, EbpfError<BpfError>>>()?;
 
-        let translate = |account_info: &SolAccountInfo, invoke_context: &InvokeContext| {
+        let translate = |account_info: &PayAccountInfo, invoke_context: &InvokeContext| {
             // Translate the account from user space
 
             let lamports =
@@ -2373,7 +2373,7 @@ impl<'a, 'b> SyscallInvokeSigned<'a, 'b> for SyscallInvokeSignedC<'a, 'b> {
         memory_mapping: &MemoryMapping,
     ) -> Result<Vec<Pubkey>, EbpfError<BpfError>> {
         if signers_seeds_len > 0 {
-            let signers_seeds = translate_slice::<SolSignerSeedC>(
+            let signers_seeds = translate_slice::<PaySignerSeedC>(
                 memory_mapping,
                 signers_seeds_addr,
                 signers_seeds_len,
@@ -2385,7 +2385,7 @@ impl<'a, 'b> SyscallInvokeSigned<'a, 'b> for SyscallInvokeSignedC<'a, 'b> {
             Ok(signers_seeds
                 .iter()
                 .map(|signer_seeds| {
-                    let seeds = translate_slice::<SolSignerSeedC>(
+                    let seeds = translate_slice::<PaySignerSeedC>(
                         memory_mapping,
                         signer_seeds.addr,
                         signer_seeds.len,
@@ -2917,14 +2917,14 @@ impl<'a, 'b> SyscallObject<BpfError> for SyscallLogData<'a, 'b> {
 #[cfg(test)]
 mod tests {
     #[allow(deprecated)]
-    use solana_sdk::sysvar::fees::Fees;
+    use paychains_sdk::sysvar::fees::Fees;
     use {
         super::*,
-        solana_program_runtime::{invoke_context::InvokeContext, sysvar_cache::SysvarCache},
-        solana_rbpf::{
+        paychains_program_runtime::{invoke_context::InvokeContext, sysvar_cache::SysvarCache},
+        paychains_rbpf::{
             ebpf::HOST_ALIGN, memory_region::MemoryRegion, user_error::UserError, vm::Config,
         },
-        solana_sdk::{
+        paychains_sdk::{
             account::AccountSharedData,
             bpf_loader,
             fee_calculator::FeeCalculator,
@@ -2999,7 +2999,7 @@ mod tests {
     #[test]
     fn test_translate_type() {
         // Pubkey
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = paychains_sdk::pubkey::new_rand();
         let addr = &pubkey as *const _ as u64;
         let config = Config::default();
         let memory_mapping = MemoryMapping::new::<UserError>(
@@ -3022,9 +3022,9 @@ mod tests {
 
         // Instruction
         let instruction = Instruction::new_with_bincode(
-            solana_sdk::pubkey::new_rand(),
+            paychains_sdk::pubkey::new_rand(),
             &"foobar",
-            vec![AccountMeta::new(solana_sdk::pubkey::new_rand(), false)],
+            vec![AccountMeta::new(paychains_sdk::pubkey::new_rand(), false)],
         );
         let addr = &instruction as *const _ as u64;
         let mut memory_mapping = MemoryMapping::new::<UserError>(
@@ -3154,7 +3154,7 @@ mod tests {
         );
 
         // Pubkeys
-        let mut data = vec![solana_sdk::pubkey::new_rand(); 5];
+        let mut data = vec![paychains_sdk::pubkey::new_rand(); 5];
         let addr = data.as_ptr() as *const _ as u64;
         let memory_mapping = MemoryMapping::new::<UserError>(
             vec![
@@ -3178,7 +3178,7 @@ mod tests {
         )
         .unwrap();
         assert_eq!(data, translated_data);
-        data[0] = solana_sdk::pubkey::new_rand(); // Both should point to same place
+        data[0] = paychains_sdk::pubkey::new_rand(); // Both should point to same place
         assert_eq!(data, translated_data);
     }
 
@@ -3239,7 +3239,7 @@ mod tests {
 
     #[test]
     #[should_panic(expected = "UserError(SyscallError(Panic(\"Gaggablaghblagh!\", 42, 84)))")]
-    fn test_syscall_sol_panic() {
+    fn test_syscall_pay_panic() {
         let program_id = Pubkey::new_unique();
         let mut transaction_context = TransactionContext::new(
             vec![(program_id, AccountSharedData::new(0, 0, &bpf_loader::id()))],
@@ -3312,7 +3312,7 @@ mod tests {
     }
 
     #[test]
-    fn test_syscall_sol_log() {
+    fn test_syscall_pay_log() {
         let program_id = Pubkey::new_unique();
         let mut transaction_context = TransactionContext::new(
             vec![(program_id, AccountSharedData::new(0, 0, &bpf_loader::id()))],
@@ -3320,7 +3320,7 @@ mod tests {
         );
         let mut invoke_context = InvokeContext::new_mock(&mut transaction_context, &[]);
         invoke_context.push(&[], &[0], &[]).unwrap();
-        let mut syscall_sol_log = SyscallLog {
+        let mut syscall_pay_log = SyscallLog {
             invoke_context: Rc::new(RefCell::new(&mut invoke_context)),
         };
 
@@ -3342,14 +3342,14 @@ mod tests {
         )
         .unwrap();
 
-        syscall_sol_log
+        syscall_pay_log
             .invoke_context
             .borrow_mut()
             .get_compute_meter()
             .borrow_mut()
             .mock_set_remaining((string.len() as u64 * 5) - 1);
         let mut result: Result<u64, EbpfError<BpfError>> = Ok(0);
-        syscall_sol_log.call(
+        syscall_pay_log.call(
             0x100000001, // AccessViolation
             string.len() as u64,
             0,
@@ -3360,7 +3360,7 @@ mod tests {
         );
         assert_access_violation!(result, 0x100000001, string.len() as u64);
         let mut result: Result<u64, EbpfError<BpfError>> = Ok(0);
-        syscall_sol_log.call(
+        syscall_pay_log.call(
             0x100000000,
             string.len() as u64 * 2, // AccessViolation
             0,
@@ -3372,7 +3372,7 @@ mod tests {
         assert_access_violation!(result, 0x100000000, string.len() as u64 * 2);
 
         let mut result: Result<u64, EbpfError<BpfError>> = Ok(0);
-        syscall_sol_log.call(
+        syscall_pay_log.call(
             0x100000000,
             string.len() as u64,
             0,
@@ -3383,7 +3383,7 @@ mod tests {
         );
         result.unwrap();
         let mut result: Result<u64, EbpfError<BpfError>> = Ok(0);
-        syscall_sol_log.call(
+        syscall_pay_log.call(
             0x100000000,
             string.len() as u64,
             0,
@@ -3400,7 +3400,7 @@ mod tests {
         );
 
         assert_eq!(
-            syscall_sol_log
+            syscall_pay_log
                 .invoke_context
                 .borrow()
                 .get_log_collector()
@@ -3412,7 +3412,7 @@ mod tests {
     }
 
     #[test]
-    fn test_syscall_sol_log_u64() {
+    fn test_syscall_pay_log_u64() {
         let program_id = Pubkey::new_unique();
         let mut transaction_context = TransactionContext::new(
             vec![(program_id, AccountSharedData::new(0, 0, &bpf_loader::id()))],
@@ -3421,11 +3421,11 @@ mod tests {
         let mut invoke_context = InvokeContext::new_mock(&mut transaction_context, &[]);
         invoke_context.push(&[], &[0], &[]).unwrap();
         let cost = invoke_context.get_compute_budget().log_64_units;
-        let mut syscall_sol_log_u64 = SyscallLogU64 {
+        let mut syscall_pay_log_u64 = SyscallLogU64 {
             invoke_context: Rc::new(RefCell::new(&mut invoke_context)),
         };
 
-        syscall_sol_log_u64
+        syscall_pay_log_u64
             .invoke_context
             .borrow_mut()
             .get_compute_meter()
@@ -3434,11 +3434,11 @@ mod tests {
         let config = Config::default();
         let memory_mapping = MemoryMapping::new::<UserError>(vec![], &config).unwrap();
         let mut result: Result<u64, EbpfError<BpfError>> = Ok(0);
-        syscall_sol_log_u64.call(1, 2, 3, 4, 5, &memory_mapping, &mut result);
+        syscall_pay_log_u64.call(1, 2, 3, 4, 5, &memory_mapping, &mut result);
         result.unwrap();
 
         assert_eq!(
-            syscall_sol_log_u64
+            syscall_pay_log_u64
                 .invoke_context
                 .borrow()
                 .get_log_collector()
@@ -3450,7 +3450,7 @@ mod tests {
     }
 
     #[test]
-    fn test_syscall_sol_pubkey() {
+    fn test_syscall_pay_pubkey() {
         let program_id = Pubkey::new_unique();
         let mut transaction_context = TransactionContext::new(
             vec![(program_id, AccountSharedData::new(0, 0, &bpf_loader::id()))],
@@ -3459,7 +3459,7 @@ mod tests {
         let mut invoke_context = InvokeContext::new_mock(&mut transaction_context, &[]);
         invoke_context.push(&[], &[0], &[]).unwrap();
         let cost = invoke_context.get_compute_budget().log_pubkey_units;
-        let mut syscall_sol_pubkey = SyscallLogPubkey {
+        let mut syscall_pay_pubkey = SyscallLogPubkey {
             invoke_context: Rc::new(RefCell::new(&mut invoke_context)),
         };
 
@@ -3482,7 +3482,7 @@ mod tests {
         .unwrap();
 
         let mut result: Result<u64, EbpfError<BpfError>> = Ok(0);
-        syscall_sol_pubkey.call(
+        syscall_pay_pubkey.call(
             0x100000001, // AccessViolation
             32,
             0,
@@ -3493,14 +3493,14 @@ mod tests {
         );
         assert_access_violation!(result, 0x100000001, 32);
 
-        syscall_sol_pubkey
+        syscall_pay_pubkey
             .invoke_context
             .borrow_mut()
             .get_compute_meter()
             .borrow_mut()
             .mock_set_remaining(1);
         let mut result: Result<u64, EbpfError<BpfError>> = Ok(0);
-        syscall_sol_pubkey.call(100, 32, 0, 0, 0, &memory_mapping, &mut result);
+        syscall_pay_pubkey.call(100, 32, 0, 0, 0, &memory_mapping, &mut result);
         assert_eq!(
             Err(EbpfError::UserError(BpfError::SyscallError(
                 SyscallError::InstructionError(InstructionError::ComputationalBudgetExceeded)
@@ -3508,18 +3508,18 @@ mod tests {
             result
         );
 
-        syscall_sol_pubkey
+        syscall_pay_pubkey
             .invoke_context
             .borrow_mut()
             .get_compute_meter()
             .borrow_mut()
             .mock_set_remaining(cost);
         let mut result: Result<u64, EbpfError<BpfError>> = Ok(0);
-        syscall_sol_pubkey.call(0x100000000, 0, 0, 0, 0, &memory_mapping, &mut result);
+        syscall_pay_pubkey.call(0x100000000, 0, 0, 0, 0, &memory_mapping, &mut result);
         result.unwrap();
 
         assert_eq!(
-            syscall_sol_pubkey
+            syscall_pay_pubkey
                 .invoke_context
                 .borrow()
                 .get_log_collector()
@@ -3531,7 +3531,7 @@ mod tests {
     }
 
     #[test]
-    fn test_syscall_sol_alloc_free() {
+    fn test_syscall_pay_alloc_free() {
         let config = Config::default();
         // large alloc
         {
@@ -4067,7 +4067,7 @@ mod tests {
 
     #[test]
     fn test_create_program_address() {
-        // These tests duplicate the direct tests in solana_program::pubkey
+        // These tests duplicate the direct tests in paychains_program::pubkey
 
         let program_id = Pubkey::new_unique();
         let mut transaction_context = TransactionContext::new(

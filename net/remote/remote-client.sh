@@ -42,11 +42,11 @@ skip)
 esac
 
 case $clientToRun in
-solana-bench-tps)
+paychains-bench-tps)
   net/scripts/rsync-retry.sh -vPrc \
-    "$entrypointIp":~/solana/config/bench-tps"$clientIndex".yml ./client-accounts.yml
+    "$entrypointIp":~/paychains/config/bench-tps"$clientIndex".yml ./client-accounts.yml
   clientCommand="\
-    solana-bench-tps \
+    paychains-bench-tps \
       --entrypoint $entrypointIp:8001 \
       --faucet $entrypointIp:9900 \
       --duration 7500 \
@@ -59,7 +59,7 @@ solana-bench-tps)
 idle)
   # Add the faucet keypair to idle clients for convenience
   net/scripts/rsync-retry.sh -vPrc \
-    "$entrypointIp":~/solana/config/faucet.json ~/solana/
+    "$entrypointIp":~/paychains/config/faucet.json ~/paychains/
   exit 0
   ;;
 *)
@@ -68,9 +68,9 @@ idle)
 esac
 
 
-cat > ~/solana/on-reboot <<EOF
+cat > ~/paychains/on-reboot <<EOF
 #!/usr/bin/env bash
-cd ~/solana
+cd ~/paychains
 
 PATH="$HOME"/.cargo/bin:"$PATH"
 export USE_INSTALL=1
@@ -78,7 +78,7 @@ export USE_INSTALL=1
 echo "$(date) | $0 $*" >> client.log
 
 (
-  sudo SOLANA_METRICS_CONFIG="$SOLANA_METRICS_CONFIG" scripts/oom-monitor.sh
+  sudo PAYCHAINS_METRICS_CONFIG="$PAYCHAINS_METRICS_CONFIG" scripts/oom-monitor.sh
 ) > oom-monitor.log 2>&1 &
 echo \$! > oom-monitor.pid
 scripts/fd-monitor.sh > fd-monitor.log 2>&1 &
@@ -97,10 +97,10 @@ tmux new -s "$clientToRun" -d "
   done
 "
 EOF
-chmod +x ~/solana/on-reboot
-echo "@reboot ~/solana/on-reboot" | crontab -
+chmod +x ~/paychains/on-reboot
+echo "@reboot ~/paychains/on-reboot" | crontab -
 
-~/solana/on-reboot
+~/paychains/on-reboot
 
 sleep 1
 tmux capture-pane -t "$clientToRun" -p -S -100

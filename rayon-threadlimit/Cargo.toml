@@ -1,12 +1,12 @@
 [package]
-name = "solana-rayon-threadlimit"
+name = "paychains-rayon-threadlimit"
 version = "1.10.0"
-description = "solana-rayon-threadlimit"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-rayon-threadlimit"
+description = "paychains-rayon-threadlimit"
+homepage = "https://paychains.com/"
+documentation = "https://docs.rs/paychains-rayon-threadlimit"
 readme = "../README.md"
-repository = "https://github.com/solana-labs/solana"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
+repository = "https://github.com/paychains-labs/paychains"
+authors = ["PayChains Maintainers <maintainers@paychains.foundation>"]
 license = "Apache-2.0"
 edition = "2021"
 

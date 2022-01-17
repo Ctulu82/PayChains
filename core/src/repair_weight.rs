@@ -7,12 +7,12 @@ use {
         serve_repair::ShredRepairType,
         tree_diff::TreeDiff,
     },
-    solana_ledger::{
+    paychains_ledger::{
         ancestor_iterator::AncestorIterator, blockstore::Blockstore, blockstore_meta::SlotMeta,
     },
-    solana_measure::measure::Measure,
-    solana_runtime::{contains::Contains, epoch_stakes::EpochStakes},
-    solana_sdk::{
+    paychains_measure::measure::Measure,
+    paychains_runtime::{contains::Contains, epoch_stakes::EpochStakes},
+    paychains_sdk::{
         clock::Slot,
         epoch_schedule::{Epoch, EpochSchedule},
         hash::Hash,
@@ -657,9 +657,9 @@ impl RepairWeight {
 mod test {
     use {
         super::*,
-        solana_ledger::{blockstore::Blockstore, get_tmp_ledger_path},
-        solana_runtime::{bank::Bank, bank_utils},
-        solana_sdk::hash::Hash,
+        paychains_ledger::{blockstore::Blockstore, get_tmp_ledger_path},
+        paychains_runtime::{bank::Bank, bank_utils},
+        paychains_sdk::hash::Hash,
         trees::tr,
     };
 

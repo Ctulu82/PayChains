@@ -1,11 +1,11 @@
 #![allow(clippy::integer_arithmetic)]
 use {
-    solana_entry::entry::Entry,
-    solana_ledger::shred::{
+    paychains_entry::entry::Entry,
+    paychains_ledger::shred::{
         max_entries_per_n_shred, verify_test_data_shred, Shred, Shredder,
         MAX_DATA_SHREDS_PER_FEC_BLOCK, SIZE_OF_DATA_SHRED_PAYLOAD,
     },
-    solana_sdk::{
+    paychains_sdk::{
         clock::Slot,
         hash::Hash,
         signature::{Keypair, Signer},

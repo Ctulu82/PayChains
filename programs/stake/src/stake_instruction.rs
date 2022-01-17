@@ -1,13 +1,13 @@
 #[deprecated(
     since = "1.8.0",
-    note = "Please use `solana_sdk::stake::instruction` or `solana_program::stake::instruction` instead"
+    note = "Please use `paychains_sdk::stake::instruction` or `paychains_program::stake::instruction` instead"
 )]
-pub use solana_sdk::stake::instruction::*;
+pub use paychains_sdk::stake::instruction::*;
 use {
     crate::{config, stake_state::StakeAccount},
     log::*,
-    solana_program_runtime::invoke_context::InvokeContext,
-    solana_sdk::{
+    paychains_program_runtime::invoke_context::InvokeContext,
+    paychains_sdk::{
         feature_set,
         instruction::InstructionError,
         keyed_account::{from_keyed_account, get_signers, keyed_account_at_index},
@@ -341,11 +341,11 @@ mod tests {
         super::*,
         crate::stake_state::{Meta, StakeState},
         bincode::serialize,
-        solana_program_runtime::{
+        paychains_program_runtime::{
             invoke_context::{mock_process_instruction, mock_process_instruction_with_sysvars},
             sysvar_cache::SysvarCache,
         },
-        solana_sdk::{
+        paychains_sdk::{
             account::{self, AccountSharedData},
             instruction::{AccountMeta, Instruction},
             pubkey::Pubkey,
@@ -428,7 +428,7 @@ mod tests {
                     } else if meta.pubkey == invalid_stake_state_pubkey() {
                         AccountSharedData::new(0, 0, &id())
                     } else if meta.pubkey == invalid_vote_state_pubkey() {
-                        AccountSharedData::new(0, 0, &solana_vote_program::id())
+                        AccountSharedData::new(0, 0, &paychains_vote_program::id())
                     } else if meta.pubkey == spoofed_stake_state_pubkey() {
                         AccountSharedData::new(0, 0, &spoofed_stake_program_id())
                     } else {
@@ -642,7 +642,7 @@ mod tests {
         let stake_history_account =
             account::create_account_shared_data_for_test(&StakeHistory::default());
         let vote_address = Pubkey::new_unique();
-        let vote_account = AccountSharedData::new(0, 0, &solana_vote_program::id());
+        let vote_account = AccountSharedData::new(0, 0, &paychains_vote_program::id());
         let clock_address = sysvar::clock::id();
         let clock_account =
             account::create_account_shared_data_for_test(&sysvar::clock::Clock::default());

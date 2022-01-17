@@ -1,12 +1,12 @@
 #[cfg(RUSTC_WITH_SPECIALIZATION)]
-use solana_frozen_abi::abi_example::AbiExample;
+use paychains_frozen_abi::abi_example::AbiExample;
 use {
     crate::system_instruction_processor,
-    solana_program_runtime::{
+    paychains_program_runtime::{
         invoke_context::{InvokeContext, ProcessInstructionWithContext},
         stable_log,
     },
-    solana_sdk::{
+    paychains_sdk::{
         feature_set, instruction::InstructionError, pubkey::Pubkey, stake, system_program,
     },
     std::fmt,
@@ -111,22 +111,22 @@ fn genesis_builtins() -> Vec<Builtin> {
         ),
         Builtin::new(
             "vote_program",
-            solana_vote_program::id(),
-            with_program_logging!(solana_vote_program::vote_instruction::process_instruction),
+            paychains_vote_program::id(),
+            with_program_logging!(paychains_vote_program::vote_instruction::process_instruction),
         ),
         Builtin::new(
             "stake_program",
             stake::program::id(),
-            with_program_logging!(solana_stake_program::stake_instruction::process_instruction),
+            with_program_logging!(paychains_stake_program::stake_instruction::process_instruction),
         ),
         Builtin::new(
             "config_program",
-            solana_config_program::id(),
-            with_program_logging!(solana_config_program::config_processor::process_instruction),
+            paychains_config_program::id(),
+            with_program_logging!(paychains_config_program::config_processor::process_instruction),
         ),
         Builtin::new(
             "secp256k1_program",
-            solana_sdk::secp256k1_program::id(),
+            paychains_sdk::secp256k1_program::id(),
             dummy_process_instruction,
         ),
     ]
@@ -148,14 +148,14 @@ fn dummy_process_instruction(
 /// This is to enable the runtime to determine categorically whether the builtin update has
 /// occurred, and preserve idempotency in Bank::add_native_program across genesis, snapshot, and
 /// normal child Bank creation.
-/// https://github.com/solana-labs/solana/blob/84b139cc94b5be7c9e0c18c2ad91743231b85a0d/runtime/src/bank.rs#L1723
+/// https://github.com/paychains-labs/paychains/blob/84b139cc94b5be7c9e0c18c2ad91743231b85a0d/runtime/src/bank.rs#L1723
 fn feature_builtins() -> Vec<(Builtin, Pubkey, ActivationType)> {
     vec![
         (
             Builtin::new(
                 "compute_budget_program",
-                solana_sdk::compute_budget::id(),
-                solana_compute_budget_program::process_instruction,
+                paychains_sdk::compute_budget::id(),
+                paychains_compute_budget_program::process_instruction,
             ),
             feature_set::add_compute_budget_program::id(),
             ActivationType::NewProgram,
@@ -166,7 +166,7 @@ fn feature_builtins() -> Vec<(Builtin, Pubkey, ActivationType)> {
         (
             Builtin::new(
                 "secp256k1_program",
-                solana_sdk::secp256k1_program::id(),
+                paychains_sdk::secp256k1_program::id(),
                 dummy_process_instruction,
             ),
             feature_set::prevent_calling_precompiles_as_programs::id(),
@@ -175,8 +175,8 @@ fn feature_builtins() -> Vec<(Builtin, Pubkey, ActivationType)> {
         (
             Builtin::new(
                 "address_lookup_table_program",
-                solana_address_lookup_table_program::id(),
-                solana_address_lookup_table_program::processor::process_instruction,
+                paychains_address_lookup_table_program::id(),
+                paychains_address_lookup_table_program::processor::process_instruction,
             ),
             feature_set::versioned_tx_message_enabled::id(),
             ActivationType::NewProgram,
@@ -184,8 +184,8 @@ fn feature_builtins() -> Vec<(Builtin, Pubkey, ActivationType)> {
         (
             Builtin::new(
                 "zk_token_proof_program",
-                solana_zk_token_sdk::zk_token_proof_program::id(),
-                with_program_logging!(solana_zk_token_proof_program::process_instruction),
+                paychains_zk_token_sdk::zk_token_proof_program::id(),
+                with_program_logging!(paychains_zk_token_proof_program::process_instruction),
             ),
             feature_set::zk_token_sdk_enabled::id(),
             ActivationType::NewProgram,

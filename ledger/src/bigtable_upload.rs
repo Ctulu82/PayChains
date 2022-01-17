@@ -2,8 +2,8 @@ use {
     crate::blockstore::Blockstore,
     crossbeam_channel::bounded,
     log::*,
-    solana_measure::measure::Measure,
-    solana_sdk::clock::Slot,
+    paychains_measure::measure::Measure,
+    paychains_sdk::clock::Slot,
     std::{
         collections::HashSet,
         result::Result,
@@ -23,7 +23,7 @@ const BLOCK_READ_AHEAD_DEPTH: usize = NUM_BLOCKS_TO_UPLOAD_IN_PARALLEL * 2;
 
 pub async fn upload_confirmed_blocks(
     blockstore: Arc<Blockstore>,
-    bigtable: solana_storage_bigtable::LedgerStorage,
+    bigtable: paychains_storage_bigtable::LedgerStorage,
     starting_slot: Slot,
     ending_slot: Option<Slot>,
     allow_missing_metadata: bool,

@@ -1,7 +1,7 @@
 use {
     enum_iterator::IntoEnumIterator,
     log::*,
-    solana_sdk::{
+    paychains_sdk::{
         account::{AccountSharedData, ReadableAccount},
         rent::Rent,
         transaction::{Result, TransactionError},
@@ -70,7 +70,7 @@ pub(crate) fn check_rent_state(
 
 #[cfg(test)]
 mod tests {
-    use {super::*, solana_sdk::pubkey::Pubkey};
+    use {super::*, paychains_sdk::pubkey::Pubkey};
 
     #[test]
     fn test_from_account() {

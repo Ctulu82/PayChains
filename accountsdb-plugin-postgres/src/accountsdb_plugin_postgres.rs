@@ -1,4 +1,4 @@
-use solana_measure::measure::Measure;
+use paychains_measure::measure::Measure;
 /// Main entry for the PostgreSQL plugin
 use {
     crate::{
@@ -10,11 +10,11 @@ use {
     log::*,
     serde_derive::{Deserialize, Serialize},
     serde_json,
-    solana_accountsdb_plugin_interface::accountsdb_plugin_interface::{
+    paychains_accountsdb_plugin_interface::accountsdb_plugin_interface::{
         AccountsDbPlugin, AccountsDbPluginError, ReplicaAccountInfoVersions,
         ReplicaBlockInfoVersions, ReplicaTransactionInfoVersions, Result, SlotStatus,
     },
-    solana_metrics::*,
+    paychains_metrics::*,
     std::{fs::File, io::Read},
     thiserror::Error,
 };
@@ -112,9 +112,9 @@ impl AccountsDbPlugin for AccountsDbPluginPostgres {
     /// # Examples
     ///
     /// {
-    ///    "libpath": "/home/solana/target/release/libsolana_accountsdb_plugin_postgres.so",
+    ///    "libpath": "/home/paychains/target/release/libpaychains_accountsdb_plugin_postgres.so",
     ///    "host": "host_foo",
-    ///    "user": "solana",
+    ///    "user": "paychains",
     ///    "threads": 10,
     ///    "accounts_selector" : {
     ///       "owners" : ["9oT9R5ZyRovSVnt37QvVoBttGpNqR3J7unkb567NP8k3"]
@@ -122,7 +122,7 @@ impl AccountsDbPlugin for AccountsDbPluginPostgres {
     /// }
 
     fn on_load(&mut self, config_file: &str) -> Result<()> {
-        solana_logger::setup_with_default("info");
+        paychains_logger::setup_with_default("info");
         info!(
             "Loading plugin {:?} from config_file {:?}",
             self.name(),

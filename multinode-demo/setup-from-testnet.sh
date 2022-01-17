@@ -6,16 +6,16 @@ source "$here"/common.sh
 
 set -e
 
-rm -rf "$SOLANA_CONFIG_DIR"/latest-testnet-snapshot
-mkdir -p "$SOLANA_CONFIG_DIR"/latest-testnet-snapshot
+rm -rf "$PAYCHAINS_CONFIG_DIR"/latest-testnet-snapshot
+mkdir -p "$PAYCHAINS_CONFIG_DIR"/latest-testnet-snapshot
 (
-  cd "$SOLANA_CONFIG_DIR"/latest-testnet-snapshot || exit 1
+  cd "$PAYCHAINS_CONFIG_DIR"/latest-testnet-snapshot || exit 1
   set -x
-  wget http://api.testnet.solana.com/genesis.tar.bz2
-  wget --trust-server-names http://testnet.solana.com/snapshot.tar.bz2
+  wget http://api.testnet.paychains.com/genesis.tar.bz2
+  wget --trust-server-names http://testnet.paychains.com/snapshot.tar.bz2
 )
 
-snapshot=$(ls "$SOLANA_CONFIG_DIR"/latest-testnet-snapshot/snapshot-[0-9]*-*.tar.zst)
+snapshot=$(ls "$PAYCHAINS_CONFIG_DIR"/latest-testnet-snapshot/snapshot-[0-9]*-*.tar.zst)
 if [[ -z $snapshot ]]; then
   echo Error: Unable to find latest snapshot
   exit 1
@@ -28,37 +28,37 @@ fi
 
 snapshot_slot="${BASH_REMATCH[1]}"
 
-rm -rf "$SOLANA_CONFIG_DIR"/bootstrap-validator
-mkdir -p "$SOLANA_CONFIG_DIR"/bootstrap-validator
+rm -rf "$PAYCHAINS_CONFIG_DIR"/bootstrap-validator
+mkdir -p "$PAYCHAINS_CONFIG_DIR"/bootstrap-validator
 
 
 # Create genesis ledger
 if [[ -r $FAUCET_KEYPAIR ]]; then
-  cp -f "$FAUCET_KEYPAIR" "$SOLANA_CONFIG_DIR"/faucet.json
+  cp -f "$FAUCET_KEYPAIR" "$PAYCHAINS_CONFIG_DIR"/faucet.json
 else
-  $solana_keygen new --no-passphrase -fso "$SOLANA_CONFIG_DIR"/faucet.json
+  $paychains_keygen new --no-passphrase -fso "$PAYCHAINS_CONFIG_DIR"/faucet.json
 fi
 
 if [[ -f $BOOTSTRAP_VALIDATOR_IDENTITY_KEYPAIR ]]; then
-  cp -f "$BOOTSTRAP_VALIDATOR_IDENTITY_KEYPAIR" "$SOLANA_CONFIG_DIR"/bootstrap-validator/identity.json
+  cp -f "$BOOTSTRAP_VALIDATOR_IDENTITY_KEYPAIR" "$PAYCHAINS_CONFIG_DIR"/bootstrap-validator/identity.json
 else
-  $solana_keygen new --no-passphrase -so "$SOLANA_CONFIG_DIR"/bootstrap-validator/identity.json
+  $paychains_keygen new --no-passphrase -so "$PAYCHAINS_CONFIG_DIR"/bootstrap-validator/identity.json
 fi
 
-$solana_keygen new --no-passphrase -so "$SOLANA_CONFIG_DIR"/bootstrap-validator/vote-account.json
-$solana_keygen new --no-passphrase -so "$SOLANA_CONFIG_DIR"/bootstrap-validator/stake-account.json
+$paychains_keygen new --no-passphrase -so "$PAYCHAINS_CONFIG_DIR"/bootstrap-validator/vote-account.json
+$paychains_keygen new --no-passphrase -so "$PAYCHAINS_CONFIG_DIR"/bootstrap-validator/stake-account.json
 
-$solana_ledger_tool create-snapshot \
-  --ledger "$SOLANA_CONFIG_DIR"/latest-testnet-snapshot \
-  --faucet-pubkey "$SOLANA_CONFIG_DIR"/faucet.json \
+$paychains_ledger_tool create-snapshot \
+  --ledger "$PAYCHAINS_CONFIG_DIR"/latest-testnet-snapshot \
+  --faucet-pubkey "$PAYCHAINS_CONFIG_DIR"/faucet.json \
   --faucet-lamports 500000000000000000 \
-  --bootstrap-validator "$SOLANA_CONFIG_DIR"/bootstrap-validator/identity.json \
-                        "$SOLANA_CONFIG_DIR"/bootstrap-validator/vote-account.json \
-                        "$SOLANA_CONFIG_DIR"/bootstrap-validator/stake-account.json \
+  --bootstrap-validator "$PAYCHAINS_CONFIG_DIR"/bootstrap-validator/identity.json \
+                        "$PAYCHAINS_CONFIG_DIR"/bootstrap-validator/vote-account.json \
+                        "$PAYCHAINS_CONFIG_DIR"/bootstrap-validator/stake-account.json \
   --hashes-per-tick sleep \
-  "$snapshot_slot" "$SOLANA_CONFIG_DIR"/bootstrap-validator
+  "$snapshot_slot" "$PAYCHAINS_CONFIG_DIR"/bootstrap-validator
 
-$solana_ledger_tool modify-genesis \
-  --ledger "$SOLANA_CONFIG_DIR"/latest-testnet-snapshot \
+$paychains_ledger_tool modify-genesis \
+  --ledger "$PAYCHAINS_CONFIG_DIR"/latest-testnet-snapshot \
   --hashes-per-tick sleep \
-  "$SOLANA_CONFIG_DIR"/bootstrap-validator
+  "$PAYCHAINS_CONFIG_DIR"/bootstrap-validator

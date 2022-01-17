@@ -1,7 +1,7 @@
 #[cfg(target_os = "linux")]
 use std::{fs::File, io::BufReader, path::Path};
 use {
-    solana_sdk::timing::AtomicInterval,
+    paychains_sdk::timing::AtomicInterval,
     std::{
         collections::HashMap,
         io::BufRead,

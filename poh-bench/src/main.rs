@@ -1,21 +1,21 @@
 #![allow(clippy::integer_arithmetic)]
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-use solana_entry::entry::{self, create_ticks, init_poh, EntrySlice, VerifyRecyclers};
+use paychains_entry::entry::{self, create_ticks, init_poh, EntrySlice, VerifyRecyclers};
 #[cfg(not(any(target_arch = "x86", target_arch = "x86_64")))]
-use solana_entry::entry::{create_ticks, init_poh, EntrySlice, VerifyRecyclers};
+use paychains_entry::entry::{create_ticks, init_poh, EntrySlice, VerifyRecyclers};
 use {
     clap::{crate_description, crate_name, value_t, App, Arg},
-    solana_measure::measure::Measure,
-    solana_perf::perf_libs,
-    solana_sdk::hash::hash,
+    paychains_measure::measure::Measure,
+    paychains_perf::perf_libs,
+    paychains_sdk::hash::hash,
 };
 
 fn main() {
-    solana_logger::setup();
+    paychains_logger::setup();
 
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(paychains_version::version!())
         .arg(
             Arg::with_name("max_num_entries")
                 .long("max-num-entries")

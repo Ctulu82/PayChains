@@ -1,6 +1,6 @@
 import React from "react";
 import { Account } from "providers/accounts";
-import { SolBalance } from "utils";
+import { PayBalance } from "utils";
 import { TableCardBody } from "components/common/TableCardBody";
 import { Address } from "components/common/Address";
 import { addressLabel } from "utils/tx";
@@ -34,9 +34,9 @@ export function UnknownAccountCard({ account }: { account: Account }) {
           </tr>
         )}
         <tr>
-          <td>Balance (SOL)</td>
+          <td>Balance (PAY)</td>
           <td className="text-lg-end">
-            <SolBalance lamports={lamports} />
+            <PayBalance lamports={lamports} />
           </td>
         </tr>
 

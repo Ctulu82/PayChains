@@ -1,6 +1,6 @@
 //! The `validator` module hosts all the validator microservices.
 
-pub use solana_perf::report_target_features;
+pub use paychains_perf::report_target_features;
 use {
     crate::{
         broadcast_stage::BroadcastStageType,
@@ -22,9 +22,9 @@ use {
     },
     crossbeam_channel::{bounded, unbounded, Receiver},
     rand::{thread_rng, Rng},
-    solana_accountsdb_plugin_manager::accountsdb_plugin_service::AccountsDbPluginService,
-    solana_entry::poh::compute_hash_time_ns,
-    solana_gossip::{
+    paychains_accountsdb_plugin_manager::accountsdb_plugin_service::AccountsDbPluginService,
+    paychains_entry::poh::compute_hash_time_ns,
+    paychains_gossip::{
         cluster_info::{
             ClusterInfo, Node, DEFAULT_CONTACT_DEBUG_INTERVAL_MILLIS,
             DEFAULT_CONTACT_SAVE_INTERVAL_MILLIS,
@@ -33,7 +33,7 @@ use {
         crds_gossip_pull::CRDS_GOSSIP_PULL_CRDS_TIMEOUT_MS,
         gossip_service::GossipService,
     },
-    solana_ledger::{
+    paychains_ledger::{
         bank_forks_utils,
         blockstore::{Blockstore, BlockstoreSignals, CompletedSlotsReceiver, PurgeType},
         blockstore_db::{BlockstoreOptions, BlockstoreRecoveryMode},
@@ -41,17 +41,17 @@ use {
         leader_schedule::FixedSchedule,
         leader_schedule_cache::LeaderScheduleCache,
     },
-    solana_measure::measure::Measure,
-    solana_metrics::datapoint_info,
-    solana_poh::{
+    paychains_measure::measure::Measure,
+    paychains_metrics::datapoint_info,
+    paychains_poh::{
         poh_recorder::{PohRecorder, GRACE_TICKS_FACTOR, MAX_GRACE_SLOTS},
         poh_service::{self, PohService},
     },
-    solana_replica_lib::{
+    paychains_replica_lib::{
         accountsdb_repl_server::{AccountsDbReplService, AccountsDbReplServiceConfig},
         accountsdb_repl_server_factory,
     },
-    solana_rpc::{
+    paychains_rpc::{
         max_slots::MaxSlots,
         optimistically_confirmed_bank_tracker::{
             OptimisticallyConfirmedBank, OptimisticallyConfirmedBankTracker,
@@ -64,7 +64,7 @@ use {
         transaction_notifier_interface::TransactionNotifierLock,
         transaction_status_service::TransactionStatusService,
     },
-    solana_runtime::{
+    paychains_runtime::{
         accounts_db::{AccountShrinkThreshold, AccountsDbConfig},
         accounts_index::AccountSecondaryIndexes,
         accounts_update_notifier_interface::AccountsUpdateNotifier,
@@ -79,7 +79,7 @@ use {
         snapshot_package::{AccountsPackageSender, PendingSnapshotPackage},
         snapshot_utils,
     },
-    solana_sdk::{
+    paychains_sdk::{
         clock::Slot,
         epoch_schedule::MAX_LEADER_SCHEDULE_EPOCH_OFFSET,
         exit::Exit,
@@ -90,9 +90,9 @@ use {
         signature::{Keypair, Signer},
         timing::timestamp,
     },
-    solana_send_transaction_service::send_transaction_service,
-    solana_streamer::socket::SocketAddrSpace,
-    solana_vote_program::vote_state::VoteState,
+    paychains_send_transaction_service::send_transaction_service,
+    paychains_streamer::socket::SocketAddrSpace,
+    paychains_vote_program::vote_state::VoteState,
     std::{
         collections::{HashMap, HashSet},
         net::SocketAddr,
@@ -285,7 +285,7 @@ pub struct Validator {
     poh_service: PohService,
     tpu: Tpu,
     tvu: Tvu,
-    ip_echo_server: Option<solana_net_utils::IpEchoServer>,
+    ip_echo_server: Option<paychains_net_utils::IpEchoServer>,
     pub cluster_info: Arc<ClusterInfo>,
     accountsdb_repl_service: Option<AccountsDbReplService>,
     accountsdb_plugin_service: Option<AccountsDbPluginService>,
@@ -359,7 +359,7 @@ impl Validator {
             info!("entrypoint: {:?}", cluster_entrypoint);
         }
 
-        if solana_perf::perf_libs::api().is_some() {
+        if paychains_perf::perf_libs::api().is_some() {
             info!("Initializing sigverify, this could take a while...");
         } else {
             info!("Initializing sigverify...");
@@ -700,7 +700,7 @@ impl Validator {
         }
         let ip_echo_server = match node.sockets.ip_echo {
             None => None,
-            Some(tcp_listener) => Some(solana_net_utils::ip_echo_server(
+            Some(tcp_listener) => Some(paychains_net_utils::ip_echo_server(
                 tcp_listener,
                 Some(node.info.shred_version),
             )),
@@ -1357,7 +1357,7 @@ fn new_banks_from_ledger(
         ));
         bank_forks.set_root(
             warp_slot,
-            &solana_runtime::accounts_background_service::AbsRequestSender::default(),
+            &paychains_runtime::accounts_background_service::AbsRequestSender::default(),
             Some(warp_slot),
         );
         leader_schedule_cache.set_root(&bank_forks.root_bank());
@@ -1748,14 +1748,14 @@ pub fn is_snapshot_config_valid(
 mod tests {
     use {
         super::*,
-        solana_ledger::{create_new_tmp_ledger, genesis_utils::create_genesis_config_with_leader},
-        solana_sdk::{genesis_config::create_genesis_config, poh_config::PohConfig},
+        paychains_ledger::{create_new_tmp_ledger, genesis_utils::create_genesis_config_with_leader},
+        paychains_sdk::{genesis_config::create_genesis_config, poh_config::PohConfig},
         std::fs::remove_dir_all,
     };
 
     #[test]
     fn validator_exit() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let leader_keypair = Keypair::new();
         let leader_node = Node::new_localhost_with_pubkey(&leader_keypair.pubkey());
 
@@ -1795,10 +1795,10 @@ mod tests {
     #[test]
     fn test_backup_and_clear_blockstore() {
         use std::time::Instant;
-        solana_logger::setup();
+        paychains_logger::setup();
         use {
-            solana_entry::entry,
-            solana_ledger::{blockstore, get_tmp_ledger_path},
+            paychains_entry::entry,
+            paychains_ledger::{blockstore, get_tmp_ledger_path},
         };
         let blockstore_path = get_tmp_ledger_path!();
         {
@@ -1883,8 +1883,8 @@ mod tests {
 
     #[test]
     fn test_wait_for_supermajority() {
-        solana_logger::setup();
-        use solana_sdk::hash::hash;
+        paychains_logger::setup();
+        use paychains_sdk::hash::hash;
         let node_keypair = Arc::new(Keypair::new());
         let cluster_info = ClusterInfo::new(
             ContactInfo::new_localhost(&node_keypair.pubkey(), timestamp()),
@@ -1988,11 +1988,11 @@ mod tests {
     #[test]
     #[should_panic]
     fn test_poh_speed() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let poh_config = PohConfig {
-            target_tick_duration: Duration::from_millis(solana_sdk::clock::MS_PER_TICK),
+            target_tick_duration: Duration::from_millis(paychains_sdk::clock::MS_PER_TICK),
             // make PoH rate really fast to cause the panic condition
-            hashes_per_tick: Some(100 * solana_sdk::clock::DEFAULT_HASHES_PER_TICK),
+            hashes_per_tick: Some(100 * paychains_sdk::clock::DEFAULT_HASHES_PER_TICK),
             ..PohConfig::default()
         };
         let genesis_config = GenesisConfig {
@@ -2005,7 +2005,7 @@ mod tests {
     #[test]
     fn test_poh_speed_no_hashes_per_tick() {
         let poh_config = PohConfig {
-            target_tick_duration: Duration::from_millis(solana_sdk::clock::MS_PER_TICK),
+            target_tick_duration: Duration::from_millis(paychains_sdk::clock::MS_PER_TICK),
             hashes_per_tick: None,
             ..PohConfig::default()
         };

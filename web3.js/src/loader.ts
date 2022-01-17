@@ -1,5 +1,5 @@
 import {Buffer} from 'buffer';
-import * as BufferLayout from '@solana/buffer-layout';
+import * as BufferLayout from '@paychains/buffer-layout';
 
 import {PublicKey} from './publickey';
 import {Transaction, PACKET_DATA_SIZE} from './transaction';
@@ -177,7 +177,7 @@ export class Loader {
       );
 
       // Delay between sends in an attempt to reduce rate limit errors
-      if (connection._rpcEndpoint.includes('solana.com')) {
+      if (connection._rpcEndpoint.includes('paychains.com')) {
         const REQUESTS_PER_SECOND = 4;
         await sleep(1000 / REQUESTS_PER_SECOND);
       }

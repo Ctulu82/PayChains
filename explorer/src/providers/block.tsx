@@ -1,7 +1,7 @@
 import React from "react";
 import * as Sentry from "@sentry/react";
 import * as Cache from "providers/cache";
-import { Connection, BlockResponse } from "@solana/web3.js";
+import { Connection, BlockResponse } from "@paychains/web3.js";
 import { useCluster, Cluster } from "./cluster";
 
 export enum FetchStatus {

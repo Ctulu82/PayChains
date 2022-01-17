@@ -1,20 +1,20 @@
 [package]
-name = "solana-upload-perf"
+name = "paychains-upload-perf"
 version = "1.10.0"
 description = "Metrics Upload Utility"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana"
+authors = ["PayChains Maintainers <maintainers@paychains.foundation>"]
+repository = "https://github.com/paychains-labs/paychains"
 license = "Apache-2.0"
 edition = "2021"
-homepage = "https://solana.com/"
+homepage = "https://paychains.com/"
 publish = false
 
 [dependencies]
 serde_json = "1.0.74"
-solana-metrics = { path = "../metrics", version = "=1.10.0" }
+paychains-metrics = { path = "../metrics", version = "=1.10.0" }
 
 [[bin]]
-name = "solana-upload-perf"
+name = "paychains-upload-perf"
 path = "src/upload-perf.rs"
 
 

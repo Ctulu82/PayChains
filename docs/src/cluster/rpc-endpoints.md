@@ -1,8 +1,8 @@
 ---
-title: Solana Cluster RPC Endpoints
+title: PayChains Cluster RPC Endpoints
 ---
 
-Solana maintains dedicated api nodes to fulfill [JSON-RPC](developing/clients/jsonrpc-api.md)
+PayChains maintains dedicated api nodes to fulfill [JSON-RPC](developing/clients/jsonrpc-api.md)
 requests for each public cluster, and third parties may as well. Here are the
 public RPC endpoints currently available and recommended for each public cluster:
 
@@ -10,7 +10,7 @@ public RPC endpoints currently available and recommended for each public cluster
 
 #### Endpoint
 
-- `https://api.devnet.solana.com` - single Solana-hosted api node; rate-limited
+- `https://api.devnet.paychains.com` - single PayChains-hosted api node; rate-limited
 
 #### Rate Limits
 
@@ -24,7 +24,7 @@ public RPC endpoints currently available and recommended for each public cluster
 
 #### Endpoint
 
-- `https://api.testnet.solana.com` - single Solana-hosted api node; rate-limited
+- `https://api.testnet.paychains.com` - single PayChains-hosted api node; rate-limited
 
 #### Rate Limits
 
@@ -38,8 +38,8 @@ public RPC endpoints currently available and recommended for each public cluster
 
 #### Endpoints
 
-- `https://api.mainnet-beta.solana.com` - Solana-hosted api node cluster, backed by a load balancer; rate-limited
-- `https://solana-api.projectserum.com` - Project Serum-hosted api node
+- `https://api.mainnet-beta.paychains.com` - PayChains-hosted api node cluster, backed by a load balancer; rate-limited
+- `https://paychains-api.projectserum.com` - Project Serum-hosted api node
 
 #### Rate Limits
 

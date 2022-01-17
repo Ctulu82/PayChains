@@ -14,9 +14,9 @@ netDir=$(
 netConfigDir="$netDir"/config
 mkdir -p "$netConfigDir"
 
-SOLANA_ROOT="$netDir"/..
+PAYCHAINS_ROOT="$netDir"/..
 # shellcheck source=scripts/configure-metrics.sh
-source "$SOLANA_ROOT"/scripts/configure-metrics.sh
+source "$PAYCHAINS_ROOT"/scripts/configure-metrics.sh
 
 configFile="$netConfigDir/config"
 geoipConfigFile="$netConfigDir/geoip.yml"
@@ -44,7 +44,7 @@ buildSshOptions() {
     -o "BatchMode=yes"
     -o "StrictHostKeyChecking=no"
     -o "UserKnownHostsFile=/dev/null"
-    -o "User=solana"
+    -o "User=paychains"
     -o "IdentitiesOnly=yes"
     -o "IdentityFile=$sshPrivateKey"
     -o "LogLevel=ERROR"
@@ -93,7 +93,7 @@ urlencode() {
   done
 }
 
-SOLANA_CONFIG_DIR=$SOLANA_ROOT/config
+PAYCHAINS_CONFIG_DIR=$PAYCHAINS_ROOT/config
 # Clear the current cluster configuration
 clear_config_dir() {
   declare config_dir="$1"
@@ -118,8 +118,8 @@ _setup_secondary_mount() {
     if [[ -d $SECONDARY_DISK_MOUNT_POINT ]] && \
       [[ -w $SECONDARY_DISK_MOUNT_POINT ]]; then
       mkdir -p $SECONDARY_DISK_MOUNT_POINT/config
-      rm -rf "$SOLANA_CONFIG_DIR"
-      ln -sfT $SECONDARY_DISK_MOUNT_POINT/config "$SOLANA_CONFIG_DIR"
+      rm -rf "$PAYCHAINS_CONFIG_DIR"
+      ln -sfT $SECONDARY_DISK_MOUNT_POINT/config "$PAYCHAINS_CONFIG_DIR"
     fi
   )
 }

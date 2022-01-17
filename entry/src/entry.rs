@@ -11,18 +11,18 @@ use {
     rand::{thread_rng, Rng},
     rayon::{prelude::*, ThreadPool},
     serde::{Deserialize, Serialize},
-    solana_measure::measure::Measure,
-    solana_merkle_tree::MerkleTree,
-    solana_metrics::*,
-    solana_perf::{
+    paychains_measure::measure::Measure,
+    paychains_merkle_tree::MerkleTree,
+    paychains_metrics::*,
+    paychains_perf::{
         cuda_runtime::PinnedVec,
         packet::{Packet, PacketBatch, PacketBatchRecycler, PACKETS_PER_BATCH},
         perf_libs,
         recycler::Recycler,
         sigverify,
     },
-    solana_rayon_threadlimit::get_thread_count,
-    solana_sdk::{
+    paychains_rayon_threadlimit::get_thread_count,
+    paychains_sdk::{
         hash::Hash,
         packet::Meta,
         timing,
@@ -63,9 +63,9 @@ fn init(name: &OsStr) {
     unsafe {
         INIT_HOOK.call_once(|| {
             let path;
-            let lib_name = if let Some(perf_libs_path) = solana_perf::perf_libs::locate_perf_libs()
+            let lib_name = if let Some(perf_libs_path) = paychains_perf::perf_libs::locate_perf_libs()
             {
-                solana_perf::perf_libs::append_to_ld_library_path(
+                paychains_perf::perf_libs::append_to_ld_library_path(
                     perf_libs_path.to_str().unwrap_or("").to_string(),
                 );
                 path = perf_libs_path.join(name);
@@ -639,7 +639,7 @@ impl EntrySlice for [Entry] {
     }
 
     fn verify_cpu_x86_simd(&self, start_hash: &Hash, simd_len: usize) -> EntryVerificationState {
-        use solana_sdk::hash::HASH_BYTES;
+        use paychains_sdk::hash::HASH_BYTES;
         let now = Instant::now();
         let genesis = [Entry {
             num_hashes: 0,
@@ -911,8 +911,8 @@ pub fn next_entry(prev_hash: &Hash, num_hashes: u64, transactions: Vec<Transacti
 mod tests {
     use {
         super::*,
-        solana_perf::test_tx::{test_invalid_tx, test_tx},
-        solana_sdk::{
+        paychains_perf::test_tx::{test_invalid_tx, test_tx},
+        paychains_sdk::{
             hash::{hash, Hash},
             pubkey::Pubkey,
             signature::{Keypair, Signer},
@@ -1060,7 +1060,7 @@ mod tests {
 
     #[test]
     fn test_transaction_signing() {
-        use solana_sdk::signature::Signature;
+        use paychains_sdk::signature::Signature;
         let zero = Hash::default();
 
         let keypair = Keypair::new();
@@ -1121,7 +1121,7 @@ mod tests {
 
     #[test]
     fn test_verify_slice1() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let zero = Hash::default();
         let one = hash(zero.as_ref());
         assert!(vec![][..].verify(&zero)); // base case
@@ -1136,7 +1136,7 @@ mod tests {
 
     #[test]
     fn test_verify_slice_with_hashes1() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let zero = Hash::default();
         let one = hash(zero.as_ref());
         let two = hash(one.as_ref());
@@ -1156,7 +1156,7 @@ mod tests {
 
     #[test]
     fn test_verify_slice_with_hashes_and_transactions() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let zero = Hash::default();
         let one = hash(zero.as_ref());
         let two = hash(one.as_ref());
@@ -1301,7 +1301,7 @@ mod tests {
 
     #[test]
     fn test_poh_verify_fuzz() {
-        solana_logger::setup();
+        paychains_logger::setup();
         for _ in 0..100 {
             let mut time = Measure::start("ticks");
             let num_ticks = thread_rng().gen_range(1, 100);

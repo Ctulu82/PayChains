@@ -6,11 +6,11 @@ use {
     jsonrpc_server_utils::tokio,
     log::*,
     serde::{Deserialize, Serialize},
-    solana_core::{
+    paychains_core::{
         consensus::Tower, tower_storage::TowerStorage, validator::ValidatorStartProgress,
     },
-    solana_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfo},
-    solana_sdk::{
+    paychains_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfo},
+    paychains_sdk::{
         exit::Exit,
         signature::{read_keypair_file, Keypair, Signer},
     },
@@ -171,7 +171,7 @@ impl AdminRpc for AdminRpcImpl {
 
     fn set_log_filter(&self, filter: String) -> Result<()> {
         debug!("set_log_filter admin rpc request received");
-        solana_logger::setup_with(&filter);
+        paychains_logger::setup_with(&filter);
         Ok(())
     }
 
@@ -232,7 +232,7 @@ impl AdminRpc for AdminRpcImpl {
         })?;
 
         if let Some(cluster_info) = meta.cluster_info.read().unwrap().as_ref() {
-            solana_metrics::set_host_id(identity_keypair.pubkey().to_string());
+            paychains_metrics::set_host_id(identity_keypair.pubkey().to_string());
             cluster_info.set_keypair(Arc::new(identity_keypair));
             warn!("Identity set to {}", cluster_info.id());
             Ok(())
@@ -259,13 +259,13 @@ pub fn run(ledger_path: &Path, metadata: AdminRpcRequestMetadata) {
     let admin_rpc_path = admin_rpc_path(ledger_path);
 
     let event_loop = tokio::runtime::Builder::new_multi_thread()
-        .thread_name("sol-adminrpc-el")
+        .thread_name("pay-adminrpc-el")
         .enable_all()
         .build()
         .unwrap();
 
     Builder::new()
-        .name("solana-adminrpc".to_string())
+        .name("paychains-adminrpc".to_string())
         .spawn(move || {
             let mut io = MetaIoHandler::default();
             io.extend_with(AdminRpcImpl.to_delegate());

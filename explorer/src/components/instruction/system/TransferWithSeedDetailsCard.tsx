@@ -3,8 +3,8 @@ import {
   SystemProgram,
   SignatureResult,
   ParsedInstruction,
-} from "@solana/web3.js";
-import { SolBalance } from "utils";
+} from "@paychains/web3.js";
+import { PayBalance } from "utils";
 import { InstructionCard } from "../InstructionCard";
 import { Copyable } from "components/common/Copyable";
 import { Address } from "components/common/Address";
@@ -58,9 +58,9 @@ export function TransferWithSeedDetailsCard(props: {
       </tr>
 
       <tr>
-        <td>Transfer Amount (SOL)</td>
+        <td>Transfer Amount (PAY)</td>
         <td className="text-lg-end">
-          <SolBalance lamports={info.lamports} />
+          <PayBalance lamports={info.lamports} />
         </td>
       </tr>
 

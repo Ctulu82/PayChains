@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Builds known downstream projects against local solana source
+# Builds known downstream projects against local paychains source
 #
 
 set -e
@@ -9,11 +9,11 @@ source ci/_
 source scripts/patch-crates.sh
 source scripts/read-cargo-variable.sh
 
-solana_ver=$(readCargoVariable version sdk/Cargo.toml)
-solana_dir=$PWD
-cargo="$solana_dir"/cargo
-cargo_build_bpf="$solana_dir"/cargo-build-bpf
-cargo_test_bpf="$solana_dir"/cargo-test-bpf
+paychains_ver=$(readCargoVariable version sdk/Cargo.toml)
+paychains_dir=$PWD
+cargo="$paychains_dir"/cargo
+cargo_build_bpf="$paychains_dir"/cargo-build-bpf
+cargo_test_bpf="$paychains_dir"/cargo-test-bpf
 
 mkdir -p target/downstream-projects
 cd target/downstream-projects
@@ -22,11 +22,11 @@ example_helloworld() {
   (
     set -x
     rm -rf example-helloworld
-    git clone https://github.com/solana-labs/example-helloworld.git
+    git clone https://github.com/paychains-labs/example-helloworld.git
     cd example-helloworld
 
-    update_solana_dependencies src/program-rust "$solana_ver"
-    patch_crates_io_solana src/program-rust/Cargo.toml "$solana_dir"
+    update_paychains_dependencies src/program-rust "$paychains_ver"
+    patch_crates_io_paychains src/program-rust/Cargo.toml "$paychains_dir"
     echo "[workspace]" >> src/program-rust/Cargo.toml
 
     $cargo_build_bpf \
@@ -40,10 +40,10 @@ spl() {
   (
     set -x
     rm -rf spl
-    git clone https://github.com/solana-labs/solana-program-library.git spl
+    git clone https://github.com/paychains-labs/paychains-program-library.git spl
     cd spl
 
-    ./patch.crates-io.sh "$solana_dir"
+    ./patch.crates-io.sh "$paychains_dir"
 
     $cargo build
     $cargo test
@@ -59,9 +59,9 @@ serum_dex() {
     git clone https://github.com/project-serum/serum-dex.git
     cd serum-dex
 
-    update_solana_dependencies . "$solana_ver"
-    patch_crates_io_solana Cargo.toml "$solana_dir"
-    patch_crates_io_solana dex/Cargo.toml "$solana_dir"
+    update_paychains_dependencies . "$paychains_ver"
+    patch_crates_io_paychains Cargo.toml "$paychains_dir"
+    patch_crates_io_paychains dex/Cargo.toml "$paychains_dir"
     cat >> dex/Cargo.toml <<EOF
 [workspace]
 exclude = [

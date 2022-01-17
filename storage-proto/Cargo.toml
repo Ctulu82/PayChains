@@ -1,12 +1,12 @@
 [package]
-name = "solana-storage-proto"
+name = "paychains-storage-proto"
 version = "1.10.0"
-description = "Solana Storage Protobuf Definitions"
-authors = ["Solana Maintainers <maintainers@solana.com>"]
-repository = "https://github.com/solana-labs/solana"
+description = "PayChains Storage Protobuf Definitions"
+authors = ["PayChains Maintainers <maintainers@paychains.com>"]
+repository = "https://github.com/paychains-labs/paychains"
 license = "Apache-2.0"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-storage-proto"
+homepage = "https://paychains.com/"
+documentation = "https://docs.rs/paychains-storage-proto"
 edition = "2021"
 
 [dependencies]
@@ -14,16 +14,16 @@ bincode = "1.3.3"
 bs58 = "0.4.0"
 prost = "0.9.0"
 serde = "1.0.133"
-solana-account-decoder = { path = "../account-decoder", version = "=1.10.0" }
-solana-sdk = { path = "../sdk", version = "=1.10.0" }
-solana-transaction-status = { path = "../transaction-status", version = "=1.10.0" }
+paychains-account-decoder = { path = "../account-decoder", version = "=1.10.0" }
+paychains-sdk = { path = "../sdk", version = "=1.10.0" }
+paychains-transaction-status = { path = "../transaction-status", version = "=1.10.0" }
 
 [dev-dependencies]
 enum-iterator = "0.7.0"
 
 [lib]
 crate-type = ["lib"]
-name = "solana_storage_proto"
+name = "paychains_storage_proto"
 
 [package.metadata.docs.rs]
 targets = ["x86_64-unknown-linux-gnu"]

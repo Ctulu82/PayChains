@@ -1,5 +1,5 @@
 use {
-    solana_sdk::instruction::CompiledInstruction,
+    paychains_sdk::instruction::CompiledInstruction,
     std::{cell::RefCell, rc::Rc},
 };
 

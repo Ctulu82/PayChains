@@ -1,6 +1,6 @@
 use {
-    solana_client::rpc_client::RpcClient,
-    solana_sdk::{clock::DEFAULT_MS_PER_SLOT, commitment_config::CommitmentConfig, pubkey::Pubkey},
+    paychains_client::rpc_client::RpcClient,
+    paychains_sdk::{clock::DEFAULT_MS_PER_SLOT, commitment_config::CommitmentConfig, pubkey::Pubkey},
     std::{thread::sleep, time::Duration},
 };
 

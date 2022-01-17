@@ -1,8 +1,8 @@
 use {
     rayon::prelude::*,
-    solana_bucket_map::bucket_map::{BucketMap, BucketMapConfig},
-    solana_measure::measure::Measure,
-    solana_sdk::pubkey::Pubkey,
+    paychains_bucket_map::bucket_map::{BucketMap, BucketMapConfig},
+    paychains_measure::measure::Measure,
+    paychains_sdk::pubkey::Pubkey,
     std::path::PathBuf,
 };
 #[test]

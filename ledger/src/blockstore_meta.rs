@@ -4,7 +4,7 @@ use {
         shred::{Shred, ShredType},
     },
     serde::{Deserialize, Deserializer, Serialize, Serializer},
-    solana_sdk::{clock::Slot, hash::Hash},
+    paychains_sdk::{clock::Slot, hash::Hash},
     std::{
         collections::BTreeSet,
         ops::{Range, RangeBounds},

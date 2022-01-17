@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Location } from "history";
-import { AccountBalancePair } from "@solana/web3.js";
+import { AccountBalancePair } from "@paychains/web3.js";
 import { useRichList, useFetchRichList, Status } from "providers/richList";
 import { LoadingCard } from "./common/LoadingCard";
 import { ErrorCard } from "./common/ErrorCard";
-import { SolBalance } from "utils";
+import { PayBalance } from "utils";
 import { useQuery } from "utils/url";
 import { useSupply } from "providers/supply";
 import { Address } from "./common/Address";
@@ -101,7 +101,7 @@ export function TopAccountsCard() {
                 <tr>
                   <th className="text-muted">Rank</th>
                   <th className="text-muted">Address</th>
-                  <th className="text-muted text-end">Balance (SOL)</th>
+                  <th className="text-muted text-end">Balance (PAY)</th>
                   <th className="text-muted text-end">% of {header} Supply</th>
                 </tr>
               </thead>
@@ -132,7 +132,7 @@ const renderAccountRow = (
         <Address pubkey={account.address} link />
       </td>
       <td className="text-end">
-        <SolBalance lamports={account.lamports} maximumFractionDigits={0} />
+        <PayBalance lamports={account.lamports} maximumFractionDigits={0} />
       </td>
       <td className="text-end">{`${((100 * account.lamports) / supply).toFixed(
         3

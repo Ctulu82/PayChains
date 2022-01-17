@@ -1,5 +1,5 @@
 use {
-    solana_sdk::{
+    paychains_sdk::{
         account::{Account, AccountSharedData},
         feature::{self, Feature},
         feature_set::FeatureSet,
@@ -11,8 +11,8 @@ use {
         stake::state::StakeState,
         system_program,
     },
-    solana_stake_program::stake_state,
-    solana_vote_program::vote_state,
+    paychains_stake_program::stake_state,
+    paychains_vote_program::vote_state,
     std::borrow::Borrow,
 };
 
@@ -56,7 +56,7 @@ pub struct GenesisConfigInfo {
 }
 
 pub fn create_genesis_config(mint_lamports: u64) -> GenesisConfigInfo {
-    create_genesis_config_with_leader(mint_lamports, &solana_sdk::pubkey::new_rand(), 0)
+    create_genesis_config_with_leader(mint_lamports, &paychains_sdk::pubkey::new_rand(), 0)
 }
 
 pub fn create_genesis_config_with_vote_accounts(
@@ -149,7 +149,7 @@ pub fn create_genesis_config_with_leader(
         &mint_keypair.pubkey(),
         validator_pubkey,
         &voting_keypair.pubkey(),
-        &solana_sdk::pubkey::new_rand(),
+        &paychains_sdk::pubkey::new_rand(),
         validator_stake_lamports,
         VALIDATOR_LAMPORTS,
         FeeRateGovernor::new(0, 0), // most tests can't handle transaction fees
@@ -233,7 +233,7 @@ pub fn create_genesis_config_with_leader_ex(
         ..GenesisConfig::default()
     };
 
-    solana_stake_program::add_genesis_accounts(&mut genesis_config);
+    paychains_stake_program::add_genesis_accounts(&mut genesis_config);
     if genesis_config.cluster_type == ClusterType::Development {
         activate_all_features(&mut genesis_config);
     }

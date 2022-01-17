@@ -11,11 +11,11 @@ use {
     log::*,
     postgres::{Client, Statement},
     postgres_types::ToSql,
-    solana_accountsdb_plugin_interface::accountsdb_plugin_interface::{
+    paychains_accountsdb_plugin_interface::accountsdb_plugin_interface::{
         AccountsDbPluginError, ReplicaTransactionInfo,
     },
-    solana_runtime::bank::RewardType,
-    solana_sdk::{
+    paychains_runtime::bank::RewardType,
+    paychains_sdk::{
         instruction::CompiledInstruction,
         message::{
             v0::{self, LoadedAddresses, MessageAddressTableLookup},
@@ -23,7 +23,7 @@ use {
         },
         transaction::TransactionError,
     },
-    solana_transaction_status::{
+    paychains_transaction_status::{
         InnerInstructions, Reward, TransactionStatusMeta, TransactionTokenBalance,
     },
 };
@@ -605,8 +605,8 @@ impl ParallelPostgresClient {
 pub(crate) mod tests {
     use {
         super::*,
-        solana_account_decoder::parse_token::UiTokenAmount,
-        solana_sdk::{
+        paychains_account_decoder::parse_token::UiTokenAmount,
+        paychains_sdk::{
             hash::Hash,
             message::VersionedMessage,
             pubkey::Pubkey,

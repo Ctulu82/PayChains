@@ -2,13 +2,13 @@
 title: Mobile App Wallets
 ---
 
-Solana is supported by multiple third-party apps which should provide a familiar
+PayChains is supported by multiple third-party apps which should provide a familiar
 experience for most people who are new or experienced with using crypto wallets.
 
 ## Coin98
 
 [Coin98](https://coin98.app/) is an app available for iOS and Android and can
-be used to send and receive SOL tokens.
+be used to send and receive PAY tokens.
 
 _Note: Coin98 does not support stake accounts or staking operations_
 
@@ -16,24 +16,24 @@ _Note: Coin98 does not support stake accounts or staking operations_
 
 Send, receive & exchange cryptocurrency with ease on the world's leading Desktop, Mobile and Hardware crypto wallets.
 
-Download [Exodus](https://exodus.com/) to easily and securely manage your Solana tokens.
+Download [Exodus](https://exodus.com/) to easily and securely manage your PayChains tokens.
 
 Exodus includes live charts, a built-in exchange, and 24/7 human support.
 
-## Solflare
+## Payflare
 
-[Solflare Wallet](https://solflare.com/) has mobile applications available for both
-iOS and Android. These Mobile apps have support for sending Solana and SPL tokens,
+[Payflare Wallet](https://solflare.com/) has mobile applications available for both
+iOS and Android. These Mobile apps have support for sending PayChains and SPL tokens,
 staking, and NFT management in a fully-featured NFT gallery.
 
-Security is a top priority for Solflare - the mobile wallet is non-custodial,
+Security is a top priority for Payflare - the mobile wallet is non-custodial,
 meaning keys are managed by the user who retains total control of their own funds.
 The app supports biometric protection alongside passwords for maximum security.
 
 ## Trust Wallet
 
 [Trust Wallet](https://trustwallet.com/) is an app available for iOS and Android
-and can be used to send and receive SOL tokens.
+and can be used to send and receive PAY tokens.
 
 _Note: Trust Wallet does not support stake accounts or staking operations_
 
@@ -59,8 +59,8 @@ viewed at any later time in the app by following these steps:
 
 ## Zelcore
 
-[Zelcore](https://zelcore.io) is a multi-currency wallet now supporting SOL and all Solana tokens (SPL). Each Zelcore account has 3 separate addresses for each asset.
-Store, transact, connect to dapps, and (soon) DEX trade in a single app and hold SOL tokens alongside BTC, ETH, and 270+ other cryptos.
+[Zelcore](https://zelcore.io) is a multi-currency wallet now supporting PAY and all PayChains tokens (SPL). Each Zelcore account has 3 separate addresses for each asset.
+Store, transact, connect to dapps, and (soon) DEX trade in a single app and hold PAY tokens alongside BTC, ETH, and 270+ other cryptos.
 
 Zelcore is available for [Desktop](https://zelcore.io), [iOS](https://apps.apple.com/us/app/zelcore/id1436296839), and [Android](https://play.google.com/store/apps/details?id=com.zelcash.zelcore&hl=en_US&gl=US). One account for all your cryptos, all your devices.
 

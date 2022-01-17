@@ -4,12 +4,12 @@ use {
         de::{Deserialize, Deserializer},
         ser::{Serialize, Serializer},
     },
-    solana_sdk::{
+    paychains_sdk::{
         account::{Account, AccountSharedData},
         instruction::InstructionError,
         pubkey::Pubkey,
     },
-    solana_vote_program::vote_state::VoteState,
+    paychains_vote_program::vote_state::VoteState,
     std::{
         cmp::Ordering,
         collections::{hash_map::Entry, HashMap},
@@ -337,8 +337,8 @@ mod tests {
         super::*,
         bincode::Options,
         rand::Rng,
-        solana_sdk::{pubkey::Pubkey, sysvar::clock::Clock},
-        solana_vote_program::vote_state::{VoteInit, VoteStateVersions},
+        paychains_sdk::{pubkey::Pubkey, sysvar::clock::Clock},
+        paychains_vote_program::vote_state::{VoteInit, VoteStateVersions},
         std::iter::repeat_with,
     };
 

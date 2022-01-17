@@ -2,27 +2,27 @@
 use {
     crossbeam_channel::unbounded,
     serial_test::serial,
-    solana_bench_tps::{
+    paychains_bench_tps::{
         bench::{do_bench_tps, generate_and_fund_keypairs},
         cli::Config,
     },
-    solana_client::thin_client::create_client,
-    solana_core::validator::ValidatorConfig,
-    solana_faucet::faucet::run_local_faucet_with_port,
-    solana_gossip::cluster_info::VALIDATOR_PORT_RANGE,
-    solana_local_cluster::{
+    paychains_client::thin_client::create_client,
+    paychains_core::validator::ValidatorConfig,
+    paychains_faucet::faucet::run_local_faucet_with_port,
+    paychains_gossip::cluster_info::VALIDATOR_PORT_RANGE,
+    paychains_local_cluster::{
         local_cluster::{ClusterConfig, LocalCluster},
         validator_configs::make_identical_validator_configs,
     },
-    solana_sdk::signature::{Keypair, Signer},
-    solana_streamer::socket::SocketAddrSpace,
+    paychains_sdk::signature::{Keypair, Signer},
+    paychains_streamer::socket::SocketAddrSpace,
     std::{sync::Arc, time::Duration},
 };
 
 fn test_bench_tps_local_cluster(config: Config) {
     let native_instruction_processors = vec![];
 
-    solana_logger::setup();
+    paychains_logger::setup();
     const NUM_NODES: usize = 1;
     let cluster = LocalCluster::new(
         &mut ClusterConfig {
@@ -77,7 +77,7 @@ fn test_bench_tps_local_cluster(config: Config) {
 
 #[test]
 #[serial]
-fn test_bench_tps_local_cluster_solana() {
+fn test_bench_tps_local_cluster_paychains() {
     test_bench_tps_local_cluster(Config {
         tx_count: 100,
         duration: Duration::from_secs(10),

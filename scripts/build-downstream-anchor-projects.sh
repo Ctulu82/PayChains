@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Builds known downstream projects against local solana source
+# Builds known downstream projects against local paychains source
 #
 
 set -e
@@ -9,11 +9,11 @@ source ci/_
 source scripts/patch-crates.sh
 source scripts/read-cargo-variable.sh
 
-solana_ver=$(readCargoVariable version sdk/Cargo.toml)
-solana_dir=$PWD
-cargo="$solana_dir"/cargo
-cargo_build_bpf="$solana_dir"/cargo-build-bpf
-cargo_test_bpf="$solana_dir"/cargo-test-bpf
+paychains_ver=$(readCargoVariable version sdk/Cargo.toml)
+paychains_dir=$PWD
+cargo="$paychains_dir"/cargo
+cargo_build_bpf="$paychains_dir"/cargo-build-bpf
+cargo_test_bpf="$paychains_dir"/cargo-test-bpf
 
 mkdir -p target/downstream-projects-anchor
 cd target/downstream-projects-anchor
@@ -46,8 +46,8 @@ anchor() {
   git clone https://github.com/project-serum/anchor.git
   cd anchor
 
-  update_solana_dependencies . "$solana_ver"
-  patch_crates_io_solana Cargo.toml "$solana_dir"
+  update_paychains_dependencies . "$paychains_ver"
+  patch_crates_io_paychains Cargo.toml "$paychains_dir"
 
   $cargo build
   $cargo test
@@ -55,7 +55,7 @@ anchor() {
   anchor_dir=$PWD
   anchor_ver=$(readCargoVariable version "$anchor_dir"/lang/Cargo.toml)
 
-  cd "$solana_dir"/target/downstream-projects-anchor
+  cd "$paychains_dir"/target/downstream-projects-anchor
 }
 
 mango() {
@@ -65,9 +65,9 @@ mango() {
     git clone https://github.com/blockworks-foundation/mango-v3
     cd mango-v3
 
-    update_solana_dependencies . "$solana_ver"
+    update_paychains_dependencies . "$paychains_ver"
     update_anchor_dependencies . "$anchor_ver"
-    patch_crates_io_solana Cargo.toml "$solana_dir"
+    patch_crates_io_paychains Cargo.toml "$paychains_dir"
     patch_crates_io_anchor Cargo.toml "$anchor_dir"
 
     $cargo build
@@ -84,9 +84,9 @@ metaplex() {
     git clone https://github.com/metaplex-foundation/metaplex-program-library
     cd metaplex-program-library
 
-    update_solana_dependencies . "$solana_ver"
+    update_paychains_dependencies . "$paychains_ver"
     update_anchor_dependencies . "$anchor_ver"
-    patch_crates_io_solana Cargo.toml "$solana_dir"
+    patch_crates_io_paychains Cargo.toml "$paychains_dir"
     patch_crates_io_anchor Cargo.toml "$anchor_dir"
 
     $cargo build

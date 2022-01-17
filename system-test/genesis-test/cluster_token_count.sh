@@ -20,22 +20,22 @@ usage: $0 [cluster_rpc_url]
    CONFIG
 
  Required arguments:
-   cluster_rpc_url  - RPC URL and port for a running Solana cluster (ex: http://34.83.146.144:8899)
+   cluster_rpc_url  - RPC URL and port for a running PayChains cluster (ex: http://34.83.146.144:8899)
 EOF
   exit $exitcode
 }
 
 function get_cluster_version {
-  clusterVersion="$(curl -s -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","id":1, "method":"getVersion"}' "$url" | jq '.result | ."solana-core" ')"
+  clusterVersion="$(curl -s -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","id":1, "method":"getVersion"}' "$url" | jq '.result | ."paychains-core" ')"
   echo Cluster software version: "$clusterVersion"
 }
 
 function get_token_capitalization {
   totalSupplyLamports="$(curl -s -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","id":1, "method":"getTotalSupply"}' "$url" | cut -d , -f 2 | cut -d : -f 2)"
-  totalSupplySol=$((totalSupplyLamports / LAMPORTS_PER_SOL))
+  totalSupplyPay=$((totalSupplyLamports / LAMPORTS_PER_PAY))
 
   printf "\n--- Token Capitalization ---\n"
-  printf "Total token capitalization %'d SOL\n" "$totalSupplySol"
+  printf "Total token capitalization %'d PAY\n" "$totalSupplyPay"
   printf "Total token capitalization %'d Lamports\n" "$totalSupplyLamports"
 
 }
@@ -55,28 +55,28 @@ function get_program_account_balance_totals {
     totalAccountBalancesLamports=$((totalAccountBalancesLamports + account))
     numberOfAccounts=$((numberOfAccounts + 1))
   done
-  totalAccountBalancesSol=$((totalAccountBalancesLamports / LAMPORTS_PER_SOL))
+  totalAccountBalancesPay=$((totalAccountBalancesLamports / LAMPORTS_PER_PAY))
 
   printf "\n--- %s Account Balance Totals ---\n" "$PROGRAM_NAME"
   printf "Number of %s Program accounts: %'.f\n" "$PROGRAM_NAME" "$numberOfAccounts"
-  printf "Total token balance in all %s accounts: %'d SOL\n" "$PROGRAM_NAME" "$totalAccountBalancesSol"
+  printf "Total token balance in all %s accounts: %'d PAY\n" "$PROGRAM_NAME" "$totalAccountBalancesPay"
   printf "Total token balance in all %s accounts: %'d Lamports\n" "$PROGRAM_NAME" "$totalAccountBalancesLamports"
 
   case $PROGRAM_NAME in
     SYSTEM)
-      systemAccountBalanceTotalSol=$totalAccountBalancesSol
+      systemAccountBalanceTotalPay=$totalAccountBalancesPay
       systemAccountBalanceTotalLamports=$totalAccountBalancesLamports
       ;;
     STAKE)
-      stakeAccountBalanceTotalSol=$totalAccountBalancesSol
+      stakeAccountBalanceTotalPay=$totalAccountBalancesPay
       stakeAccountBalanceTotalLamports=$totalAccountBalancesLamports
       ;;
     VOTE)
-      voteAccountBalanceTotalSol=$totalAccountBalancesSol
+      voteAccountBalanceTotalPay=$totalAccountBalancesPay
       voteAccountBalanceTotalLamports=$totalAccountBalancesLamports
       ;;
     CONFIG)
-      configAccountBalanceTotalSol=$totalAccountBalancesSol
+      configAccountBalanceTotalPay=$totalAccountBalancesPay
       configAccountBalanceTotalLamports=$totalAccountBalancesLamports
       ;;
     *)
@@ -87,11 +87,11 @@ function get_program_account_balance_totals {
 }
 
 function sum_account_balances_totals {
-  grandTotalAccountBalancesSol=$((systemAccountBalanceTotalSol + stakeAccountBalanceTotalSol + voteAccountBalanceTotalSol + configAccountBalanceTotalSol))
+  grandTotalAccountBalancesPay=$((systemAccountBalanceTotalPay + stakeAccountBalanceTotalPay + voteAccountBalanceTotalPay + configAccountBalanceTotalPay))
   grandTotalAccountBalancesLamports=$((systemAccountBalanceTotalLamports + stakeAccountBalanceTotalLamports + voteAccountBalanceTotalLamports + configAccountBalanceTotalLamports))
 
   printf "\n--- Total Token Distribution in all Account Balances ---\n"
-  printf "Total SOL in all Account Balances: %'d\n" "$grandTotalAccountBalancesSol"
+  printf "Total PAY in all Account Balances: %'d\n" "$grandTotalAccountBalancesPay"
   printf "Total Lamports in all Account Balances: %'d\n" "$grandTotalAccountBalancesLamports"
 }
 
@@ -99,12 +99,12 @@ url=$1
 [[ -n $url ]] || usage "Missing required RPC URL"
 shift
 
-LAMPORTS_PER_SOL=1000000000 # 1 billion
+LAMPORTS_PER_PAY=1000000000 # 1 billion
 
-stakeAccountBalanceTotalSol=
-systemAccountBalanceTotalSol=
-voteAccountBalanceTotalSol=
-configAccountBalanceTotalSol=
+stakeAccountBalanceTotalPay=
+systemAccountBalanceTotalPay=
+voteAccountBalanceTotalPay=
+configAccountBalanceTotalPay=
 
 stakeAccountBalanceTotalLamports=
 systemAccountBalanceTotalLamports=

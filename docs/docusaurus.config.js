@@ -1,14 +1,14 @@
 const math = require("remark-math");
 const katex = require("rehype-katex");
 module.exports = {
-  title: "Solana Docs",
+  title: "PayChains Docs",
   tagline:
-    "Solana is an open source project implementing a new, high-performance, permissionless blockchain.",
-  url: "https://docs.solana.com",
+    "PayChains is an open source project implementing a new, high-performance, permissionless blockchain.",
+  url: "https://docs.paychains.com",
   baseUrl: "/",
   favicon: "img/favicon.ico",
-  organizationName: "solana-labs", // Usually your GitHub org/user name.
-  projectName: "solana", // Usually your repo name.
+  organizationName: "paychains-labs", // Usually your GitHub org/user name.
+  projectName: "paychains", // Usually your repo name.
   onBrokenLinks: "throw",
   stylesheets: [
     {
@@ -47,13 +47,13 @@ module.exports = {
   themeConfig: {
     navbar: {
       logo: {
-        alt: "Solana Logo",
+        alt: "PayChains Logo",
         src: "img/logo-horizontal.svg",
         srcDark: "img/logo-horizontal-dark.svg",
       },
       items: [
         {
-          href: "https://spl.solana.com",
+          href: "https://spl.paychains.com",
           label: "Program Library »",
           position: "left",
         },
@@ -87,7 +87,7 @@ module.exports = {
           position: "right",
         },
         {
-          href: "https://github.com/solana-labs/solana",
+          href: "https://github.com/paychains-labs/paychains",
           label: "GitHub",
           position: "right",
         },
@@ -96,7 +96,7 @@ module.exports = {
     algolia: {
       // This API key is "search-only" and safe to be published
       apiKey: "d58e0d68c875346d52645d68b13f3ac0",
-      indexName: "solana",
+      indexName: "paychains",
       contextualSearch: true,
     },
     footer: {
@@ -120,11 +120,11 @@ module.exports = {
             },
             {
               label: "Twitter",
-              href: "https://twitter.com/solana",
+              href: "https://twitter.com/paychains",
             },
             {
               label: "Forums",
-              href: "https://forums.solana.com",
+              href: "https://forums.paychains.com",
             },
           ],
         },
@@ -133,12 +133,12 @@ module.exports = {
           items: [
             {
               label: "GitHub",
-              href: "https://github.com/solana-labs/solana",
+              href: "https://github.com/paychains-labs/paychains",
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Solana Foundation`,
+      copyright: `Copyright © ${new Date().getFullYear()} PayChains Foundation`,
     },
   },
   presets: [

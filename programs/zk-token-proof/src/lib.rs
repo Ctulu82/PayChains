@@ -2,9 +2,9 @@
 
 use {
     bytemuck::Pod,
-    solana_program_runtime::{ic_msg, invoke_context::InvokeContext},
-    solana_sdk::instruction::InstructionError,
-    solana_zk_token_sdk::zk_token_proof_instruction::*,
+    paychains_program_runtime::{ic_msg, invoke_context::InvokeContext},
+    paychains_sdk::instruction::InstructionError,
+    paychains_zk_token_sdk::zk_token_proof_instruction::*,
     std::result::Result,
 };
 

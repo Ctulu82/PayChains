@@ -1,17 +1,17 @@
 use {
     jsonrpc_core::{Error, Result},
-    solana_account_decoder::{
+    paychains_account_decoder::{
         parse_account_data::AccountAdditionalData,
         parse_token::{get_token_account_mint, spl_token_id, spl_token_native_mint},
         UiAccount, UiAccountData, UiAccountEncoding,
     },
-    solana_client::rpc_response::RpcKeyedAccount,
-    solana_runtime::bank::Bank,
-    solana_sdk::{
+    paychains_client::rpc_response::RpcKeyedAccount,
+    paychains_runtime::bank::Bank,
+    paychains_sdk::{
         account::{AccountSharedData, ReadableAccount},
         pubkey::Pubkey,
     },
-    spl_token::{solana_program::program_pack::Pack, state::Mint},
+    spl_token::{paychains_program::program_pack::Pack, state::Mint},
     std::{collections::HashMap, sync::Arc},
 };
 

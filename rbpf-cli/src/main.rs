@@ -2,19 +2,19 @@ use {
     clap::{crate_version, App, Arg},
     serde::{Deserialize, Serialize},
     serde_json::Result,
-    solana_bpf_loader_program::{
+    paychains_bpf_loader_program::{
         create_vm, serialization::serialize_parameters, syscalls::register_syscalls, BpfError,
         ThisInstructionMeter,
     },
-    solana_program_runtime::invoke_context::{prepare_mock_invoke_context, InvokeContext},
-    solana_rbpf::{
+    paychains_program_runtime::invoke_context::{prepare_mock_invoke_context, InvokeContext},
+    paychains_rbpf::{
         assembler::assemble,
         elf::Executable,
         static_analysis::Analysis,
         verifier::check,
         vm::{Config, DynamicAnalysis},
     },
-    solana_sdk::{
+    paychains_sdk::{
         account::AccountSharedData, bpf_loader, instruction::AccountMeta, pubkey::Pubkey,
         transaction_context::TransactionContext,
     },
@@ -51,10 +51,10 @@ fn load_accounts(path: &Path) -> Result<Input> {
 }
 
 fn main() {
-    solana_logger::setup();
-    let matches = App::new("Solana BPF CLI")
+    paychains_logger::setup();
+    let matches = App::new("PayChains BPF CLI")
         .version(crate_version!())
-        .author("Solana Maintainers <maintainers@solana.foundation>")
+        .author("PayChains Maintainers <maintainers@paychains.foundation>")
         .about(
             r##"CLI to test and analyze eBPF programs.
 
@@ -168,7 +168,7 @@ native machine code before execting it in the virtual machine.",
     let mut transaction_accounts = vec![
         (
             loader_id,
-            AccountSharedData::new(0, 0, &solana_sdk::native_loader::id()),
+            AccountSharedData::new(0, 0, &paychains_sdk::native_loader::id()),
         ),
         (
             Pubkey::new_unique(),

@@ -1,7 +1,7 @@
 use {
-    solana_download_utils::download_genesis_if_missing,
-    solana_runtime::hardened_unpack::unpack_genesis_archive,
-    solana_sdk::{
+    paychains_download_utils::download_genesis_if_missing,
+    paychains_runtime::hardened_unpack::unpack_genesis_archive,
+    paychains_sdk::{
         genesis_config::{GenesisConfig, DEFAULT_GENESIS_ARCHIVE},
         hash::Hash,
     },

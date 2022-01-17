@@ -1,5 +1,5 @@
 use {
-    solana_sdk::{transaction::TransactionError, transport::TransportError},
+    paychains_sdk::{transaction::TransactionError, transport::TransportError},
     std::io,
     tarpc::client::RpcError,
     thiserror::Error,

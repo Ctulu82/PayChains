@@ -10,18 +10,18 @@ use {
             resolve_command, AuthorizeArgs, Command, MoveArgs, NewArgs, RebaseArgs, SetLockupArgs,
         },
     },
-    solana_cli_config::Config,
-    solana_client::{client_error::ClientError, rpc_client::RpcClient},
-    solana_sdk::{
+    paychains_cli_config::Config,
+    paychains_client::{client_error::ClientError, rpc_client::RpcClient},
+    paychains_sdk::{
         message::Message,
-        native_token::lamports_to_sol,
+        native_token::lamports_to_pay,
         pubkey::Pubkey,
         signature::{unique_signers, Signature, Signer},
         signers::Signers,
         stake::{instruction::LockupArgs, state::Lockup},
         transaction::Transaction,
     },
-    solana_stake_program::stake_state,
+    paychains_stake_program::stake_state,
     std::{env, error::Error},
 };
 
@@ -262,8 +262,8 @@ fn main() -> Result<(), Box<dyn Error>> {
             );
             let balances = get_balances(&client, addresses)?;
             let lamports: u64 = balances.into_iter().map(|(_, bal)| bal).sum();
-            let sol = lamports_to_sol(lamports);
-            println!("{} SOL", sol);
+            let sol = lamports_to_pay(lamports);
+            println!("{} PAY", pay);
         }
         Command::Authorize(args) => {
             process_authorize_stake_accounts(&client, &args)?;

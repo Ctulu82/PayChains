@@ -6,14 +6,14 @@ use {
         result::{Error, Result},
     },
     crossbeam_channel::{unbounded, RecvTimeoutError},
-    solana_metrics::{inc_new_counter_debug, inc_new_counter_info},
-    solana_perf::{packet::PacketBatchRecycler, recycler::Recycler},
-    solana_poh::poh_recorder::PohRecorder,
-    solana_sdk::{
+    paychains_metrics::{inc_new_counter_debug, inc_new_counter_info},
+    paychains_perf::{packet::PacketBatchRecycler, recycler::Recycler},
+    paychains_poh::poh_recorder::PohRecorder,
+    paychains_sdk::{
         clock::DEFAULT_TICKS_PER_SLOT,
         packet::{Packet, PacketFlags},
     },
-    solana_streamer::streamer::{self, PacketBatchReceiver, PacketBatchSender},
+    paychains_streamer::streamer::{self, PacketBatchReceiver, PacketBatchSender},
     std::{
         net::UdpSocket,
         sync::{atomic::AtomicBool, Arc, Mutex},
@@ -173,7 +173,7 @@ impl FetchStage {
         let poh_recorder = poh_recorder.clone();
 
         let fwd_thread_hdl = Builder::new()
-            .name("solana-fetch-stage-fwd-rcvr".to_string())
+            .name("paychains-fetch-stage-fwd-rcvr".to_string())
             .spawn(move || loop {
                 if let Err(e) =
                     Self::handle_forwarded_packets(&forward_receiver, &sender, &poh_recorder)

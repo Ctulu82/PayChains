@@ -1,7 +1,7 @@
 use {
-    solana_banks_client::BanksClient,
-    solana_program_test::{processor, ProgramTest},
-    solana_sdk::{
+    paychains_banks_client::BanksClient,
+    paychains_program_test::{processor, ProgramTest},
+    paychains_sdk::{
         account_info::AccountInfo,
         entrypoint::ProgramResult,
         hash::Hash,

@@ -13,17 +13,17 @@ use {
     },
     crossbeam_channel::{Receiver as CrossbeamReceiver, Sender as CrossbeamSender},
     lru::LruCache,
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_ledger::{
+    paychains_gossip::cluster_info::ClusterInfo,
+    paychains_ledger::{
         blockstore::{Blockstore, SlotMeta},
         shred::Nonce,
     },
-    solana_measure::measure::Measure,
-    solana_runtime::{bank_forks::BankForks, contains::Contains},
-    solana_sdk::{
+    paychains_measure::measure::Measure,
+    paychains_runtime::{bank_forks::BankForks, contains::Contains},
+    paychains_sdk::{
         clock::Slot, epoch_schedule::EpochSchedule, hash::Hash, pubkey::Pubkey, timing::timestamp,
     },
-    solana_streamer::sendmmsg::{batch_send, SendPktsError},
+    paychains_streamer::sendmmsg::{batch_send, SendPktsError},
     std::{
         collections::{HashMap, HashSet},
         iter::Iterator,
@@ -212,7 +212,7 @@ impl RepairService {
             let exit = exit.clone();
             let repair_info = repair_info.clone();
             Builder::new()
-                .name("solana-repair-service".to_string())
+                .name("paychains-repair-service".to_string())
                 .spawn(move || {
                     Self::run(
                         &blockstore,
@@ -719,16 +719,16 @@ impl RepairService {
 mod test {
     use {
         super::*,
-        solana_gossip::{cluster_info::Node, contact_info::ContactInfo},
-        solana_ledger::{
+        paychains_gossip::{cluster_info::Node, contact_info::ContactInfo},
+        paychains_ledger::{
             blockstore::{
                 make_chaining_slot_entries, make_many_slot_entries, make_slot_entries, Blockstore,
             },
             get_tmp_ledger_path,
             shred::max_ticks_per_n_shreds,
         },
-        solana_sdk::signature::Keypair,
-        solana_streamer::socket::SocketAddrSpace,
+        paychains_sdk::signature::Keypair,
+        paychains_streamer::socket::SocketAddrSpace,
         std::collections::HashSet,
     };
 

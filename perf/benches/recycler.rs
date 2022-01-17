@@ -3,13 +3,13 @@
 extern crate test;
 
 use {
-    solana_perf::{packet::PacketBatchRecycler, recycler::Recycler},
+    paychains_perf::{packet::PacketBatchRecycler, recycler::Recycler},
     test::Bencher,
 };
 
 #[bench]
 fn bench_recycler(bencher: &mut Bencher) {
-    solana_logger::setup();
+    paychains_logger::setup();
 
     let recycler: PacketBatchRecycler = Recycler::default();
 

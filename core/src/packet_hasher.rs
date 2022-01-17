@@ -4,8 +4,8 @@
 use {
     ahash::AHasher,
     rand::{thread_rng, Rng},
-    solana_ledger::shred::Shred,
-    solana_perf::packet::Packet,
+    paychains_ledger::shred::Shred,
+    paychains_perf::packet::Packet,
     std::hash::Hasher,
 };
 

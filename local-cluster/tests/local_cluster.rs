@@ -11,14 +11,14 @@ use {
     gag::BufferRedirect,
     log::*,
     serial_test::serial,
-    solana_client::{
+    paychains_client::{
         pubsub_client::PubsubClient,
         rpc_client::RpcClient,
         rpc_config::{RpcProgramAccountsConfig, RpcSignatureSubscribeConfig},
         rpc_response::RpcSignatureResult,
         thin_client::{create_client, ThinClient},
     },
-    solana_core::{
+    paychains_core::{
         broadcast_stage::BroadcastStageType,
         consensus::{Tower, SWITCH_FORK_THRESHOLD, VOTE_THRESHOLD_DEPTH},
         optimistic_confirmation_verifier::OptimisticConfirmationVerifier,
@@ -26,22 +26,22 @@ use {
         tower_storage::{FileTowerStorage, SavedTower, TowerStorage},
         validator::ValidatorConfig,
     },
-    solana_download_utils::download_snapshot_archive,
-    solana_gossip::{cluster_info::VALIDATOR_PORT_RANGE, gossip_service::discover_cluster},
-    solana_ledger::{ancestor_iterator::AncestorIterator, blockstore::Blockstore},
-    solana_local_cluster::{
+    paychains_download_utils::download_snapshot_archive,
+    paychains_gossip::{cluster_info::VALIDATOR_PORT_RANGE, gossip_service::discover_cluster},
+    paychains_ledger::{ancestor_iterator::AncestorIterator, blockstore::Blockstore},
+    paychains_local_cluster::{
         cluster::{Cluster, ClusterValidatorInfo},
         cluster_tests,
         local_cluster::{ClusterConfig, LocalCluster},
         validator_configs::*,
     },
-    solana_runtime::{
+    paychains_runtime::{
         snapshot_archive_info::SnapshotArchiveInfoGetter,
         snapshot_config::SnapshotConfig,
         snapshot_package::SnapshotType,
         snapshot_utils::{self, ArchiveFormat},
     },
-    solana_sdk::{
+    paychains_sdk::{
         account::AccountSharedData,
         client::{AsyncClient, SyncClient},
         clock::{self, Slot, DEFAULT_TICKS_PER_SLOT, MAX_PROCESSING_AGE},
@@ -53,8 +53,8 @@ use {
         signature::{Keypair, Signer},
         system_program, system_transaction,
     },
-    solana_streamer::socket::SocketAddrSpace,
-    solana_vote_program::vote_state::MAX_LOCKOUT_HISTORY,
+    paychains_streamer::socket::SocketAddrSpace,
+    paychains_vote_program::vote_state::MAX_LOCKOUT_HISTORY,
     std::{
         collections::{HashMap, HashSet},
         fs,
@@ -75,7 +75,7 @@ mod common;
 
 #[test]
 fn test_local_cluster_start_and_exit() {
-    solana_logger::setup();
+    paychains_logger::setup();
     let num_nodes = 1;
     let cluster =
         LocalCluster::new_with_equal_stakes(num_nodes, 100, 3, SocketAddrSpace::Unspecified);
@@ -84,7 +84,7 @@ fn test_local_cluster_start_and_exit() {
 
 #[test]
 fn test_local_cluster_start_and_exit_with_config() {
-    solana_logger::setup();
+    paychains_logger::setup();
     const NUM_NODES: usize = 1;
     let mut config = ClusterConfig {
         validator_configs: make_identical_validator_configs(&ValidatorConfig::default(), NUM_NODES),
@@ -102,7 +102,7 @@ fn test_local_cluster_start_and_exit_with_config() {
 #[test]
 #[serial]
 fn test_ledger_cleanup_service() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
     error!("test_ledger_cleanup_service");
     let num_nodes = 3;
     let validator_config = ValidatorConfig {
@@ -144,7 +144,7 @@ fn test_ledger_cleanup_service() {
 #[test]
 #[serial]
 fn test_spend_and_verify_all_nodes_1() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
     error!("test_spend_and_verify_all_nodes_1");
     let num_nodes = 1;
     let local =
@@ -161,7 +161,7 @@ fn test_spend_and_verify_all_nodes_1() {
 #[test]
 #[serial]
 fn test_spend_and_verify_all_nodes_2() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
     error!("test_spend_and_verify_all_nodes_2");
     let num_nodes = 2;
     let local =
@@ -178,7 +178,7 @@ fn test_spend_and_verify_all_nodes_2() {
 #[test]
 #[serial]
 fn test_spend_and_verify_all_nodes_3() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
     error!("test_spend_and_verify_all_nodes_3");
     let num_nodes = 3;
     let local =
@@ -195,7 +195,7 @@ fn test_spend_and_verify_all_nodes_3() {
 #[test]
 #[serial]
 fn test_local_cluster_signature_subscribe() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
     let num_nodes = 2;
     let cluster =
         LocalCluster::new_with_equal_stakes(num_nodes, 10_000, 100, SocketAddrSpace::Unspecified);
@@ -218,7 +218,7 @@ fn test_local_cluster_signature_subscribe() {
 
     let mut transaction = system_transaction::transfer(
         &cluster.funding_keypair,
-        &solana_sdk::pubkey::new_rand(),
+        &paychains_sdk::pubkey::new_rand(),
         10,
         blockhash,
     );
@@ -270,7 +270,7 @@ fn test_local_cluster_signature_subscribe() {
 #[allow(unused_attributes)]
 #[ignore]
 fn test_spend_and_verify_all_nodes_env_num_nodes() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
     let num_nodes: usize = std::env::var("NUM_NODES")
         .expect("please set environment variable NUM_NODES")
         .parse()
@@ -290,7 +290,7 @@ fn test_spend_and_verify_all_nodes_env_num_nodes() {
 #[test]
 #[serial]
 fn test_leader_failure_4() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
     error!("test_leader_failure_4");
     let num_nodes = 4;
     let validator_config = ValidatorConfig::default();
@@ -382,7 +382,7 @@ fn test_cluster_partition_1_1_1() {
 #[test]
 #[serial]
 fn test_two_unbalanced_stakes() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
     error!("test_two_unbalanced_stakes");
     let validator_config = ValidatorConfig::default();
     let num_ticks_per_second = 100;
@@ -450,7 +450,7 @@ fn test_forwarding() {
 #[test]
 #[serial]
 fn test_restart_node() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
     error!("test_restart_node");
     let slots_per_epoch = MINIMUM_SLOTS_PER_EPOCH * 2;
     let ticks_per_slot = 16;
@@ -492,7 +492,7 @@ fn test_restart_node() {
 #[test]
 #[serial]
 fn test_mainnet_beta_cluster_type() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
 
     let mut config = ClusterConfig {
         cluster_type: ClusterType::MainnetBeta,
@@ -517,13 +517,13 @@ fn test_mainnet_beta_cluster_type() {
 
     // Programs that are available at epoch 0
     for program_id in [
-        &solana_config_program::id(),
-        &solana_sdk::system_program::id(),
-        &solana_sdk::stake::program::id(),
-        &solana_vote_program::id(),
-        &solana_sdk::bpf_loader_deprecated::id(),
-        &solana_sdk::bpf_loader::id(),
-        &solana_sdk::bpf_loader_upgradeable::id(),
+        &paychains_config_program::id(),
+        &paychains_sdk::system_program::id(),
+        &paychains_sdk::stake::program::id(),
+        &paychains_vote_program::id(),
+        &paychains_sdk::bpf_loader_deprecated::id(),
+        &paychains_sdk::bpf_loader::id(),
+        &paychains_sdk::bpf_loader_upgradeable::id(),
     ]
     .iter()
     {
@@ -555,7 +555,7 @@ fn test_mainnet_beta_cluster_type() {
 #[test]
 #[serial]
 fn test_consistency_halt() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
     let snapshot_interval_slots = 20;
     let num_account_paths = 1;
 
@@ -658,7 +658,7 @@ fn test_consistency_halt() {
 #[test]
 #[serial]
 fn test_snapshot_download() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
     // First set up the cluster with 1 node
     let snapshot_interval_slots = 50;
     let num_account_paths = 3;
@@ -730,7 +730,7 @@ fn test_snapshot_download() {
 #[test]
 #[serial]
 fn test_incremental_snapshot_download() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
     // First set up the cluster with 1 node
     let accounts_hash_interval = 3;
     let incremental_snapshot_interval = accounts_hash_interval * 3;
@@ -885,7 +885,7 @@ fn test_incremental_snapshot_download() {
 #[test]
 #[serial]
 fn test_incremental_snapshot_download_with_crossing_full_snapshot_interval_at_startup() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
     // If these intervals change, also make sure to change the loop timers accordingly.
     let accounts_hash_interval = 3;
     let incremental_snapshot_interval = accounts_hash_interval * 3;
@@ -1276,7 +1276,7 @@ fn test_incremental_snapshot_download_with_crossing_full_snapshot_interval_at_st
 #[test]
 #[serial]
 fn test_snapshot_restart_tower() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
     // First set up the cluster with 2 nodes
     let snapshot_interval_slots = 10;
     let num_account_paths = 2;
@@ -1349,7 +1349,7 @@ fn test_snapshot_restart_tower() {
 #[test]
 #[serial]
 fn test_snapshots_blockstore_floor() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
     // First set up the cluster with 1 snapshotting leader
     let snapshot_interval_slots = 10;
     let num_account_paths = 4;
@@ -1459,7 +1459,7 @@ fn test_snapshots_blockstore_floor() {
 #[test]
 #[serial]
 fn test_snapshots_restart_validity() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
     let snapshot_interval_slots = 10;
     let num_account_paths = 1;
     let mut snapshot_test_config =
@@ -1576,7 +1576,7 @@ fn test_fake_shreds_broadcast_leader() {
 
 #[test]
 fn test_wait_for_max_stake() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
     let validator_config = ValidatorConfig::default();
     let mut config = ClusterConfig {
         cluster_lamports: 10_000,
@@ -1597,7 +1597,7 @@ fn test_wait_for_max_stake() {
 // Test that when a leader is leader for banks B_i..B_{i+n}, and B_i is not
 // votable, then B_{i+1} still chains to B_i
 fn test_no_voting() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
     let validator_config = ValidatorConfig {
         voting_disabled: true,
         ..ValidatorConfig::default()
@@ -1637,7 +1637,7 @@ fn test_no_voting() {
 #[test]
 #[serial]
 fn test_optimistic_confirmation_violation_detection() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
     // First set up the cluster with 2 nodes
     let slots_per_epoch = 2048;
     let node_stakes = vec![51, 50];
@@ -1770,7 +1770,7 @@ fn test_optimistic_confirmation_violation_detection() {
 #[test]
 #[serial]
 fn test_validator_saves_tower() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
 
     let validator_config = ValidatorConfig {
         require_tower: true,
@@ -1948,8 +1948,8 @@ fn root_in_tower(tower_path: &Path, node_pubkey: &Pubkey) -> Option<Slot> {
 #[test]
 #[ignore]
 fn test_slot_hash_expiry() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
-    solana_sdk::slot_hashes::set_entries_for_tests_only(64);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_sdk::slot_hashes::set_entries_for_tests_only(64);
 
     let slots_per_epoch = 2048;
     let node_stakes = vec![60, 40];
@@ -2052,14 +2052,14 @@ fn test_slot_hash_expiry() {
 
     info!(
         "Run A on majority fork until it reaches slot hash expiry {}",
-        solana_sdk::slot_hashes::get_entries()
+        paychains_sdk::slot_hashes::get_entries()
     );
     let mut last_vote_on_a;
     // Keep A running for a while longer so the majority fork has some decent size
     loop {
         last_vote_on_a = wait_for_last_vote_in_tower_to_land_in_ledger(&a_ledger_path, &a_pubkey);
         if last_vote_on_a
-            >= common_ancestor_slot + 2 * (solana_sdk::slot_hashes::get_entries() as u64)
+            >= common_ancestor_slot + 2 * (paychains_sdk::slot_hashes::get_entries() as u64)
         {
             let blockstore = open_blockstore(&a_ledger_path);
             info!(
@@ -2127,7 +2127,7 @@ enum ClusterMode {
 }
 
 fn do_test_future_tower(cluster_mode: ClusterMode) {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
 
     // First set up the cluster with 4 nodes
     let slots_per_epoch = 2048;
@@ -2242,7 +2242,7 @@ fn test_future_tower_master_slave() {
 
 #[test]
 fn test_hard_fork_invalidates_tower() {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
 
     // First set up the cluster with 2 nodes
     let slots_per_epoch = 2048;
@@ -2301,10 +2301,10 @@ fn test_hard_fork_invalidates_tower() {
     // setup hard fork at slot < a previously rooted slot!
     let hard_fork_slot = min_root - 5;
     let hard_fork_slots = Some(vec![hard_fork_slot]);
-    let mut hard_forks = solana_sdk::hard_forks::HardForks::default();
+    let mut hard_forks = paychains_sdk::hard_forks::HardForks::default();
     hard_forks.register(hard_fork_slot);
 
-    let expected_shred_version = solana_sdk::shred_version::compute_shred_version(
+    let expected_shred_version = paychains_sdk::shred_version::compute_shred_version(
         &cluster.lock().unwrap().genesis_config.hash(),
         Some(&hard_forks),
     );
@@ -2377,7 +2377,7 @@ fn test_run_test_load_program_accounts_root() {
 #[serial]
 fn test_restart_tower_rollback() {
     // Test node crashing and failing to save its tower before restart
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
 
     // First set up the cluster with 4 nodes
     let slots_per_epoch = 2048;
@@ -2735,7 +2735,7 @@ fn setup_transfer_scan_threads(
 }
 
 fn run_test_load_program_accounts(scan_commitment: CommitmentConfig) {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    paychains_logger::setup_with_default(RUST_LOG_FILTER);
     // First set up the cluster with 2 nodes
     let slots_per_epoch = 2048;
     let node_stakes = vec![51, 50];

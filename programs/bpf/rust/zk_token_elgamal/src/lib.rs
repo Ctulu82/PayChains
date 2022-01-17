@@ -1,9 +1,9 @@
 //! @brief zk_token_elgamal syscall tests
 
-extern crate solana_program;
+extern crate paychains_program;
 use {
-    solana_program::{custom_panic_default, msg},
-    solana_zk_token_sdk::zk_token_elgamal::{
+    paychains_program::{custom_panic_default, msg},
+    paychains_zk_token_sdk::zk_token_elgamal::{
         ops,
         pod::{ElGamalCiphertext, Zeroable},
     },

@@ -1,9 +1,9 @@
 #![feature(test)]
 extern crate test;
 use {
-    solana_entry::entry::{self, VerifyRecyclers},
-    solana_perf::test_tx::test_tx,
-    solana_sdk::{
+    paychains_entry::entry::{self, VerifyRecyclers},
+    paychains_perf::test_tx::test_tx,
+    paychains_sdk::{
         hash::Hash,
         transaction::{
             Result, SanitizedTransaction, TransactionError, TransactionVerificationMode,

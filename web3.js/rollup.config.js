@@ -50,7 +50,7 @@ function generateConfig(configType, format) {
     // Prevent dependencies from being bundled
     config.external = [
       /@babel\/runtime/,
-      '@solana/buffer-layout',
+      '@paychains/buffer-layout',
       'bn.js',
       'borsh',
       'bs58',
@@ -81,7 +81,7 @@ function generateConfig(configType, format) {
           // Prevent dependencies from being bundled
           config.external = [
             /@babel\/runtime/,
-            '@solana/buffer-layout',
+            '@paychains/buffer-layout',
             'bn.js',
             'borsh',
             'bs58',
@@ -106,13 +106,13 @@ function generateConfig(configType, format) {
             {
               file: 'lib/index.iife.js',
               format: 'iife',
-              name: 'solanaWeb3',
+              name: 'paychainsWeb3',
               sourcemap: true,
             },
             {
               file: 'lib/index.iife.min.js',
               format: 'iife',
-              name: 'solanaWeb3',
+              name: 'paychainsWeb3',
               sourcemap: true,
               plugins: [terser({mangle: false, compress: false})],
             },

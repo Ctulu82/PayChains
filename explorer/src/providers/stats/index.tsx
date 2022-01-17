@@ -1,7 +1,7 @@
 import React from "react";
-import { SolanaClusterStatsProvider } from "./solanaClusterStats";
+import { PayChainsClusterStatsProvider } from "./paychainsClusterStats";
 
 type Props = { children: React.ReactNode };
 export function StatsProvider({ children }: Props) {
-  return <SolanaClusterStatsProvider>{children}</SolanaClusterStatsProvider>;
+  return <PayChainsClusterStatsProvider>{children}</PayChainsClusterStatsProvider>;
 }

@@ -25,12 +25,12 @@ use {
         ThreadPool,
     },
     rocksdb::DBRawIterator,
-    solana_entry::entry::{create_ticks, Entry},
-    solana_measure::measure::Measure,
-    solana_metrics::{datapoint_debug, datapoint_error},
-    solana_rayon_threadlimit::get_thread_count,
-    solana_runtime::hardened_unpack::{unpack_genesis_archive, MAX_GENESIS_ARCHIVE_UNPACKED_SIZE},
-    solana_sdk::{
+    paychains_entry::entry::{create_ticks, Entry},
+    paychains_measure::measure::Measure,
+    paychains_metrics::{datapoint_debug, datapoint_error},
+    paychains_rayon_threadlimit::get_thread_count,
+    paychains_runtime::hardened_unpack::{unpack_genesis_archive, MAX_GENESIS_ARCHIVE_UNPACKED_SIZE},
+    paychains_sdk::{
         clock::{Slot, UnixTimestamp, DEFAULT_TICKS_PER_SECOND, MS_PER_TICK},
         genesis_config::{GenesisConfig, DEFAULT_GENESIS_ARCHIVE, DEFAULT_GENESIS_FILE},
         hash::Hash,
@@ -40,8 +40,8 @@ use {
         timing::timestamp,
         transaction::VersionedTransaction,
     },
-    solana_storage_proto::{StoredExtendedRewards, StoredTransactionStatusMeta},
-    solana_transaction_status::{
+    paychains_storage_proto::{StoredExtendedRewards, StoredTransactionStatusMeta},
+    paychains_transaction_status::{
         ConfirmedBlock, ConfirmedTransactionStatusWithSignature,
         ConfirmedTransactionWithStatusMeta, Rewards, TransactionStatusMeta,
         TransactionWithStatusMeta,
@@ -1596,7 +1596,7 @@ impl Blockstore {
                 "shred_insert_is_full",
                 (
                     "total_time_ms",
-                    solana_sdk::timing::timestamp() - slot_meta.first_shred_timestamp,
+                    paychains_sdk::timing::timestamp() - slot_meta.first_shred_timestamp,
                     i64
                 ),
                 ("slot", slot_meta.slot, i64),
@@ -3516,7 +3516,7 @@ fn find_slot_meta_in_cached_state<'a>(
 /// [`cf::Orphans`].
 ///
 /// For more information about the chaining, check the previous discussion here:
-/// https://github.com/solana-labs/solana/pull/2253
+/// https://github.com/paychains-labs/paychains/pull/2253
 ///
 /// Arguments:
 /// - `db`: the blockstore db that stores both shreds and their metadata.
@@ -3764,7 +3764,7 @@ pub fn create_new_ledger(
     let hashes_per_tick = genesis_config.poh_config.hashes_per_tick.unwrap_or(0);
     let entries = create_ticks(ticks_per_slot, hashes_per_tick, genesis_config.hash());
     let last_hash = entries.last().unwrap().hash;
-    let version = solana_sdk::shred_version::version_from_hash(&last_hash);
+    let version = paychains_sdk::shred_version::version_from_hash(&last_hash);
 
     let shredder = Shredder::new(0, 0, 0, version).unwrap();
     let shreds = shredder
@@ -4140,10 +4140,10 @@ pub mod tests {
         crossbeam_channel::unbounded,
         itertools::Itertools,
         rand::{seq::SliceRandom, thread_rng},
-        solana_account_decoder::parse_token::UiTokenAmount,
-        solana_entry::entry::{next_entry, next_entry_mut},
-        solana_runtime::bank::{Bank, RewardType},
-        solana_sdk::{
+        paychains_account_decoder::parse_token::UiTokenAmount,
+        paychains_entry::entry::{next_entry, next_entry_mut},
+        paychains_runtime::bank::{Bank, RewardType},
+        paychains_sdk::{
             hash::{self, hash, Hash},
             instruction::CompiledInstruction,
             packet::PACKET_DATA_SIZE,
@@ -4151,8 +4151,8 @@ pub mod tests {
             signature::Signature,
             transaction::{Transaction, TransactionError},
         },
-        solana_storage_proto::convert::generated,
-        solana_transaction_status::{InnerInstructions, Reward, Rewards, TransactionTokenBalance},
+        paychains_storage_proto::convert::generated,
+        paychains_transaction_status::{InnerInstructions, Reward, Rewards, TransactionTokenBalance},
         std::{thread::Builder, time::Duration},
     };
 
@@ -4162,9 +4162,9 @@ pub mod tests {
         for x in 0..num_entries {
             let transaction = Transaction::new_with_compiled_instructions(
                 &[&Keypair::new()],
-                &[solana_sdk::pubkey::new_rand()],
+                &[paychains_sdk::pubkey::new_rand()],
                 Hash::default(),
-                vec![solana_sdk::pubkey::new_rand()],
+                vec![paychains_sdk::pubkey::new_rand()],
                 vec![CompiledInstruction::new(1, &(), vec![0])],
             );
             entries.push(next_entry_mut(&mut Hash::default(), 0, vec![transaction]));
@@ -4176,7 +4176,7 @@ pub mod tests {
 
     #[test]
     fn test_create_new_ledger() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let mint_total = 1_000_000_000_000;
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(mint_total);
         let (ledger_path, _blockhash) = create_new_tmp_ledger_auto_delete!(&genesis_config);
@@ -4218,7 +4218,7 @@ pub mod tests {
 
     #[test]
     fn test_write_entries() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let blockstore = Blockstore::open(ledger_path.path()).unwrap();
 
@@ -5620,7 +5620,7 @@ pub mod tests {
 
     #[test]
     pub fn test_should_insert_data_shred() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let (mut shreds, _) = make_slot_entries(0, 0, 200);
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let blockstore = Blockstore::open(ledger_path.path()).unwrap();
@@ -5963,7 +5963,7 @@ pub mod tests {
 
     #[test]
     pub fn test_insert_multiple_is_last() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let (shreds, _) = make_slot_entries(0, 0, 20);
         let num_shreds = shreds.len() as u64;
         let ledger_path = get_tmp_ledger_path_auto_delete!();
@@ -6431,7 +6431,7 @@ pub mod tests {
 
         // insert value
         let status = TransactionStatusMeta {
-            status: solana_sdk::transaction::Result::<()>::Err(TransactionError::AccountNotFound),
+            status: paychains_sdk::transaction::Result::<()>::Err(TransactionError::AccountNotFound),
             fee: 5u64,
             pre_balances: pre_balances_vec.clone(),
             post_balances: post_balances_vec.clone(),
@@ -6475,7 +6475,7 @@ pub mod tests {
 
         // insert value
         let status = TransactionStatusMeta {
-            status: solana_sdk::transaction::Result::<()>::Ok(()),
+            status: paychains_sdk::transaction::Result::<()>::Ok(()),
             fee: 9u64,
             pre_balances: pre_balances_vec.clone(),
             post_balances: post_balances_vec.clone(),
@@ -6740,7 +6740,7 @@ pub mod tests {
         let pre_balances_vec = vec![1, 2, 3];
         let post_balances_vec = vec![3, 2, 1];
         let status = TransactionStatusMeta {
-            status: solana_sdk::transaction::Result::<()>::Ok(()),
+            status: paychains_sdk::transaction::Result::<()>::Ok(()),
             fee: 42u64,
             pre_balances: pre_balances_vec,
             post_balances: post_balances_vec,
@@ -6923,7 +6923,7 @@ pub mod tests {
         simulate_compaction: bool,
         simulate_ledger_cleanup_service: bool,
     ) {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let blockstore = Blockstore::open(ledger_path.path()).unwrap();
@@ -6934,7 +6934,7 @@ pub mod tests {
         let pre_balances_vec = vec![1, 2, 3];
         let post_balances_vec = vec![3, 2, 1];
         let status = TransactionStatusMeta {
-            status: solana_sdk::transaction::Result::<()>::Ok(()),
+            status: paychains_sdk::transaction::Result::<()>::Ok(()),
             fee: 42u64,
             pre_balances: pre_balances_vec,
             post_balances: post_balances_vec,
@@ -6972,8 +6972,8 @@ pub mod tests {
             .put_protobuf((0, signature2, lowest_available_slot), &status)
             .unwrap();
 
-        let address0 = solana_sdk::pubkey::new_rand();
-        let address1 = solana_sdk::pubkey::new_rand();
+        let address0 = paychains_sdk::pubkey::new_rand();
+        let address1 = paychains_sdk::pubkey::new_rand();
         blockstore
             .write_transaction_status(
                 lowest_cleanup_slot,
@@ -7303,8 +7303,8 @@ pub mod tests {
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let blockstore = Blockstore::open(ledger_path.path()).unwrap();
 
-        let address0 = solana_sdk::pubkey::new_rand();
-        let address1 = solana_sdk::pubkey::new_rand();
+        let address0 = paychains_sdk::pubkey::new_rand();
+        let address1 = paychains_sdk::pubkey::new_rand();
 
         let slot0 = 10;
         for x in 1..5 {
@@ -7440,8 +7440,8 @@ pub mod tests {
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         let blockstore = Blockstore::open(ledger_path.path()).unwrap();
 
-        let address0 = solana_sdk::pubkey::new_rand();
-        let address1 = solana_sdk::pubkey::new_rand();
+        let address0 = paychains_sdk::pubkey::new_rand();
+        let address1 = paychains_sdk::pubkey::new_rand();
 
         let slot1 = 1;
         for x in 1..5 {
@@ -7535,7 +7535,7 @@ pub mod tests {
                     &[&Keypair::new()],
                     &[*address],
                     Hash::default(),
-                    vec![solana_sdk::pubkey::new_rand()],
+                    vec![paychains_sdk::pubkey::new_rand()],
                     vec![CompiledInstruction::new(1, &(), vec![0])],
                 );
                 entries.push(next_entry_mut(&mut Hash::default(), 0, vec![transaction]));
@@ -7545,8 +7545,8 @@ pub mod tests {
             entries
         }
 
-        let address0 = solana_sdk::pubkey::new_rand();
-        let address1 = solana_sdk::pubkey::new_rand();
+        let address0 = paychains_sdk::pubkey::new_rand();
+        let address1 = paychains_sdk::pubkey::new_rand();
 
         for slot in 2..=8 {
             let entries = make_slot_entries_with_transaction_addresses(&[
@@ -8002,13 +8002,13 @@ pub mod tests {
         for x in 0..4 {
             let transaction = Transaction::new_with_compiled_instructions(
                 &[&Keypair::new()],
-                &[solana_sdk::pubkey::new_rand()],
+                &[paychains_sdk::pubkey::new_rand()],
                 Hash::default(),
-                vec![solana_sdk::pubkey::new_rand()],
+                vec![paychains_sdk::pubkey::new_rand()],
                 vec![CompiledInstruction::new(1, &(), vec![0])],
             );
             let status = TransactionStatusMeta {
-                status: solana_sdk::transaction::Result::<()>::Err(
+                status: paychains_sdk::transaction::Result::<()>::Err(
                     TransactionError::AccountNotFound,
                 ),
                 fee: x,
@@ -8030,9 +8030,9 @@ pub mod tests {
         transactions.push(
             Transaction::new_with_compiled_instructions(
                 &[&Keypair::new()],
-                &[solana_sdk::pubkey::new_rand()],
+                &[paychains_sdk::pubkey::new_rand()],
                 Hash::default(),
-                vec![solana_sdk::pubkey::new_rand()],
+                vec![paychains_sdk::pubkey::new_rand()],
                 vec![CompiledInstruction::new(1, &(), vec![0])],
             )
             .into(),
@@ -8497,7 +8497,7 @@ pub mod tests {
 
         let rewards: Rewards = (0..100)
             .map(|i| Reward {
-                pubkey: solana_sdk::pubkey::new_rand().to_string(),
+                pubkey: paychains_sdk::pubkey::new_rand().to_string(),
                 lamports: 42 + i,
                 post_balance: std::u64::MAX,
                 reward_type: Some(RewardType::Fee),
@@ -8628,8 +8628,8 @@ pub mod tests {
             .into_iter()
             .map(|_| {
                 let keypair0 = Keypair::new();
-                let to = solana_sdk::pubkey::new_rand();
-                solana_sdk::system_transaction::transfer(&keypair0, &to, 1, Hash::default())
+                let to = paychains_sdk::pubkey::new_rand();
+                paychains_sdk::system_transaction::transfer(&keypair0, &to, 1, Hash::default())
             })
             .collect();
 
@@ -8638,7 +8638,7 @@ pub mod tests {
 
     #[test]
     fn erasure_multiple_config() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let slot = 1;
         let parent = 0;
         let num_txs = 20;
@@ -8677,7 +8677,7 @@ pub mod tests {
 
     #[test]
     fn test_large_num_coding() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let slot = 1;
         let (_data_shreds, mut coding_shreds, leader_schedule_cache) =
             setup_erasure_shreds(slot, 0, 100);

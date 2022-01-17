@@ -73,29 +73,29 @@ if [[ $CI_OS_NAME = windows ]]; then
   BINS=(
     cargo-build-bpf
     cargo-test-bpf
-    solana
-    solana-install
-    solana-install-init
-    solana-keygen
-    solana-stake-accounts
-    solana-test-validator
-    solana-tokens
+    paychains
+    paychains-install
+    paychains-install-init
+    paychains-keygen
+    paychains-stake-accounts
+    paychains-test-validator
+    paychains-tokens
   )
 else
   ./fetch-perf-libs.sh
 
   BINS=(
-    solana
-    solana-bench-tps
-    solana-faucet
-    solana-gossip
-    solana-install
-    solana-keygen
-    solana-ledger-tool
-    solana-log-analyzer
-    solana-net-shaper
-    solana-sys-tuner
-    solana-validator
+    paychains
+    paychains-bench-tps
+    paychains-faucet
+    paychains-gossip
+    paychains-install
+    paychains-keygen
+    paychains-ledger-tool
+    paychains-log-analyzer
+    paychains-net-shaper
+    paychains-sys-tuner
+    paychains-validator
     rbpf-cli
   )
 
@@ -104,18 +104,18 @@ else
     BINS+=(
       cargo-build-bpf
       cargo-test-bpf
-      solana-dos
-      solana-install-init
-      solana-stake-accounts
-      solana-test-validator
-      solana-tokens
-      solana-watchtower
+      paychains-dos
+      paychains-install-init
+      paychains-stake-accounts
+      paychains-test-validator
+      paychains-tokens
+      paychains-watchtower
     )
   fi
 
-  #XXX: Ensure `solana-genesis` is built LAST!
-  # See https://github.com/solana-labs/solana/issues/5826
-  BINS+=(solana-genesis)
+  #XXX: Ensure `paychains-genesis` is built LAST!
+  # See https://github.com/paychains-labs/paychains/issues/5826
+  BINS+=(paychains-genesis)
 fi
 
 binArgs=()
@@ -156,7 +156,7 @@ fi
   set -x
   # deps dir can be empty
   shopt -s nullglob
-  for dep in target/"$buildVariant"/deps/libsolana*program.*; do
+  for dep in target/"$buildVariant"/deps/libpaychains*program.*; do
     cp -fv "$dep" "$installDir/bin/deps"
   done
 )

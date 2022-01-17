@@ -42,7 +42,7 @@
 //!
 
 use {
-    reed_solomon_erasure::{galois_8::Field, ReconstructShard, ReedSolomon},
+    reed_payomon_erasure::{galois_8::Field, ReconstructShard, ReedSolomon},
     serde::{Deserialize, Serialize},
 };
 
@@ -69,7 +69,7 @@ impl ErasureConfig {
     }
 }
 
-type Result<T> = std::result::Result<T, reed_solomon_erasure::Error>;
+type Result<T> = std::result::Result<T, reed_payomon_erasure::Error>;
 
 /// Represents an erasure "session" with a particular configuration and number of data and coding
 /// shreds
@@ -109,7 +109,7 @@ impl Session {
 
 #[cfg(test)]
 pub mod test {
-    use {super::*, log::*, solana_sdk::clock::Slot};
+    use {super::*, log::*, paychains_sdk::clock::Slot};
 
     /// Specifies the contents of a 16-data-shred and 4-coding-shred erasure set
     /// Exists to be passed to `generate_blockstore_with_coding`

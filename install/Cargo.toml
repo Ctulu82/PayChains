@@ -1,13 +1,13 @@
 [package]
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
+authors = ["PayChains Maintainers <maintainers@paychains.foundation>"]
 edition = "2021"
-name = "solana-install"
-description = "The solana cluster software installer"
+name = "paychains-install"
+description = "The paychains cluster software installer"
 version = "1.10.0"
-repository = "https://github.com/solana-labs/solana"
+repository = "https://github.com/paychains-labs/paychains"
 license = "Apache-2.0"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-install"
+homepage = "https://paychains.com/"
+documentation = "https://docs.rs/paychains-install"
 
 [dependencies]
 atty = "0.2.11"
@@ -25,12 +25,12 @@ nix = "0.23.1"
 reqwest = { version = "0.11.6", default-features = false, features = ["blocking", "rustls-tls", "json"] }
 serde = { version = "1.0.133", features = ["derive"] }
 serde_yaml = "0.8.23"
-solana-clap-utils = { path = "../clap-utils", version = "=1.10.0" }
-solana-client = { path = "../client", version = "=1.10.0" }
-solana-config-program = { path = "../programs/config", version = "=1.10.0" }
-solana-logger = { path = "../logger", version = "=1.10.0" }
-solana-sdk = { path = "../sdk", version = "=1.10.0" }
-solana-version = { path = "../version", version = "=1.10.0" }
+paychains-clap-utils = { path = "../clap-utils", version = "=1.10.0" }
+paychains-client = { path = "../client", version = "=1.10.0" }
+paychains-config-program = { path = "../programs/config", version = "=1.10.0" }
+paychains-logger = { path = "../logger", version = "=1.10.0" }
+paychains-sdk = { path = "../sdk", version = "=1.10.0" }
+paychains-version = { path = "../version", version = "=1.10.0" }
 semver = "1.0.4"
 tar = "0.4.38"
 tempfile = "3.3.0"

@@ -3,13 +3,13 @@ use {
     crossbeam_channel::{unbounded, Receiver, Sender, TryRecvError},
     rayon::{iter::ParallelIterator, prelude::*},
     serial_test::serial,
-    solana_gossip::{
+    paychains_gossip::{
         cluster_info::{compute_retransmit_peers, ClusterInfo},
         contact_info::ContactInfo,
         deprecated::{shuffle_peers_and_index, sorted_retransmit_peers_and_stakes},
     },
-    solana_sdk::{pubkey::Pubkey, signer::keypair::Keypair},
-    solana_streamer::socket::SocketAddrSpace,
+    paychains_sdk::{pubkey::Pubkey, signer::keypair::Keypair},
+    paychains_streamer::socket::SocketAddrSpace,
     std::{
         collections::{HashMap, HashSet},
         sync::{Arc, Mutex},
@@ -77,7 +77,7 @@ fn run_simulation(stakes: &[u64], fanout: usize) {
     let timeout = 60 * 5;
 
     // describe the leader
-    let leader_info = ContactInfo::new_localhost(&solana_sdk::pubkey::new_rand(), 0);
+    let leader_info = ContactInfo::new_localhost(&paychains_sdk::pubkey::new_rand(), 0);
     let cluster_info = ClusterInfo::new(
         leader_info.clone(),
         Arc::new(Keypair::new()),
@@ -104,7 +104,7 @@ fn run_simulation(stakes: &[u64], fanout: usize) {
         chunk.iter().for_each(|i| {
             //distribute neighbors across threads to maximize parallel compute
             let batch_ix = *i as usize % batches.len();
-            let node = ContactInfo::new_localhost(&solana_sdk::pubkey::new_rand(), 0);
+            let node = ContactInfo::new_localhost(&paychains_sdk::pubkey::new_rand(), 0);
             staked_nodes.insert(node.id, stakes[*i - 1]);
             cluster_info.insert_info(node.clone());
             let (s, r) = unbounded();
@@ -123,8 +123,8 @@ fn run_simulation(stakes: &[u64], fanout: usize) {
             let mut seed = [0; 32];
             seed[0..4].copy_from_slice(&i.to_le_bytes());
             // TODO: Ideally these should use the new methods in
-            // solana_core::cluster_nodes, however that would add build
-            // dependency on solana_core which is not desired.
+            // paychains_core::cluster_nodes, however that would add build
+            // dependency on paychains_core which is not desired.
             let (peers, stakes_and_index) =
                 sorted_retransmit_peers_and_stakes(&cluster_info, Some(&staked_nodes));
             let (_, shuffled_stakes_and_indexes) =

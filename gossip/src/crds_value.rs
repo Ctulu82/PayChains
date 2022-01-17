@@ -9,7 +9,7 @@ use {
     bincode::{serialize, serialized_size},
     rand::{CryptoRng, Rng},
     serde::de::{Deserialize, Deserializer},
-    solana_sdk::{
+    paychains_sdk::{
         clock::Slot,
         hash::Hash,
         pubkey::{self, Pubkey},
@@ -18,7 +18,7 @@ use {
         timing::timestamp,
         transaction::Transaction,
     },
-    solana_vote_program::vote_transaction::parse_vote_transaction,
+    paychains_vote_program::vote_transaction::parse_vote_transaction,
     std::{
         borrow::{Borrow, Cow},
         cmp::Ordering,
@@ -194,7 +194,7 @@ impl SnapshotHashes {
         let num_hashes = rng.gen_range(0, MAX_SNAPSHOT_HASHES) + 1;
         let hashes = std::iter::repeat_with(|| {
             let slot = 47825632 + rng.gen_range(0, 512);
-            let hash = solana_sdk::hash::new_rand(rng);
+            let hash = paychains_sdk::hash::new_rand(rng);
             (slot, hash)
         })
         .take(num_hashes)
@@ -358,7 +358,7 @@ impl<'de> Deserialize<'de> for Vote {
 pub struct LegacyVersion {
     pub from: Pubkey,
     pub wallclock: u64,
-    pub version: solana_version::LegacyVersion,
+    pub version: paychains_version::LegacyVersion,
 }
 
 impl Sanitize for LegacyVersion {
@@ -373,7 +373,7 @@ impl Sanitize for LegacyVersion {
 pub struct Version {
     pub from: Pubkey,
     pub wallclock: u64,
-    pub version: solana_version::Version,
+    pub version: paychains_version::Version,
 }
 
 impl Sanitize for Version {
@@ -389,7 +389,7 @@ impl Version {
         Self {
             from,
             wallclock: timestamp(),
-            version: solana_version::Version::default(),
+            version: paychains_version::Version::default(),
         }
     }
 
@@ -398,7 +398,7 @@ impl Version {
         Self {
             from: pubkey.unwrap_or_else(pubkey::new_rand),
             wallclock: new_rand_timestamp(rng),
-            version: solana_version::Version {
+            version: paychains_version::Version {
                 major: rng.gen(),
                 minor: rng.gen(),
                 patch: rng.gen(),
@@ -686,12 +686,12 @@ mod test {
         bincode::{deserialize, Options},
         rand::SeedableRng,
         rand_chacha::ChaChaRng,
-        solana_perf::test_tx::new_test_vote_tx,
-        solana_sdk::{
+        paychains_perf::test_tx::new_test_vote_tx,
+        paychains_sdk::{
             signature::{Keypair, Signer},
             timing::timestamp,
         },
-        solana_vote_program::{vote_instruction, vote_state},
+        paychains_vote_program::{vote_instruction, vote_state},
         std::{cmp::Ordering, iter::repeat_with},
     };
 
@@ -784,7 +784,7 @@ mod test {
         let mut rng = rand::thread_rng();
         let vote = vote_state::Vote::new(
             vec![1, 3, 7], // slots
-            solana_sdk::hash::new_rand(&mut rng),
+            paychains_sdk::hash::new_rand(&mut rng),
         );
         let ix = vote_instruction::vote(
             &Pubkey::new_unique(), // vote_pubkey

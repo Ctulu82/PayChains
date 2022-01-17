@@ -3,7 +3,7 @@ import {
   TransactionInstruction,
   SignatureResult,
   ParsedInstruction,
-} from "@solana/web3.js";
+} from "@paychains/web3.js";
 import { InstructionCard } from "./InstructionCard";
 import { programLabel } from "utils/tx";
 import { useCluster } from "providers/cluster";

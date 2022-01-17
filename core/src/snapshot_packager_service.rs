@@ -1,9 +1,9 @@
 use {
-    solana_gossip::cluster_info::{
+    paychains_gossip::cluster_info::{
         ClusterInfo, MAX_INCREMENTAL_SNAPSHOT_HASHES, MAX_SNAPSHOT_HASHES,
     },
-    solana_perf::thread::renice_this_thread,
-    solana_runtime::{
+    paychains_perf::thread::renice_this_thread,
+    paychains_runtime::{
         snapshot_archive_info::SnapshotArchiveInfoGetter,
         snapshot_config::SnapshotConfig,
         snapshot_hash::{
@@ -13,7 +13,7 @@ use {
         snapshot_package::{PendingSnapshotPackage, SnapshotType},
         snapshot_utils,
     },
-    solana_sdk::{clock::Slot, hash::Hash},
+    paychains_sdk::{clock::Slot, hash::Hash},
     std::{
         sync::{
             atomic::{AtomicBool, Ordering},
@@ -213,7 +213,7 @@ mod tests {
     use {
         super::*,
         bincode::serialize_into,
-        solana_runtime::{
+        paychains_runtime::{
             accounts_db::AccountStorageEntry,
             bank::BankSlotDelta,
             snapshot_archive_info::SnapshotArchiveInfo,
@@ -222,7 +222,7 @@ mod tests {
                 self, ArchiveFormat, SnapshotVersion, SNAPSHOT_STATUS_CACHE_FILE_NAME,
             },
         },
-        solana_sdk::hash::Hash,
+        paychains_sdk::hash::Hash,
         std::{
             fs::{self, remove_dir_all, OpenOptions},
             io::Write,

@@ -1,7 +1,7 @@
 use {
-    solana_cli_config::{Config, CONFIG_FILE},
-    solana_client::rpc_client::RpcClient,
-    solana_tokens::{arg_parser::parse_args, args::Command, commands, spl_token},
+    paychains_cli_config::{Config, CONFIG_FILE},
+    paychains_client::rpc_client::RpcClient,
+    paychains_tokens::{arg_parser::parse_args, args::Command, commands, spl_token},
     std::{
         env,
         error::Error,

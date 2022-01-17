@@ -4,12 +4,12 @@ extern crate test;
 
 use {
     rand::{thread_rng, Rng},
-    solana_gossip::{
+    paychains_gossip::{
         crds::{Crds, GossipRoute, VersionedCrdsValue},
         crds_shards::CrdsShards,
         crds_value::CrdsValue,
     },
-    solana_sdk::timing::timestamp,
+    paychains_sdk::timing::timestamp,
     std::iter::repeat_with,
     test::Bencher,
 };

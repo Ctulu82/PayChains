@@ -331,7 +331,7 @@ export type VoteAccountStatus = {
 
 /**
  * Network Inflation
- * (see https://docs.solana.com/implemented-proposals/ed_overview)
+ * (see https://docs.paychains.com/implemented-proposals/ed_overview)
  */
 export type InflationGovernor = {
   foundation: number;
@@ -410,7 +410,7 @@ const GetEpochScheduleResult = pick({
 
 /**
  * Leader schedule
- * (see https://docs.solana.com/terminology#leader-schedule)
+ * (see https://docs.paychains.com/terminology#leader-schedule)
  */
 export type LeaderSchedule = {
   [address: string]: number[];
@@ -439,13 +439,13 @@ const SignatureReceivedResult = literal('receivedSignature');
  * Version info for a node
  */
 export type Version = {
-  /** Version of solana-core */
-  'solana-core': string;
+  /** Version of paychains-core */
+  'paychains-core': string;
   'feature-set'?: number;
 };
 
 const VersionResult = pick({
-  'solana-core': string(),
+  'paychains-core': string(),
   'feature-set': optional(number()),
 });
 
@@ -2716,7 +2716,7 @@ export class Connection {
       throw new Error(
         `Transaction was not confirmed in ${duration.toFixed(
           2,
-        )} seconds. It is unknown if it succeeded or failed. Check signature ${signature} using the Solana Explorer or CLI tools.`,
+        )} seconds. It is unknown if it succeeded or failed. Check signature ${signature} using the PayChains Explorer or CLI tools.`,
       );
     }
 
@@ -3476,12 +3476,12 @@ export class Connection {
    * Request an allocation of lamports to the specified address
    *
    * ```typescript
-   * import { Connection, PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
+   * import { Connection, PublicKey, LAMPORTS_PER_PAY } from "@paychains/web3.js";
    *
    * (async () => {
-   *   const connection = new Connection("https://api.testnet.solana.com", "confirmed");
+   *   const connection = new Connection("https://api.testnet.paychains.com", "confirmed");
    *   const myAddress = new PublicKey("2nr1bHFT86W9tGnyvmYW4vcHKsQB3sVQfnddasz4kExM");
-   *   const signature = await connection.requestAirdrop(myAddress, LAMPORTS_PER_SOL);
+   *   const signature = await connection.requestAirdrop(myAddress, LAMPORTS_PER_PAY);
    *   await connection.confirmTransaction(signature);
    * })();
    * ```

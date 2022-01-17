@@ -1,6 +1,6 @@
 use {
-    solana_core::validator::ValidatorConfig,
-    solana_sdk::exit::Exit,
+    paychains_core::validator::ValidatorConfig,
+    paychains_sdk::exit::Exit,
     std::sync::{Arc, RwLock},
 };
 

@@ -63,9 +63,9 @@ case $deployMethod in
 local|tar|skip)
   PATH="$HOME"/.cargo/bin:"$PATH"
   export USE_INSTALL=1
-  solana_cli=solana
-  solana_gossip=solana-gossip
-  solana_install=solana-install
+  paychains_cli=paychains
+  paychains_gossip=paychains-gossip
+  paychains_install=paychains-install
   ;;
 *)
   echo "Unknown deployment method: $deployMethod"
@@ -85,7 +85,7 @@ fi
 echo "--- $sanityTargetIp: validators"
 (
   set -x
-  $solana_cli --url http://"$sanityTargetIp":8899 validators
+  $paychains_cli --url http://"$sanityTargetIp":8899 validators
 )
 
 echo "--- $sanityTargetIp: node count ($numSanityNodes expected)"
@@ -97,7 +97,7 @@ echo "--- $sanityTargetIp: node count ($numSanityNodes expected)"
     nodeArg="num-nodes-exactly"
   fi
 
-  $solana_gossip --allow-private-addr spy --entrypoint "$sanityTargetIp:8001" \
+  $paychains_gossip --allow-private-addr spy --entrypoint "$sanityTargetIp:8001" \
     --$nodeArg "$numSanityNodes" --timeout 60 \
 )
 
@@ -122,17 +122,17 @@ else
 fi
 
 if $installCheck && [[ -r update_manifest_keypair.json ]]; then
-  echo "--- $sanityTargetIp: solana-install test"
+  echo "--- $sanityTargetIp: paychains-install test"
 
   (
     set -x
     rm -rf install-data-dir
-    $solana_install init \
+    $paychains_install init \
       --no-modify-path \
       --data-dir install-data-dir \
       --url http://"$sanityTargetIp":8899 \
 
-    $solana_install info
+    $paychains_install info
   )
 fi
 

@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @brief Solana Public key
+ * @brief PayChains Public key
  */
 
 #include <sol/types.h>
@@ -19,15 +19,15 @@ extern "C" {
  */
 typedef struct {
   uint8_t x[SIZE_PUBKEY];
-} SolPubkey;
+} PayPubkey;
 
 /**
  * Prints the hexadecimal representation of a public key
  *
  * @param key The public key to print
  */
-void sol_log_pubkey(
-  const SolPubkey *pubkey
+void pay_log_pubkey(
+  const PayPubkey *pubkey
 );
 
 /**
@@ -37,7 +37,7 @@ void sol_log_pubkey(
  * @param two Second public key
  * @return true if the same
  */
-static bool SolPubkey_same(const SolPubkey *one, const SolPubkey *two) {
+static bool PayPubkey_same(const PayPubkey *one, const PayPubkey *two) {
   for (int i = 0; i < sizeof(*one); i++) {
     if (one->x[i] != two->x[i]) {
       return false;
@@ -47,21 +47,21 @@ static bool SolPubkey_same(const SolPubkey *one, const SolPubkey *two) {
 }
 
 /**
- * Seed used to create a program address or passed to sol_invoke_signed
+ * Seed used to create a program address or passed to pay_invoke_signed
  */
 typedef struct {
   const uint8_t *addr; /** Seed bytes */
   uint64_t len; /** Length of the seed bytes */
-} SolSignerSeed;
+} PaySignerSeed;
 
 /**
  * Seeds used by a signer to create a program address or passed to
- * sol_invoke_signed
+ * pay_invoke_signed
  */
 typedef struct {
-  const SolSignerSeed *addr; /** An arry of a signer's seeds */
+  const PaySignerSeed *addr; /** An arry of a signer's seeds */
   uint64_t len; /** Number of seeds */
-} SolSignerSeeds;
+} PaySignerSeeds;
 
 /**
  * Create a program address
@@ -71,11 +71,11 @@ typedef struct {
  * @param program_id Program id of the signer
  * @param program_address Program address created, filled on return
  */
-uint64_t sol_create_program_address(
-    const SolSignerSeed *seeds,
+uint64_t pay_create_program_address(
+    const PaySignerSeed *seeds,
     int seeds_len,
-    const SolPubkey *program_id,
-    SolPubkey *program_address
+    const PayPubkey *program_id,
+    PayPubkey *program_address
 );
 
 /**
@@ -87,22 +87,22 @@ uint64_t sol_create_program_address(
  * @param program_address Program address created, filled on return
  * @param bump_seed Bump seed required to create a valid program address
  */
-uint64_t sol_try_find_program_address(
-    const SolSignerSeed *seeds,
+uint64_t pay_try_find_program_address(
+    const PaySignerSeed *seeds,
     int seeds_len,
-    const SolPubkey *program_id,
-    SolPubkey *program_address,
+    const PayPubkey *program_id,
+    PayPubkey *program_address,
     uint8_t *bump_seed
 );
 
-#ifdef SOL_TEST
+#ifdef PAY_TEST
 /**
  * Stub functions when building tests
  */
 #include <stdio.h>
 
-void sol_log_pubkey(
-  const SolPubkey *pubkey
+void pay_log_pubkey(
+  const PayPubkey *pubkey
 ) {
   printf("Program log: ");
   for (int i = 0; i < SIZE_PUBKEY; i++) {

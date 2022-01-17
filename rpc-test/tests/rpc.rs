@@ -6,8 +6,8 @@ use {
     log::*,
     reqwest::{self, header::CONTENT_TYPE},
     serde_json::{json, Value},
-    solana_account_decoder::UiAccount,
-    solana_client::{
+    paychains_account_decoder::UiAccount,
+    paychains_client::{
         client_error::{ClientErrorKind, Result as ClientResult},
         rpc_client::RpcClient,
         rpc_config::{RpcAccountInfoConfig, RpcSignatureSubscribeConfig},
@@ -15,8 +15,8 @@ use {
         rpc_response::{Response as RpcResponse, RpcSignatureResult, SlotUpdate},
         tpu_client::{TpuClient, TpuClientConfig},
     },
-    solana_rpc::rpc_pubsub::gen_client::Client as PubsubClient,
-    solana_sdk::{
+    paychains_rpc::rpc_pubsub::gen_client::Client as PubsubClient,
+    paychains_sdk::{
         commitment_config::CommitmentConfig,
         hash::Hash,
         pubkey::Pubkey,
@@ -25,9 +25,9 @@ use {
         system_transaction,
         transaction::Transaction,
     },
-    solana_streamer::socket::SocketAddrSpace,
-    solana_test_validator::TestValidator,
-    solana_transaction_status::TransactionStatus,
+    paychains_streamer::socket::SocketAddrSpace,
+    paychains_test_validator::TestValidator,
+    paychains_transaction_status::TransactionStatus,
     std::{
         collections::HashSet,
         net::UdpSocket,
@@ -62,14 +62,14 @@ fn post_rpc(request: Value, rpc_url: &str) -> Value {
 
 #[test]
 fn test_rpc_send_tx() {
-    solana_logger::setup();
+    paychains_logger::setup();
 
     let alice = Keypair::new();
     let test_validator =
         TestValidator::with_no_fees(alice.pubkey(), None, SocketAddrSpace::Unspecified);
     let rpc_url = test_validator.rpc_url();
 
-    let bob_pubkey = solana_sdk::pubkey::new_rand();
+    let bob_pubkey = paychains_sdk::pubkey::new_rand();
 
     let req = json_req!("getRecentBlockhash", json!([]));
     let json = post_rpc(req, &rpc_url);
@@ -98,7 +98,7 @@ fn test_rpc_send_tx() {
 
     let request = json_req!("getSignatureStatuses", [[signature]]);
 
-    for _ in 0..solana_sdk::clock::DEFAULT_TICKS_PER_SLOT {
+    for _ in 0..paychains_sdk::clock::DEFAULT_TICKS_PER_SLOT {
         let json = post_rpc(request.clone(), &rpc_url);
 
         let result: Option<TransactionStatus> =
@@ -116,7 +116,7 @@ fn test_rpc_send_tx() {
     assert!(confirmed_tx);
 
     use {
-        solana_account_decoder::UiAccountEncoding, solana_client::rpc_config::RpcAccountInfoConfig,
+        paychains_account_decoder::UiAccountEncoding, paychains_client::rpc_config::RpcAccountInfoConfig,
     };
     let config = RpcAccountInfoConfig {
         encoding: Some(UiAccountEncoding::Base64),
@@ -133,14 +133,14 @@ fn test_rpc_send_tx() {
 
 #[test]
 fn test_rpc_invalid_requests() {
-    solana_logger::setup();
+    paychains_logger::setup();
 
     let alice = Keypair::new();
     let test_validator =
         TestValidator::with_no_fees(alice.pubkey(), None, SocketAddrSpace::Unspecified);
     let rpc_url = test_validator.rpc_url();
 
-    let bob_pubkey = solana_sdk::pubkey::new_rand();
+    let bob_pubkey = paychains_sdk::pubkey::new_rand();
 
     // test invalid get_balance request
     let req = json_req!("getBalance", json!(["invalid9999"]));
@@ -166,7 +166,7 @@ fn test_rpc_invalid_requests() {
 
 #[test]
 fn test_rpc_slot_updates() {
-    solana_logger::setup();
+    paychains_logger::setup();
 
     let test_validator =
         TestValidator::with_no_fees(Pubkey::new_unique(), None, SocketAddrSpace::Unspecified);
@@ -231,7 +231,7 @@ fn test_rpc_slot_updates() {
 
 #[test]
 fn test_rpc_subscriptions() {
-    solana_logger::setup();
+    paychains_logger::setup();
 
     let alice = Keypair::new();
     let test_validator =
@@ -248,7 +248,7 @@ fn test_rpc_subscriptions() {
         .map(|_| {
             system_transaction::transfer(
                 &alice,
-                &solana_sdk::pubkey::new_rand(),
+                &paychains_sdk::pubkey::new_rand(),
                 Rent::default().minimum_balance(0),
                 recent_blockhash,
             )
@@ -438,7 +438,7 @@ fn test_tpu_send_transaction() {
 
 #[test]
 fn deserialize_rpc_error() -> ClientResult<()> {
-    solana_logger::setup();
+    paychains_logger::setup();
 
     let alice = Keypair::new();
     let validator = TestValidator::with_no_fees(alice.pubkey(), None, SocketAddrSpace::Unspecified);

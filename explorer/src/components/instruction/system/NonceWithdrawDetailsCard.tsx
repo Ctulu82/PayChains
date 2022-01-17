@@ -3,8 +3,8 @@ import {
   SystemProgram,
   SignatureResult,
   ParsedInstruction,
-} from "@solana/web3.js";
-import { SolBalance } from "utils";
+} from "@paychains/web3.js";
+import { PayBalance } from "utils";
 import { InstructionCard } from "../InstructionCard";
 import { Address } from "components/common/Address";
 import { WithdrawNonceInfo } from "./types";
@@ -57,9 +57,9 @@ export function NonceWithdrawDetailsCard(props: {
       </tr>
 
       <tr>
-        <td>Withdraw Amount (SOL)</td>
+        <td>Withdraw Amount (PAY)</td>
         <td className="text-lg-end">
-          <SolBalance lamports={info.lamports} />
+          <PayBalance lamports={info.lamports} />
         </td>
       </tr>
     </InstructionCard>

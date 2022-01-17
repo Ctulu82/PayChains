@@ -1,8 +1,8 @@
 use {
     crate::nonce_keyed_account::NonceKeyedAccount,
     log::*,
-    solana_program_runtime::{ic_msg, invoke_context::InvokeContext},
-    solana_sdk::{
+    paychains_program_runtime::{ic_msg, invoke_context::InvokeContext},
+    paychains_sdk::{
         account::{AccountSharedData, ReadableAccount, WritableAccount},
         account_utils::StateMut,
         feature_set,
@@ -362,7 +362,7 @@ pub fn process_instruction(
         SystemInstruction::AdvanceNonceAccount => {
             let me = &mut keyed_account_at_index(keyed_accounts, first_instruction_account)?;
             #[allow(deprecated)]
-            if from_keyed_account::<solana_sdk::sysvar::recent_blockhashes::RecentBlockhashes>(
+            if from_keyed_account::<paychains_sdk::sysvar::recent_blockhashes::RecentBlockhashes>(
                 keyed_account_at_index(keyed_accounts, first_instruction_account + 1)?,
             )?
             .is_empty()
@@ -379,7 +379,7 @@ pub fn process_instruction(
             let me = &mut keyed_account_at_index(keyed_accounts, first_instruction_account)?;
             let to = &mut keyed_account_at_index(keyed_accounts, first_instruction_account + 1)?;
             #[allow(deprecated)]
-            let _ = from_keyed_account::<solana_sdk::sysvar::recent_blockhashes::RecentBlockhashes>(
+            let _ = from_keyed_account::<paychains_sdk::sysvar::recent_blockhashes::RecentBlockhashes>(
                 keyed_account_at_index(keyed_accounts, first_instruction_account + 2)?,
             )?;
             me.withdraw_nonce_account(
@@ -396,7 +396,7 @@ pub fn process_instruction(
         SystemInstruction::InitializeNonceAccount(authorized) => {
             let me = &mut keyed_account_at_index(keyed_accounts, first_instruction_account)?;
             #[allow(deprecated)]
-            if from_keyed_account::<solana_sdk::sysvar::recent_blockhashes::RecentBlockhashes>(
+            if from_keyed_account::<paychains_sdk::sysvar::recent_blockhashes::RecentBlockhashes>(
                 keyed_account_at_index(keyed_accounts, first_instruction_account + 1)?,
             )?
             .is_empty()
@@ -489,7 +489,7 @@ pub fn get_system_account_kind(account: &AccountSharedData) -> Option<SystemAcco
 #[cfg(test)]
 mod tests {
     #[allow(deprecated)]
-    use solana_sdk::{
+    use paychains_sdk::{
         account::{self, Account, AccountSharedData},
         client::SyncClient,
         feature_set::FeatureSet,
@@ -508,7 +508,7 @@ mod tests {
         super::*,
         crate::{bank::Bank, bank_client::BankClient},
         bincode::serialize,
-        solana_program_runtime::invoke_context::{mock_process_instruction, InvokeContext},
+        paychains_program_runtime::invoke_context::{mock_process_instruction, InvokeContext},
         std::{cell::RefCell, sync::Arc},
     };
 
@@ -1388,7 +1388,7 @@ mod tests {
     where
         F: Fn(&Bank),
     {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let alice_keypair = Keypair::new();
         let bob_keypair = Keypair::new();
@@ -1650,7 +1650,7 @@ mod tests {
         let blockhash = hash(&serialize(&0).unwrap());
         #[allow(deprecated)]
         let new_recent_blockhashes_account =
-            solana_sdk::recent_blockhashes_account::create_account_with_data_for_test(
+            paychains_sdk::recent_blockhashes_account::create_account_with_data_for_test(
                 vec![IterItem(0u64, &blockhash, 0); sysvar::recent_blockhashes::MAX_ENTRIES]
                     .into_iter(),
             );
@@ -2083,7 +2083,7 @@ mod tests {
         let blockhash_id = sysvar::recent_blockhashes::id();
         #[allow(deprecated)]
         let new_recent_blockhashes_account =
-            solana_sdk::recent_blockhashes_account::create_account_with_data_for_test(
+            paychains_sdk::recent_blockhashes_account::create_account_with_data_for_test(
                 vec![].into_iter(),
             );
         process_instruction(
@@ -2148,7 +2148,7 @@ mod tests {
         );
         #[allow(deprecated)]
         let new_recent_blockhashes_account =
-            solana_sdk::recent_blockhashes_account::create_account_with_data_for_test(
+            paychains_sdk::recent_blockhashes_account::create_account_with_data_for_test(
                 vec![].into_iter(),
             );
         mock_process_instruction(

@@ -2,35 +2,35 @@
 title: Rust API
 ---
 
-Solana's Rust crates are [published to crates.io][crates.io] and can be found
-[on docs.rs with the "solana-" prefix][docs.rs].
+PayChains's Rust crates are [published to crates.io][crates.io] and can be found
+[on docs.rs with the "paychains-" prefix][docs.rs].
 
-[crates.io]: https://crates.io/search?q=solana-
-[docs.rs]: https://docs.rs/releases/search?query=solana-
+[crates.io]: https://crates.io/search?q=paychains-
+[docs.rs]: https://docs.rs/releases/search?query=paychains-
 
 Some important crates:
 
-- [`solana-program`] &mdash; Imported by programs running on Solana, compiled
+- [`paychains-program`] &mdash; Imported by programs running on PayChains, compiled
   to BPF. This crate contains many fundamental data types and is re-exported from
-  [`solana-sdk`], which cannot be imported from a Solana program.
+  [`paychains-sdk`], which cannot be imported from a PayChains program.
 
-- [`solana-sdk`] &mdash; The basic off-chain SDK, it re-exports
-  [`solana-program`] and adds more APIs on top of that. Most Solana programs
+- [`paychains-sdk`] &mdash; The basic off-chain SDK, it re-exports
+  [`paychains-program`] and adds more APIs on top of that. Most PayChains programs
   that do not run on-chain will import this.
 
-- [`solana-client`] &mdash; For interacting with a Solana node via the
+- [`paychains-client`] &mdash; For interacting with a PayChains node via the
   [JSON RPC API](jsonrpc-api).
 
-- [`solana-cli-config`] &mdash; Loading and saving the Solana CLI configuration
+- [`paychains-cli-config`] &mdash; Loading and saving the PayChains CLI configuration
   file.
 
-- [`solana-clap-utils`] &mdash; Routines for setting up a CLI, using [`clap`],
-  as used by the main Solana CLI. Includes functions for loading all types of
+- [`paychains-clap-utils`] &mdash; Routines for setting up a CLI, using [`clap`],
+  as used by the main PayChains CLI. Includes functions for loading all types of
   signers supported by the CLI.
 
-[`solana-program`]: https://docs.rs/solana-program
-[`solana-sdk`]: https://docs.rs/solana-sdk
-[`solana-client`]: https://docs.rs/solana-client
-[`solana-cli-config`]: https://docs.rs/solana-cli-config
-[`solana-clap-utils`]: https://docs.rs/solana-clap-utils
+[`paychains-program`]: https://docs.rs/paychains-program
+[`paychains-sdk`]: https://docs.rs/paychains-sdk
+[`paychains-client`]: https://docs.rs/paychains-client
+[`paychains-cli-config`]: https://docs.rs/paychains-cli-config
+[`paychains-clap-utils`]: https://docs.rs/paychains-clap-utils
 [`clap`]: https://docs.rs/clap

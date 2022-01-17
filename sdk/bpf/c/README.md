@@ -7,14 +7,14 @@ include path/to/bpf.mk
 ```
 and `src/program.c` containing:
 ```c
-#include <solana_sdk.h>
+#include <paychains_sdk.h>
 
 bool entrypoint(const uint8_t *input) {
-  SolKeyedAccount ka[1];
+  PayKeyedAccount ka[1];
   uint8_t *data;
   uint64_t data_len;
 
-  if (!sol_deserialize(buf, ka, SOL_ARRAY_SIZE(ka), NULL, &data, &data_len)) {
+  if (!pay_deserialize(buf, ka, PAY_ARRAY_SIZE(ka), NULL, &data, &data_len)) {
     return false;
   }
   print_params(1, ka, data, data_len);
@@ -41,4 +41,4 @@ Then run `make test`.
 
 ### Limitations
 * Programs must be fully contained within a single .c file
-* No libc is available but `solana_sdk.h` provides a minimal set of primitives
+* No libc is available but `paychains_sdk.h` provides a minimal set of primitives

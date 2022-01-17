@@ -16,8 +16,8 @@ use {
         rpc_sender::*,
     },
     serde_json::{json, Number, Value},
-    solana_account_decoder::{UiAccount, UiAccountEncoding},
-    solana_sdk::{
+    paychains_account_decoder::{UiAccount, UiAccountEncoding},
+    paychains_sdk::{
         account::Account,
         clock::{Slot, UnixTimestamp},
         epoch_info::EpochInfo,
@@ -29,13 +29,13 @@ use {
         sysvar::epoch_schedule::EpochSchedule,
         transaction::{self, Transaction, TransactionError},
     },
-    solana_transaction_status::{
+    paychains_transaction_status::{
         EncodedConfirmedBlock, EncodedConfirmedTransactionWithStatusMeta, EncodedTransaction,
         EncodedTransactionWithStatusMeta, Rewards, TransactionConfirmationStatus,
         TransactionStatus, UiCompiledInstruction, UiMessage, UiRawMessage, UiTransaction,
         UiTransactionEncoding, UiTransactionStatusMeta,
     },
-    solana_version::Version,
+    paychains_version::Version,
     std::{collections::HashMap, net::SocketAddr, str::FromStr, sync::RwLock},
 };
 
@@ -339,7 +339,7 @@ impl RpcSender for MockSender {
             "getVersion" => {
                 let version = Version::default();
                 json!(RpcVersionInfo {
-                    solana_core: version.to_string(),
+                    paychains_core: version.to_string(),
                     feature_set: Some(version.feature_set),
                 })
             }

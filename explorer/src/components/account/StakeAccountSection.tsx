@@ -1,6 +1,6 @@
 import React from "react";
 import { TableCardBody } from "components/common/TableCardBody";
-import { SolBalance } from "utils";
+import { PayBalance } from "utils";
 import { displayTimestampUtc } from "utils/date";
 import { Account, useFetchAccountInfo } from "providers/accounts";
 import { Address } from "components/common/Address";
@@ -10,7 +10,7 @@ import {
   StakeAccountType,
 } from "validators/accounts/stake";
 import BN from "bn.js";
-import { StakeActivationData } from "@solana/web3.js";
+import { StakeActivationData } from "@paychains/web3.js";
 import { Epoch } from "components/common/Epoch";
 
 const MAX_EPOCH = new BN(2).pow(new BN(64)).sub(new BN(1));
@@ -124,15 +124,15 @@ function OverviewCard({
           </td>
         </tr>
         <tr>
-          <td>Balance (SOL)</td>
+          <td>Balance (PAY)</td>
           <td className="text-lg-end text-uppercase">
-            <SolBalance lamports={account.lamports || 0} />
+            <PayBalance lamports={account.lamports || 0} />
           </td>
         </tr>
         <tr>
-          <td>Rent Reserve (SOL)</td>
+          <td>Rent Reserve (PAY)</td>
           <td className="text-lg-end">
-            <SolBalance lamports={stakeAccount.meta.rentExemptReserve} />
+            <PayBalance lamports={stakeAccount.meta.rentExemptReserve} />
           </td>
         </tr>
         {hideDelegation && (
@@ -189,25 +189,25 @@ function DelegationCard({
         {stake && (
           <>
             <tr>
-              <td>Delegated Stake (SOL)</td>
+              <td>Delegated Stake (PAY)</td>
               <td className="text-lg-end">
-                <SolBalance lamports={stake.delegation.stake} />
+                <PayBalance lamports={stake.delegation.stake} />
               </td>
             </tr>
 
             {activation && (
               <>
                 <tr>
-                  <td>Active Stake (SOL)</td>
+                  <td>Active Stake (PAY)</td>
                   <td className="text-lg-end">
-                    <SolBalance lamports={activation.active} />
+                    <PayBalance lamports={activation.active} />
                   </td>
                 </tr>
 
                 <tr>
-                  <td>Inactive Stake (SOL)</td>
+                  <td>Inactive Stake (PAY)</td>
                   <td className="text-lg-end">
-                    <SolBalance lamports={activation.inactive} />
+                    <PayBalance lamports={activation.inactive} />
                   </td>
                 </tr>
               </>

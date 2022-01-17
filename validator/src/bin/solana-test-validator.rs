@@ -2,31 +2,31 @@ use {
     clap::{crate_name, value_t, value_t_or_exit, values_t_or_exit, App, Arg},
     crossbeam_channel::unbounded,
     log::*,
-    solana_clap_utils::{
+    paychains_clap_utils::{
         input_parsers::{pubkey_of, pubkeys_of, value_of},
         input_validators::{
             is_pubkey, is_pubkey_or_keypair, is_slot, is_url_or_moniker,
             normalize_to_url_if_moniker,
         },
     },
-    solana_client::rpc_client::RpcClient,
-    solana_core::tower_storage::FileTowerStorage,
-    solana_faucet::faucet::{run_local_faucet_with_port, FAUCET_PORT},
-    solana_rpc::rpc::JsonRpcConfig,
-    solana_sdk::{
+    paychains_client::rpc_client::RpcClient,
+    paychains_core::tower_storage::FileTowerStorage,
+    paychains_faucet::faucet::{run_local_faucet_with_port, FAUCET_PORT},
+    paychains_rpc::rpc::JsonRpcConfig,
+    paychains_sdk::{
         account::AccountSharedData,
         clock::Slot,
         epoch_schedule::{EpochSchedule, MINIMUM_SLOTS_PER_EPOCH},
-        native_token::sol_to_lamports,
+        native_token::pay_to_lamports,
         pubkey::Pubkey,
         rent::Rent,
         rpc_port,
         signature::{read_keypair_file, write_keypair_file, Keypair, Signer},
         system_program,
     },
-    solana_streamer::socket::SocketAddrSpace,
-    solana_test_validator::*,
-    solana_validator::{
+    paychains_streamer::socket::SocketAddrSpace,
+    paychains_test_validator::*,
+    paychains_validator::{
         admin_rpc_service, dashboard::Dashboard, ledger_lockfile, lock_ledger, println_name_value,
         redirect_stderr_to_file,
     },
@@ -43,11 +43,11 @@ use {
 
 /* 10,000 was derived empirically by watching the size
  * of the rocksdb/ directory self-limit itself to the
- * 40MB-150MB range when running `solana-test-validator`
+ * 40MB-150MB range when running `paychains-test-validator`
  */
 const DEFAULT_MAX_LEDGER_SHREDS: u64 = 10_000;
 
-const DEFAULT_FAUCET_SOL: f64 = 1_000_000.;
+const DEFAULT_FAUCET_PAY: f64 = 1_000_000.;
 
 #[derive(PartialEq)]
 enum Output {
@@ -60,11 +60,11 @@ fn main() {
     let default_rpc_port = rpc_port::DEFAULT_RPC_PORT.to_string();
     let default_faucet_port = FAUCET_PORT.to_string();
     let default_limit_ledger_size = DEFAULT_MAX_LEDGER_SHREDS.to_string();
-    let default_faucet_sol = DEFAULT_FAUCET_SOL.to_string();
+    let default_faucet_pay = DEFAULT_FAUCET_PAY.to_string();
 
-    let matches = App::new("solana-test-validator")
+    let matches = App::new("paychains-test-validator")
         .about("Test Validator")
-        .version(solana_version::version!())
+        .version(paychains_version::version!())
         .arg({
             let arg = Arg::with_name("config_file")
                 .short("C")
@@ -72,7 +72,7 @@ fn main() {
                 .value_name("PATH")
                 .takes_value(true)
                 .help("Configuration file to use");
-            if let Some(ref config_file) = *solana_cli_config::CONFIG_FILE {
+            if let Some(ref config_file) = *paychains_cli_config::CONFIG_FILE {
                 arg.default_value(config_file)
             } else {
                 arg
@@ -86,7 +86,7 @@ fn main() {
                 .takes_value(true)
                 .validator(is_url_or_moniker)
                 .help(
-                    "URL for Solana's JSON RPC or moniker (or their first letter): \
+                    "URL for PayChains's JSON RPC or moniker (or their first letter): \
                    [mainnet-beta, testnet, devnet, localhost]",
                 ),
         )
@@ -143,7 +143,7 @@ fn main() {
                 .value_name("PORT")
                 .takes_value(true)
                 .default_value(&default_faucet_port)
-                .validator(solana_validator::port_validator)
+                .validator(paychains_validator::port_validator)
                 .help("Enable the faucet on this port"),
         )
         .arg(
@@ -152,7 +152,7 @@ fn main() {
                 .value_name("PORT")
                 .takes_value(true)
                 .default_value(&default_rpc_port)
-                .validator(solana_validator::port_validator)
+                .validator(paychains_validator::port_validator)
                 .help("Enable JSON RPC on this port, and the next port for the RPC websocket"),
         )
         .arg(
@@ -176,7 +176,7 @@ fn main() {
                 .number_of_values(2)
                 .multiple(true)
                 .help(
-                    "Load an account from the provided JSON file (see `solana account --help` on how to dump \
+                    "Load an account from the provided JSON file (see `paychains account --help` on how to dump \
                         an account to file). Files are searched for relatively to CWD and tests/fixtures. \
                         If the ledger already exists then this parameter is silently ignored",
                 ),
@@ -221,7 +221,7 @@ fn main() {
                 .long("gossip-host")
                 .value_name("HOST")
                 .takes_value(true)
-                .validator(solana_net_utils::is_host)
+                .validator(paychains_net_utils::is_host)
                 .help(
                     "Gossip DNS name or IP address for the validator to advertise in gossip \
                        [default: 127.0.0.1]",
@@ -232,7 +232,7 @@ fn main() {
                 .long("dynamic-port-range")
                 .value_name("MIN_PORT-MAX_PORT")
                 .takes_value(true)
-                .validator(solana_validator::port_range_validator)
+                .validator(paychains_validator::port_range_validator)
                 .help(
                     "Range to use for dynamically assigned ports \
                     [default: 1024-65535]",
@@ -243,7 +243,7 @@ fn main() {
                 .long("bind-address")
                 .value_name("HOST")
                 .takes_value(true)
-                .validator(solana_net_utils::is_host)
+                .validator(paychains_net_utils::is_host)
                 .default_value("0.0.0.0")
                 .help("IP address to bind the validator ports [default: 0.0.0.0]"),
         )
@@ -287,13 +287,13 @@ fn main() {
                 .help("Keep this amount of shreds in root slots."),
         )
         .arg(
-            Arg::with_name("faucet_sol")
-                .long("faucet-sol")
+            Arg::with_name("faucet_pay")
+                .long("faucet-pay")
                 .takes_value(true)
-                .value_name("SOL")
-                .default_value(default_faucet_sol.as_str())
+                .value_name("PAY")
+                .default_value(default_faucet_pay.as_str())
                 .help(
-                    "Give the faucet address this much SOL in genesis. \
+                    "Give the faucet address this much PAY in genesis. \
                      If the ledger already exists then this parameter is silently ignored",
                 ),
         )
@@ -343,7 +343,7 @@ fn main() {
             exit(1);
         })
     }
-    solana_runtime::snapshot_utils::remove_tmp_snapshot_archives(&ledger_path);
+    paychains_runtime::snapshot_utils::remove_tmp_snapshot_archives(&ledger_path);
 
     let validator_log_symlink = ledger_path.join("validator.log");
 
@@ -371,16 +371,16 @@ fn main() {
     };
     let _logger_thread = redirect_stderr_to_file(logfile);
 
-    info!("{} {}", crate_name!(), solana_version::version!());
+    info!("{} {}", crate_name!(), paychains_version::version!());
     info!("Starting validator with: {:#?}", std::env::args_os());
-    solana_core::validator::report_target_features();
+    paychains_core::validator::report_target_features();
 
     // TODO: Ideally test-validator should *only* allow private addresses.
     let socket_addr_space = SocketAddrSpace::new(/*allow_private_addr=*/ true);
     let cli_config = if let Some(config_file) = matches.value_of("config_file") {
-        solana_cli_config::Config::load(config_file).unwrap_or_default()
+        paychains_cli_config::Config::load(config_file).unwrap_or_default()
     } else {
-        solana_cli_config::Config::default()
+        paychains_cli_config::Config::default()
     };
 
     let cluster_rpc_client = value_t!(matches, "json_rpc_url", String)
@@ -399,20 +399,20 @@ fn main() {
     let faucet_port = value_t_or_exit!(matches, "faucet_port", u16);
     let slots_per_epoch = value_t!(matches, "slots_per_epoch", Slot).ok();
     let gossip_host = matches.value_of("gossip_host").map(|gossip_host| {
-        solana_net_utils::parse_host(gossip_host).unwrap_or_else(|err| {
+        paychains_net_utils::parse_host(gossip_host).unwrap_or_else(|err| {
             eprintln!("Failed to parse --gossip-host: {}", err);
             exit(1);
         })
     });
     let gossip_port = value_t!(matches, "gossip_port", u16).ok();
     let dynamic_port_range = matches.value_of("dynamic_port_range").map(|port_range| {
-        solana_net_utils::parse_port_range(port_range).unwrap_or_else(|| {
+        paychains_net_utils::parse_port_range(port_range).unwrap_or_else(|| {
             eprintln!("Failed to parse --dynamic-port-range");
             exit(1);
         })
     });
     let bind_address = matches.value_of("bind_address").map(|bind_address| {
-        solana_net_utils::parse_host(bind_address).unwrap_or_else(|err| {
+        paychains_net_utils::parse_host(bind_address).unwrap_or_else(|err| {
             eprintln!("Failed to parse --bind-address: {}", err);
             exit(1);
         })
@@ -448,7 +448,7 @@ fn main() {
 
                     programs_to_load.push(ProgramInfo {
                         program_id: address,
-                        loader: solana_sdk::bpf_loader::id(),
+                        loader: paychains_sdk::bpf_loader::id(),
                         program_path,
                     });
                 }
@@ -498,7 +498,7 @@ fn main() {
         None
     };
 
-    let faucet_lamports = sol_to_lamports(value_of(&matches, "faucet_sol").unwrap());
+    let faucet_lamports = pay_to_lamports(value_of(&matches, "faucet_pay").unwrap());
     let faucet_keypair_file = ledger_path.join("faucet-keypair.json");
     if !faucet_keypair_file.exists() {
         write_keypair_file(&Keypair::new(), faucet_keypair_file.to_str().unwrap()).unwrap_or_else(
@@ -540,7 +540,7 @@ fn main() {
             ("account", "--account"),
             ("mint_address", "--mint"),
             ("slots_per_epoch", "--slots-per-epoch"),
-            ("faucet_sol", "--faucet-sol"),
+            ("faucet_pay", "--faucet-pay"),
         ] {
             if matches.is_present(name) {
                 println!("{} argument ignored, ledger already exists", long);
@@ -549,7 +549,7 @@ fn main() {
     } else if random_mint {
         println_name_value(
             "\nNotice!",
-            "No wallet available. `solana airdrop` localnet SOL after creating one\n",
+            "No wallet available. `paychains airdrop` localnet PAY after creating one\n",
         );
     }
 

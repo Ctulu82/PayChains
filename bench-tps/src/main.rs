@@ -1,18 +1,18 @@
 #![allow(clippy::integer_arithmetic)]
 use {
     log::*,
-    solana_bench_tps::{
+    paychains_bench_tps::{
         bench::{do_bench_tps, generate_and_fund_keypairs, generate_keypairs},
         cli,
     },
-    solana_genesis::Base64Account,
-    solana_gossip::gossip_service::{discover_cluster, get_client, get_multi_client},
-    solana_sdk::{
+    paychains_genesis::Base64Account,
+    paychains_gossip::gossip_service::{discover_cluster, get_client, get_multi_client},
+    paychains_sdk::{
         fee_calculator::FeeRateGovernor,
         signature::{Keypair, Signer},
         system_program,
     },
-    solana_streamer::socket::SocketAddrSpace,
+    paychains_streamer::socket::SocketAddrSpace,
     std::{collections::HashMap, fs::File, io::prelude::*, path::Path, process::exit, sync::Arc},
 };
 
@@ -20,10 +20,10 @@ use {
 pub const NUM_SIGNATURES_FOR_TXS: u64 = 100_000 * 60 * 60 * 24 * 7;
 
 fn main() {
-    solana_logger::setup_with_default("solana=info");
-    solana_metrics::set_panic_hook("bench-tps");
+    paychains_logger::setup_with_default("paychains=info");
+    paychains_metrics::set_panic_hook("bench-tps");
 
-    let matches = cli::build_args(solana_version::version!()).get_matches();
+    let matches = cli::build_args(paychains_version::version!()).get_matches();
     let cli_config = cli::extract_args(&matches);
 
     let cli::Config {

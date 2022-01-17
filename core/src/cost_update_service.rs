@@ -5,11 +5,11 @@
 
 use {
     crossbeam_channel::Receiver,
-    solana_ledger::blockstore::Blockstore,
-    solana_measure::measure::Measure,
-    solana_program_runtime::timings::ExecuteTimings,
-    solana_runtime::{bank::Bank, cost_model::CostModel},
-    solana_sdk::timing::timestamp,
+    paychains_ledger::blockstore::Blockstore,
+    paychains_measure::measure::Measure,
+    paychains_program_runtime::timings::ExecuteTimings,
+    paychains_runtime::{bank::Bank, cost_model::CostModel},
+    paychains_sdk::timing::timestamp,
     std::{
         sync::{
             atomic::{AtomicBool, Ordering},
@@ -92,7 +92,7 @@ impl CostUpdateService {
         cost_update_receiver: CostUpdateReceiver,
     ) -> Self {
         let thread_hdl = Builder::new()
-            .name("solana-cost-update-service".to_string())
+            .name("paychains-cost-update-service".to_string())
             .spawn(move || {
                 Self::service_loop(exit, blockstore, cost_model, cost_update_receiver);
             })
@@ -223,7 +223,7 @@ impl CostUpdateService {
 
 #[cfg(test)]
 mod tests {
-    use {super::*, solana_program_runtime::timings::ProgramTiming, solana_sdk::pubkey::Pubkey};
+    use {super::*, paychains_program_runtime::timings::ProgramTiming, paychains_sdk::pubkey::Pubkey};
 
     #[test]
     fn test_update_cost_model_with_empty_execute_timings() {

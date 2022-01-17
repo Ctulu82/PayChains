@@ -15,14 +15,14 @@ use {
         sigverify_stage::SigVerifyStage,
     },
     crossbeam_channel::{unbounded, Receiver},
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_ledger::{blockstore::Blockstore, blockstore_processor::TransactionStatusSender},
-    solana_poh::poh_recorder::{PohRecorder, WorkingBankEntry},
-    solana_rpc::{
+    paychains_gossip::cluster_info::ClusterInfo,
+    paychains_ledger::{blockstore::Blockstore, blockstore_processor::TransactionStatusSender},
+    paychains_poh::poh_recorder::{PohRecorder, WorkingBankEntry},
+    paychains_rpc::{
         optimistically_confirmed_bank_tracker::BankNotificationSender,
         rpc_subscriptions::RpcSubscriptions,
     },
-    solana_runtime::{
+    paychains_runtime::{
         bank_forks::BankForks,
         cost_model::CostModel,
         vote_sender_types::{ReplayVoteReceiver, ReplayVoteSender},

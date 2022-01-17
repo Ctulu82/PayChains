@@ -1,7 +1,7 @@
 use {
     clap::{crate_description, crate_name, App, Arg, ArgMatches},
-    solana_faucet::faucet::FAUCET_PORT,
-    solana_sdk::{
+    paychains_faucet::faucet::FAUCET_PORT,
+    paychains_sdk::{
         fee_calculator::FeeRateGovernor,
         pubkey::Pubkey,
         signature::{read_keypair_file, Keypair},
@@ -9,7 +9,7 @@ use {
     std::{net::SocketAddr, process::exit, time::Duration},
 };
 
-const NUM_LAMPORTS_PER_ACCOUNT_DEFAULT: u64 = solana_sdk::native_token::LAMPORTS_PER_SOL;
+const NUM_LAMPORTS_PER_ACCOUNT_DEFAULT: u64 = paychains_sdk::native_token::LAMPORTS_PER_PAY;
 
 /// Holds the configuration for a single run of the benchmark
 pub struct Config {
@@ -202,14 +202,14 @@ pub fn extract_args(matches: &ArgMatches) -> Config {
     let mut args = Config::default();
 
     if let Some(addr) = matches.value_of("entrypoint") {
-        args.entrypoint_addr = solana_net_utils::parse_host_port(addr).unwrap_or_else(|e| {
+        args.entrypoint_addr = paychains_net_utils::parse_host_port(addr).unwrap_or_else(|e| {
             eprintln!("failed to parse entrypoint address: {}", e);
             exit(1)
         });
     }
 
     if let Some(addr) = matches.value_of("faucet") {
-        args.faucet_addr = solana_net_utils::parse_host_port(addr).unwrap_or_else(|e| {
+        args.faucet_addr = paychains_net_utils::parse_host_port(addr).unwrap_or_else(|e| {
             eprintln!("failed to parse faucet address: {}", e);
             exit(1)
         });

@@ -1,6 +1,6 @@
 use {
     crate::consensus::{Result, Tower, TowerError},
-    solana_sdk::{
+    paychains_sdk::{
         pubkey::Pubkey,
         signature::{Signature, Signer},
     },
@@ -177,7 +177,7 @@ impl EtcdTowerStorage {
 
         Ok(Self {
             client: RwLock::new(client),
-            instance_id: solana_sdk::timing::timestamp().to_le_bytes(),
+            instance_id: paychains_sdk::timing::timestamp().to_le_bytes(),
             runtime,
         })
     }

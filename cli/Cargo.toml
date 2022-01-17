@@ -1,13 +1,13 @@
 [package]
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
+authors = ["PayChains Maintainers <maintainers@paychains.foundation>"]
 edition = "2021"
-name = "solana-cli"
+name = "paychains-cli"
 description = "Blockchain, Rebuilt for Scale"
 version = "1.10.0"
-repository = "https://github.com/solana-labs/solana"
+repository = "https://github.com/paychains-labs/paychains"
 license = "Apache-2.0"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-cli"
+homepage = "https://paychains.com/"
+documentation = "https://docs.rs/paychains-cli"
 
 [dependencies]
 bincode = "1.3.3"
@@ -27,33 +27,33 @@ semver = "1.0.4"
 serde = "1.0.133"
 serde_derive = "1.0.103"
 serde_json = "1.0.74"
-solana-account-decoder = { path = "../account-decoder", version = "=1.10.0" }
-solana-bpf-loader-program = { path = "../programs/bpf_loader", version = "=1.10.0" }
-solana-clap-utils = { path = "../clap-utils", version = "=1.10.0" }
-solana-cli-config = { path = "../cli-config", version = "=1.10.0" }
-solana-cli-output = { path = "../cli-output", version = "=1.10.0" }
-solana-client = { path = "../client", version = "=1.10.0" }
-solana-config-program = { path = "../programs/config", version = "=1.10.0" }
-solana-faucet = { path = "../faucet", version = "=1.10.0" }
-solana-logger = { path = "../logger", version = "=1.10.0" }
-solana-program-runtime = { path = "../program-runtime", version = "=1.10.0" }
-solana_rbpf = "=0.2.21"
-solana-remote-wallet = { path = "../remote-wallet", version = "=1.10.0" }
-solana-sdk = { path = "../sdk", version = "=1.10.0" }
-solana-transaction-status = { path = "../transaction-status", version = "=1.10.0" }
-solana-version = { path = "../version", version = "=1.10.0" }
-solana-vote-program = { path = "../programs/vote", version = "=1.10.0" }
+paychains-account-decoder = { path = "../account-decoder", version = "=1.10.0" }
+paychains-bpf-loader-program = { path = "../programs/bpf_loader", version = "=1.10.0" }
+paychains-clap-utils = { path = "../clap-utils", version = "=1.10.0" }
+paychains-cli-config = { path = "../cli-config", version = "=1.10.0" }
+paychains-cli-output = { path = "../cli-output", version = "=1.10.0" }
+paychains-client = { path = "../client", version = "=1.10.0" }
+paychains-config-program = { path = "../programs/config", version = "=1.10.0" }
+paychains-faucet = { path = "../faucet", version = "=1.10.0" }
+paychains-logger = { path = "../logger", version = "=1.10.0" }
+paychains-program-runtime = { path = "../program-runtime", version = "=1.10.0" }
+paychains_rbpf = "=0.2.21"
+paychains-remote-wallet = { path = "../remote-wallet", version = "=1.10.0" }
+paychains-sdk = { path = "../sdk", version = "=1.10.0" }
+paychains-transaction-status = { path = "../transaction-status", version = "=1.10.0" }
+paychains-version = { path = "../version", version = "=1.10.0" }
+paychains-vote-program = { path = "../programs/vote", version = "=1.10.0" }
 spl-memo = { version = "=3.0.1", features = ["no-entrypoint"] }
 thiserror = "1.0.30"
 tiny-bip39 = "0.8.2"
 
 [dev-dependencies]
-solana-streamer = { path = "../streamer", version = "=1.10.0" }
-solana-test-validator = { path = "../test-validator", version = "=1.10.0" }
+paychains-streamer = { path = "../streamer", version = "=1.10.0" }
+paychains-test-validator = { path = "../test-validator", version = "=1.10.0" }
 tempfile = "3.3.0"
 
 [[bin]]
-name = "solana"
+name = "paychains"
 path = "src/main.rs"
 
 [package.metadata.docs.rs]

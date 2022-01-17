@@ -10,19 +10,19 @@
 //! For Entries:
 //! * recorded entry must be >= WorkingBank::min_tick_height && entry must be < WorkingBank::max_tick_height
 //!
-pub use solana_sdk::clock::Slot;
+pub use paychains_sdk::clock::Slot;
 use {
     crate::poh_service::PohService,
     crossbeam_channel::{unbounded, Receiver, RecvTimeoutError, SendError, Sender},
     log::*,
-    solana_entry::{entry::Entry, poh::Poh},
-    solana_ledger::{
+    paychains_entry::{entry::Entry, poh::Poh},
+    paychains_ledger::{
         blockstore::Blockstore,
         genesis_utils::{create_genesis_config, GenesisConfigInfo},
         leader_schedule_cache::LeaderScheduleCache,
     },
-    solana_runtime::bank::Bank,
-    solana_sdk::{
+    paychains_runtime::bank::Bank,
+    paychains_sdk::{
         clock::NUM_CONSECUTIVE_LEADER_SLOTS, hash::Hash, poh_config::PohConfig, pubkey::Pubkey,
         timing, transaction::VersionedTransaction,
     },
@@ -823,9 +823,9 @@ mod tests {
         super::*,
         bincode::serialize,
         crossbeam_channel::bounded,
-        solana_ledger::{blockstore::Blockstore, blockstore_meta::SlotMeta, get_tmp_ledger_path},
-        solana_perf::test_tx::test_tx,
-        solana_sdk::{clock::DEFAULT_TICKS_PER_SLOT, hash::hash},
+        paychains_ledger::{blockstore::Blockstore, blockstore_meta::SlotMeta, get_tmp_ledger_path},
+        paychains_perf::test_tx::test_tx,
+        paychains_sdk::{clock::DEFAULT_TICKS_PER_SLOT, hash::hash},
     };
 
     #[test]
@@ -1357,7 +1357,7 @@ mod tests {
 
     #[test]
     fn test_reset_to_new_value() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let ledger_path = get_tmp_ledger_path!();
         {
@@ -1452,7 +1452,7 @@ mod tests {
 
     #[test]
     fn test_poh_recorder_record_sets_start_slot() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let ledger_path = get_tmp_ledger_path!();
         {
             let blockstore = Blockstore::open(&ledger_path)
@@ -1503,7 +1503,7 @@ mod tests {
 
     #[test]
     fn test_reached_leader_tick() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let ledger_path = get_tmp_ledger_path!();
         {
@@ -1567,7 +1567,7 @@ mod tests {
 
     #[test]
     fn test_reached_leader_slot() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let ledger_path = get_tmp_ledger_path!();
         {

@@ -8,23 +8,23 @@ use {
     log::*,
     rand::{thread_rng, Rng},
     rayon::prelude::*,
-    solana_core::{
+    paychains_core::{
         banking_stage::{BankingStage, BankingStageStats},
         packet_deduper::PacketDeduper,
         qos_service::QosService,
     },
-    solana_entry::entry::{next_hash, Entry},
-    solana_gossip::cluster_info::{ClusterInfo, Node},
-    solana_ledger::{
+    paychains_entry::entry::{next_hash, Entry},
+    paychains_gossip::cluster_info::{ClusterInfo, Node},
+    paychains_ledger::{
         blockstore::Blockstore,
         blockstore_processor::process_entries_for_tests,
         genesis_utils::{create_genesis_config, GenesisConfigInfo},
         get_tmp_ledger_path,
     },
-    solana_perf::{packet::to_packet_batches, test_tx::test_tx},
-    solana_poh::poh_recorder::{create_test_recorder, WorkingBankEntry},
-    solana_runtime::{bank::Bank, cost_model::CostModel},
-    solana_sdk::{
+    paychains_perf::{packet::to_packet_batches, test_tx::test_tx},
+    paychains_poh::poh_recorder::{create_test_recorder, WorkingBankEntry},
+    paychains_runtime::{bank::Bank, cost_model::CostModel},
+    paychains_sdk::{
         genesis_config::GenesisConfig,
         hash::Hash,
         message::Message,
@@ -34,7 +34,7 @@ use {
         timing::{duration_as_us, timestamp},
         transaction::{Transaction, VersionedTransaction},
     },
-    solana_streamer::socket::SocketAddrSpace,
+    paychains_streamer::socket::SocketAddrSpace,
     std::{
         collections::VecDeque,
         sync::{atomic::Ordering, Arc, RwLock},
@@ -147,7 +147,7 @@ enum TransactionType {
 }
 
 fn bench_banking(bencher: &mut Bencher, tx_type: TransactionType) {
-    solana_logger::setup();
+    paychains_logger::setup();
     let num_threads = BankingStage::num_threads() as usize;
     //   a multiple of packet chunk duplicates to avoid races
     const CHUNKS: usize = 8;

@@ -10,11 +10,11 @@ use {
     crossbeam_channel::Receiver,
     log::*,
     serde_json,
-    solana_rpc::{
+    paychains_rpc::{
         optimistically_confirmed_bank_tracker::BankNotification,
         transaction_notifier_interface::TransactionNotifierLock,
     },
-    solana_runtime::accounts_update_notifier_interface::AccountsUpdateNotifier,
+    paychains_runtime::accounts_update_notifier_interface::AccountsUpdateNotifier,
     std::{
         fs::File,
         io::Read,

@@ -1,6 +1,6 @@
 
                  .-------------------------------------.
-                 | Solana Runtime                      |
+                 | PayChains Runtime                      |
                  |                                     |
   .----------.   |   .------------.   .------------.   |
   | Program  |   |   | BPF        |   | Executable |   |

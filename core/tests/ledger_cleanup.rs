@@ -6,13 +6,13 @@ mod tests {
     use {
         crossbeam_channel::unbounded,
         log::*,
-        solana_core::ledger_cleanup_service::LedgerCleanupService,
-        solana_ledger::{
+        paychains_core::ledger_cleanup_service::LedgerCleanupService,
+        paychains_ledger::{
             blockstore::{make_many_slot_shreds, Blockstore},
             blockstore_db::BlockstoreOptions,
             get_tmp_ledger_path,
         },
-        solana_measure::measure::Measure,
+        paychains_measure::measure::Measure,
         std::{
             collections::VecDeque,
             str::FromStr,
@@ -281,7 +281,7 @@ mod tests {
     /// -- --exact --nocapture
     #[test]
     fn test_ledger_cleanup_compaction() {
-        solana_logger::setup_with("error,ledger_cleanup::tests=info");
+        paychains_logger::setup_with("error,ledger_cleanup::tests=info");
 
         let ledger_path = get_tmp_ledger_path!();
         let mut blockstore =

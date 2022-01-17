@@ -1,8 +1,8 @@
 use {
     crate::accountsdb_repl_server::{self, ReplicaSlotConfirmationServer},
     crossbeam_channel::Receiver,
-    solana_rpc::optimistically_confirmed_bank_tracker::BankNotification,
-    solana_sdk::{clock::Slot, commitment_config::CommitmentLevel},
+    paychains_rpc::optimistically_confirmed_bank_tracker::BankNotification,
+    paychains_sdk::{clock::Slot, commitment_config::CommitmentLevel},
     std::{
         collections::VecDeque,
         sync::{

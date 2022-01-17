@@ -34,7 +34,7 @@
 //! on behalf of the caller, and a low-level API for when they have
 //! already been signed and verified.
 #[allow(deprecated)]
-use solana_sdk::recent_blockhashes_account;
+use paychains_sdk::recent_blockhashes_account;
 use {
     crate::{
         accounts::{AccountAddressFilter, Accounts, LoadedTransaction, TransactionLoadResult},
@@ -71,9 +71,9 @@ use {
         iter::{IntoParallelIterator, IntoParallelRefIterator, ParallelIterator},
         ThreadPool, ThreadPoolBuilder,
     },
-    solana_measure::measure::Measure,
-    solana_metrics::{inc_new_counter_debug, inc_new_counter_info},
-    solana_program_runtime::{
+    paychains_measure::measure::Measure,
+    paychains_metrics::{inc_new_counter_debug, inc_new_counter_info},
+    paychains_program_runtime::{
         instruction_recorder::InstructionRecorder,
         invoke_context::{
             BuiltinProgram, Executor, Executors, ProcessInstructionWithContext, TransactionExecutor,
@@ -82,7 +82,7 @@ use {
         sysvar_cache::SysvarCache,
         timings::ExecuteTimings,
     },
-    solana_sdk::{
+    paychains_sdk::{
         account::{
             create_account_shared_data_with_fields as create_account, from_account, Account,
             AccountSharedData, InheritableAccountFields, ReadableAccount, WritableAccount,
@@ -114,7 +114,7 @@ use {
             SanitizedMessage,
         },
         native_loader,
-        native_token::sol_to_lamports,
+        native_token::pay_to_lamports,
         nonce, nonce_account,
         packet::PACKET_DATA_SIZE,
         precompiles::get_precompiles,
@@ -133,10 +133,10 @@ use {
         },
         transaction_context::{TransactionAccount, TransactionContext},
     },
-    solana_stake_program::stake_state::{
+    paychains_stake_program::stake_state::{
         self, InflationPointCalculationEvent, PointValue, StakeState,
     },
-    solana_vote_program::{
+    paychains_vote_program::{
         vote_instruction::VoteInstruction,
         vote_state::{VoteState, VoteStateVersions},
     },
@@ -511,7 +511,7 @@ pub struct BankRc {
 }
 
 #[cfg(RUSTC_WITH_SPECIALIZATION)]
-use solana_frozen_abi::abi_example::AbiExample;
+use paychains_frozen_abi::abi_example::AbiExample;
 
 #[cfg(RUSTC_WITH_SPECIALIZATION)]
 impl AbiExample for BankRc {
@@ -2359,7 +2359,7 @@ impl Bank {
 
                     let stake_delegation = match self.get_account_with_fixed_root(stake_pubkey) {
                         Some(stake_account) => {
-                            if stake_account.owner() != &solana_stake_program::id() {
+                            if stake_account.owner() != &paychains_stake_program::id() {
                                 invalid_stake_keys
                                     .insert(*stake_pubkey, InvalidCacheEntryReason::WrongOwner);
                                 return;
@@ -2388,7 +2388,7 @@ impl Bank {
                     } else {
                         let vote_account = match self.get_account_with_fixed_root(vote_pubkey) {
                             Some(vote_account) => {
-                                if vote_account.owner() != &solana_vote_program::id() {
+                                if vote_account.owner() != &paychains_vote_program::id() {
                                     invalid_vote_keys
                                         .insert(*vote_pubkey, InvalidCacheEntryReason::WrongOwner);
                                     return;
@@ -2426,7 +2426,7 @@ impl Bank {
                             stake_pubkey,
                             &InflationPointCalculationEvent::Delegation(
                                 *delegation,
-                                solana_vote_program::id(),
+                                paychains_vote_program::id(),
                             ),
                         ));
                     }
@@ -3019,7 +3019,7 @@ impl Bank {
         let (lamports, rent_epoch) = self.inherit_specially_retained_account_fields(&None);
         let account = AccountSharedData::from(Account {
             lamports,
-            owner: solana_sdk::system_program::id(),
+            owner: paychains_sdk::system_program::id(),
             data: vec![],
             executable: true,
             rent_epoch,
@@ -4790,7 +4790,7 @@ impl Bank {
     fn use_multi_epoch_collection_cycle(&self, epoch: Epoch) -> bool {
         // Force normal behavior, disabling multi epoch collection cycle for manual local testing
         #[cfg(not(test))]
-        if self.slot_count_per_normal_epoch() == solana_sdk::epoch_schedule::MINIMUM_SLOTS_PER_EPOCH
+        if self.slot_count_per_normal_epoch() == paychains_sdk::epoch_schedule::MINIMUM_SLOTS_PER_EPOCH
         {
             return false;
         }
@@ -4802,7 +4802,7 @@ impl Bank {
     fn use_fixed_collection_cycle(&self) -> bool {
         // Force normal behavior, disabling fixed collection cycle for manual local testing
         #[cfg(not(test))]
-        if self.slot_count_per_normal_epoch() == solana_sdk::epoch_schedule::MINIMUM_SLOTS_PER_EPOCH
+        if self.slot_count_per_normal_epoch() == paychains_sdk::epoch_schedule::MINIMUM_SLOTS_PER_EPOCH
         {
             return false;
         }
@@ -6225,21 +6225,21 @@ impl Bank {
         };
 
         if reconfigure_token2_native_mint {
-            let mut native_mint_account = solana_sdk::account::AccountSharedData::from(Account {
+            let mut native_mint_account = paychains_sdk::account::AccountSharedData::from(Account {
                 owner: inline_spl_token::id(),
                 data: inline_spl_token::native_mint::ACCOUNT_DATA.to_vec(),
-                lamports: sol_to_lamports(1.),
+                lamports: pay_to_lamports(1.),
                 executable: false,
                 rent_epoch: self.epoch() + 1,
             });
 
             // As a workaround for
-            // https://github.com/solana-labs/solana-program-library/issues/374, ensure that the
+            // https://github.com/paychains-labs/paychains-program-library/issues/374, ensure that the
             // spl-token 2 native mint account is owned by the spl-token 2 program.
             let store = if let Some(existing_native_mint_account) =
                 self.get_account_with_fixed_root(&inline_spl_token::native_mint::id())
             {
-                if existing_native_mint_account.owner() == &solana_sdk::system_program::id() {
+                if existing_native_mint_account.owner() == &paychains_sdk::system_program::id() {
                     native_mint_account.set_lamports(existing_native_mint_account.lamports());
                     true
                 } else {
@@ -6394,7 +6394,7 @@ pub fn is_simple_vote_transaction(transaction: &SanitizedTransaction) -> bool {
             .program_instructions_iter()
             .next()
             .unwrap();
-        if program_pubkey == &solana_vote_program::id() {
+        if program_pubkey == &paychains_vote_program::id() {
             if let Ok(vote_instruction) = limited_deserialize::<VoteInstruction>(&instruction.data)
             {
                 return matches!(
@@ -6413,7 +6413,7 @@ pub fn is_simple_vote_transaction(transaction: &SanitizedTransaction) -> bool {
 #[cfg(test)]
 pub(crate) mod tests {
     #[allow(deprecated)]
-    use solana_sdk::sysvar::fees::Fees;
+    use paychains_sdk::sysvar::fees::Fees;
     use {
         super::*,
         crate::{
@@ -6430,8 +6430,8 @@ pub(crate) mod tests {
             status_cache::MAX_CACHE_ENTRIES,
         },
         crossbeam_channel::{bounded, unbounded},
-        solana_program_runtime::invoke_context::InvokeContext,
-        solana_sdk::{
+        paychains_program_runtime::invoke_context::InvokeContext,
+        paychains_sdk::{
             account::Account,
             clock::{DEFAULT_SLOTS_PER_EPOCH, DEFAULT_TICKS_PER_SLOT},
             compute_budget::ComputeBudgetInstruction,
@@ -6456,7 +6456,7 @@ pub(crate) mod tests {
             timing::duration_as_s,
             transaction::MAX_TX_ACCOUNT_LOCKS,
         },
-        solana_vote_program::{
+        paychains_vote_program::{
             vote_instruction,
             vote_state::{
                 self, BlockTimestamp, Vote, VoteInit, VoteState, VoteStateVersions,
@@ -6649,7 +6649,7 @@ pub(crate) mod tests {
     #[test]
     #[allow(clippy::float_cmp)]
     fn test_bank_new() {
-        let dummy_leader_pubkey = solana_sdk::pubkey::new_rand();
+        let dummy_leader_pubkey = paychains_sdk::pubkey::new_rand();
         let dummy_leader_stake_lamports = bootstrap_validator_stake_lamports();
         let mint_lamports = 10_000;
         let GenesisConfigInfo {
@@ -6761,7 +6761,7 @@ pub(crate) mod tests {
             accounts: (0..42)
                 .map(|_| {
                     (
-                        solana_sdk::pubkey::new_rand(),
+                        paychains_sdk::pubkey::new_rand(),
                         Account::new(42, 0, &Pubkey::default()),
                     )
                 })
@@ -6784,7 +6784,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_credit_debit_rent_no_side_effect_on_hash() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let (mut genesis_config, _mint_keypair) = create_genesis_config(10);
         let keypair1: Keypair = Keypair::new();
@@ -7030,7 +7030,7 @@ pub(crate) mod tests {
     fn test_store_account_and_update_capitalization_missing() {
         let (genesis_config, _mint_keypair) = create_genesis_config(0);
         let bank = Bank::new_for_tests(&genesis_config);
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = paychains_sdk::pubkey::new_rand();
 
         let some_lamports = 400;
         let account = AccountSharedData::new(some_lamports, 0, &system_program::id());
@@ -7098,9 +7098,9 @@ pub(crate) mod tests {
 
     #[test]
     fn test_rent_distribution() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
-        let bootstrap_validator_pubkey = solana_sdk::pubkey::new_rand();
+        let bootstrap_validator_pubkey = paychains_sdk::pubkey::new_rand();
         let bootstrap_validator_stake_lamports = 30;
         let mut genesis_config = create_genesis_config_with_leader(
             10,
@@ -7129,7 +7129,7 @@ pub(crate) mod tests {
 
         let rent = Rent::free();
 
-        let validator_1_pubkey = solana_sdk::pubkey::new_rand();
+        let validator_1_pubkey = paychains_sdk::pubkey::new_rand();
         let validator_1_stake_lamports = 20;
         let validator_1_staking_keypair = Keypair::new();
         let validator_1_voting_keypair = Keypair::new();
@@ -7162,7 +7162,7 @@ pub(crate) mod tests {
             Account::from(validator_1_vote_account),
         );
 
-        let validator_2_pubkey = solana_sdk::pubkey::new_rand();
+        let validator_2_pubkey = paychains_sdk::pubkey::new_rand();
         let validator_2_stake_lamports = 20;
         let validator_2_staking_keypair = Keypair::new();
         let validator_2_voting_keypair = Keypair::new();
@@ -7195,7 +7195,7 @@ pub(crate) mod tests {
             Account::from(validator_2_vote_account),
         );
 
-        let validator_3_pubkey = solana_sdk::pubkey::new_rand();
+        let validator_3_pubkey = paychains_sdk::pubkey::new_rand();
         let validator_3_stake_lamports = 30;
         let validator_3_staking_keypair = Keypair::new();
         let validator_3_voting_keypair = Keypair::new();
@@ -7354,13 +7354,13 @@ pub(crate) mod tests {
 
     #[test]
     fn test_distribute_rent_to_validators_overflow() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         // These values are taken from the real cluster (testnet)
         const RENT_TO_BE_DISTRIBUTED: u64 = 120_525;
         const VALIDATOR_STAKE: u64 = 374_999_998_287_840;
 
-        let validator_pubkey = solana_sdk::pubkey::new_rand();
+        let validator_pubkey = paychains_sdk::pubkey::new_rand();
         let mut genesis_config =
             create_genesis_config_with_leader(10, &validator_pubkey, VALIDATOR_STAKE)
                 .genesis_config;
@@ -7408,11 +7408,11 @@ pub(crate) mod tests {
         let root_bank = Arc::new(Bank::new_for_tests(&genesis_config));
         let bank = create_child_bank_for_rent_test(&root_bank, &genesis_config);
 
-        let account_pubkey = solana_sdk::pubkey::new_rand();
+        let account_pubkey = paychains_sdk::pubkey::new_rand();
         let account_balance = 1;
         let data_len = 12345; // use non-zero data len to also test accounts_data_len
         let mut account =
-            AccountSharedData::new(account_balance, data_len, &solana_sdk::pubkey::new_rand());
+            AccountSharedData::new(account_balance, data_len, &paychains_sdk::pubkey::new_rand());
         account.set_executable(true);
         bank.store_account(&account_pubkey, &account);
         bank.store_accounts_data_len(data_len as u64);
@@ -7436,7 +7436,7 @@ pub(crate) mod tests {
     #[test]
     #[allow(clippy::cognitive_complexity)]
     fn test_rent_complex() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let mock_program_id = Pubkey::new(&[2u8; 32]);
 
         #[derive(Serialize, Deserialize)]
@@ -7689,7 +7689,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_rent_eager_across_epoch_without_gap_mnb() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let (mut genesis_config, _mint_keypair) = create_genesis_config(1);
         genesis_config.cluster_type = ClusterType::MainnetBeta;
 
@@ -7755,7 +7755,7 @@ pub(crate) mod tests {
     #[test]
     #[allow(clippy::cognitive_complexity)]
     fn test_rent_eager_across_epoch_without_gap_under_multi_epoch_cycle() {
-        let leader_pubkey = solana_sdk::pubkey::new_rand();
+        let leader_pubkey = paychains_sdk::pubkey::new_rand();
         let leader_lamports = 3;
         let mut genesis_config =
             create_genesis_config_with_leader(5, &leader_pubkey, leader_lamports).genesis_config;
@@ -7825,7 +7825,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_rent_eager_across_epoch_with_gap_under_multi_epoch_cycle() {
-        let leader_pubkey = solana_sdk::pubkey::new_rand();
+        let leader_pubkey = paychains_sdk::pubkey::new_rand();
         let leader_lamports = 3;
         let mut genesis_config =
             create_genesis_config_with_leader(5, &leader_pubkey, leader_lamports).genesis_config;
@@ -7883,7 +7883,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_rent_eager_with_warmup_epochs_under_multi_epoch_cycle() {
-        let leader_pubkey = solana_sdk::pubkey::new_rand();
+        let leader_pubkey = paychains_sdk::pubkey::new_rand();
         let leader_lamports = 3;
         let mut genesis_config =
             create_genesis_config_with_leader(5, &leader_pubkey, leader_lamports).genesis_config;
@@ -7939,8 +7939,8 @@ pub(crate) mod tests {
 
     #[test]
     fn test_rent_eager_under_fixed_cycle_for_development() {
-        solana_logger::setup();
-        let leader_pubkey = solana_sdk::pubkey::new_rand();
+        paychains_logger::setup();
+        let leader_pubkey = paychains_sdk::pubkey::new_rand();
         let leader_lamports = 3;
         let mut genesis_config =
             create_genesis_config_with_leader(5, &leader_pubkey, leader_lamports).genesis_config;
@@ -8109,7 +8109,7 @@ pub(crate) mod tests {
     fn map_to_test_bad_range() -> std::collections::BTreeMap<Pubkey, i8> {
         let mut map = std::collections::BTreeMap::new();
         // when empty, std::collections::BTreeMap doesn't sanitize given range...
-        map.insert(solana_sdk::pubkey::new_rand(), 1);
+        map.insert(paychains_sdk::pubkey::new_rand(), 1);
         map
     }
 
@@ -8223,7 +8223,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_rent_eager_pubkey_range_not_dividable() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let test_map = map_to_test_bad_range();
         let range = Bank::pubkey_range_from_partition((0, 0, 3));
@@ -8277,7 +8277,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_rent_eager_pubkey_range_gap() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let test_map = map_to_test_bad_range();
         let range = Bank::pubkey_range_from_partition((120, 1023, 12345));
@@ -8321,14 +8321,14 @@ pub(crate) mod tests {
 
     #[test]
     fn test_rent_eager_collect_rent_in_partition() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let (mut genesis_config, _mint_keypair) = create_genesis_config(1);
         activate_all_features(&mut genesis_config);
 
-        let zero_lamport_pubkey = solana_sdk::pubkey::new_rand();
-        let rent_due_pubkey = solana_sdk::pubkey::new_rand();
-        let rent_exempt_pubkey = solana_sdk::pubkey::new_rand();
+        let zero_lamport_pubkey = paychains_sdk::pubkey::new_rand();
+        let rent_due_pubkey = paychains_sdk::pubkey::new_rand();
+        let rent_exempt_pubkey = paychains_sdk::pubkey::new_rand();
 
         let mut bank = Arc::new(Bank::new_for_tests(&genesis_config));
         let zero_lamports = 0;
@@ -8407,11 +8407,11 @@ pub(crate) mod tests {
 
     #[test]
     fn test_rent_eager_collect_rent_zero_lamport_deterministic() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let (genesis_config, _mint_keypair) = create_genesis_config(1);
 
-        let zero_lamport_pubkey = solana_sdk::pubkey::new_rand();
+        let zero_lamport_pubkey = paychains_sdk::pubkey::new_rand();
 
         let genesis_bank1 = Arc::new(Bank::new_for_tests(&genesis_config));
         let genesis_bank2 = Arc::new(Bank::new_for_tests(&genesis_config));
@@ -8467,14 +8467,14 @@ pub(crate) mod tests {
 
     #[test]
     fn test_bank_update_vote_stake_rewards() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         // create a bank that ticks really slowly...
         let bank0 = Arc::new(Bank::new_for_tests(&GenesisConfig {
             accounts: (0..42)
                 .map(|_| {
                     (
-                        solana_sdk::pubkey::new_rand(),
+                        paychains_sdk::pubkey::new_rand(),
                         Account::new(1_000_000_000, 0, &Pubkey::default()),
                     )
                 })
@@ -8609,7 +8609,7 @@ pub(crate) mod tests {
             accounts: (0..42)
                 .map(|_| {
                     (
-                        solana_sdk::pubkey::new_rand(),
+                        paychains_sdk::pubkey::new_rand(),
                         Account::new(1_000_000_000, 0, &Pubkey::default()),
                     )
                 })
@@ -8640,9 +8640,9 @@ pub(crate) mod tests {
         );
         assert!(bank.rewards.read().unwrap().is_empty());
 
-        let vote_id = solana_sdk::pubkey::new_rand();
+        let vote_id = paychains_sdk::pubkey::new_rand();
         let mut vote_account =
-            vote_state::create_account(&vote_id, &solana_sdk::pubkey::new_rand(), 50, 100);
+            vote_state::create_account(&vote_id, &paychains_sdk::pubkey::new_rand(), 50, 100);
         let (stake_id1, stake_account1) = crate::stakes::tests::create_stake_account(123, &vote_id);
         let (stake_id2, stake_account2) = crate::stakes::tests::create_stake_account(456, &vote_id);
 
@@ -8696,7 +8696,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_bank_update_rewards_determinism() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         // The same reward should be distributed given same credits
         let expected_capitalization = do_test_bank_update_rewards_determinism();
@@ -8711,13 +8711,13 @@ pub(crate) mod tests {
     // Test that purging 0 lamports accounts works.
     #[test]
     fn test_purge_empty_accounts() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let (genesis_config, mint_keypair) = create_genesis_config(500_000);
         let parent = Arc::new(Bank::new_for_tests(&genesis_config));
         let mut bank = parent;
         for _ in 0..10 {
             let blockhash = bank.last_blockhash();
-            let pubkey = solana_sdk::pubkey::new_rand();
+            let pubkey = paychains_sdk::pubkey::new_rand();
             let tx = system_transaction::transfer(&mint_keypair, &pubkey, 0, blockhash);
             bank.process_transaction(&tx).unwrap();
             bank.freeze();
@@ -8739,7 +8739,7 @@ pub(crate) mod tests {
         bank0.process_transaction(&tx).unwrap();
 
         let bank1 = Arc::new(new_from_parent(&bank0));
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = paychains_sdk::pubkey::new_rand();
         let blockhash = bank.last_blockhash();
         let tx = system_transaction::transfer(&keypair, &pubkey, 10, blockhash);
         bank1.process_transaction(&tx).unwrap();
@@ -8785,7 +8785,7 @@ pub(crate) mod tests {
     #[test]
     fn test_two_payments_to_one_party() {
         let (genesis_config, mint_keypair) = create_genesis_config(10_000);
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = paychains_sdk::pubkey::new_rand();
         let bank = Bank::new_for_tests(&genesis_config);
         assert_eq!(bank.last_blockhash(), genesis_config.hash());
 
@@ -8800,8 +8800,8 @@ pub(crate) mod tests {
     #[test]
     fn test_one_source_two_tx_one_batch() {
         let (genesis_config, mint_keypair) = create_genesis_config(1);
-        let key1 = solana_sdk::pubkey::new_rand();
-        let key2 = solana_sdk::pubkey::new_rand();
+        let key1 = paychains_sdk::pubkey::new_rand();
+        let key2 = paychains_sdk::pubkey::new_rand();
         let bank = Bank::new_for_tests(&genesis_config);
         assert_eq!(bank.last_blockhash(), genesis_config.hash());
 
@@ -8825,8 +8825,8 @@ pub(crate) mod tests {
     #[test]
     fn test_one_tx_two_out_atomic_fail() {
         let (genesis_config, mint_keypair) = create_genesis_config(1);
-        let key1 = solana_sdk::pubkey::new_rand();
-        let key2 = solana_sdk::pubkey::new_rand();
+        let key1 = paychains_sdk::pubkey::new_rand();
+        let key2 = paychains_sdk::pubkey::new_rand();
         let bank = Bank::new_for_tests(&genesis_config);
         let instructions =
             system_instruction::transfer_many(&mint_keypair.pubkey(), &[(key1, 1), (key2, 1)]);
@@ -8844,8 +8844,8 @@ pub(crate) mod tests {
     #[test]
     fn test_one_tx_two_out_atomic_pass() {
         let (genesis_config, mint_keypair) = create_genesis_config(2);
-        let key1 = solana_sdk::pubkey::new_rand();
-        let key2 = solana_sdk::pubkey::new_rand();
+        let key1 = paychains_sdk::pubkey::new_rand();
+        let key2 = paychains_sdk::pubkey::new_rand();
         let bank = Bank::new_for_tests(&genesis_config);
         let instructions =
             system_instruction::transfer_many(&mint_keypair.pubkey(), &[(key1, 1), (key2, 1)]);
@@ -8889,7 +8889,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_account_not_found() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let (genesis_config, mint_keypair) = create_genesis_config(0);
         let bank = Bank::new_for_tests(&genesis_config);
         let keypair = Keypair::new();
@@ -8904,7 +8904,7 @@ pub(crate) mod tests {
     fn test_insufficient_funds() {
         let (genesis_config, mint_keypair) = create_genesis_config(11_000);
         let bank = Bank::new_for_tests(&genesis_config);
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = paychains_sdk::pubkey::new_rand();
         bank.transfer(1_000, &mint_keypair, &pubkey).unwrap();
         assert_eq!(bank.transaction_count(), 1);
         assert_eq!(bank.get_balance(&pubkey), 1_000);
@@ -8924,21 +8924,21 @@ pub(crate) mod tests {
 
     #[test]
     fn test_transfer_to_newb() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let (genesis_config, mint_keypair) = create_genesis_config(10_000);
         let bank = Bank::new_for_tests(&genesis_config);
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = paychains_sdk::pubkey::new_rand();
         bank.transfer(500, &mint_keypair, &pubkey).unwrap();
         assert_eq!(bank.get_balance(&pubkey), 500);
     }
 
     #[test]
     fn test_transfer_to_sysvar() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let (genesis_config, mint_keypair) = create_genesis_config(10_000);
         let bank = Arc::new(Bank::new_for_tests(&genesis_config));
 
-        let normal_pubkey = solana_sdk::pubkey::new_rand();
+        let normal_pubkey = paychains_sdk::pubkey::new_rand();
         let sysvar_pubkey = sysvar::clock::id();
         assert_eq!(bank.get_balance(&normal_pubkey), 0);
         assert_eq!(bank.get_balance(&sysvar_pubkey), 1);
@@ -9036,11 +9036,11 @@ pub(crate) mod tests {
 
     #[test]
     fn test_bank_tx_fee() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let arbitrary_transfer_amount = 42;
         let mint = arbitrary_transfer_amount * 100;
-        let leader = solana_sdk::pubkey::new_rand();
+        let leader = paychains_sdk::pubkey::new_rand();
         let GenesisConfigInfo {
             mut genesis_config,
             mint_keypair,
@@ -9142,9 +9142,9 @@ pub(crate) mod tests {
 
     #[test]
     fn test_bank_blockhash_fee_schedule() {
-        //solana_logger::setup();
+        //paychains_logger::setup();
 
-        let leader = solana_sdk::pubkey::new_rand();
+        let leader = paychains_sdk::pubkey::new_rand();
         let GenesisConfigInfo {
             mut genesis_config,
             mint_keypair,
@@ -9194,7 +9194,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_filter_program_errors_and_collect_fee() {
-        let leader = solana_sdk::pubkey::new_rand();
+        let leader = paychains_sdk::pubkey::new_rand();
         let GenesisConfigInfo {
             mut genesis_config,
             mint_keypair,
@@ -9274,12 +9274,12 @@ pub(crate) mod tests {
             genesis_config,
             mint_keypair,
             ..
-        } = create_genesis_config_with_leader(500, &solana_sdk::pubkey::new_rand(), 0);
+        } = create_genesis_config_with_leader(500, &paychains_sdk::pubkey::new_rand(), 0);
         let bank = Bank::new_for_tests(&genesis_config);
 
-        let vote_pubkey0 = solana_sdk::pubkey::new_rand();
-        let vote_pubkey1 = solana_sdk::pubkey::new_rand();
-        let vote_pubkey2 = solana_sdk::pubkey::new_rand();
+        let vote_pubkey0 = paychains_sdk::pubkey::new_rand();
+        let vote_pubkey1 = paychains_sdk::pubkey::new_rand();
+        let vote_pubkey2 = paychains_sdk::pubkey::new_rand();
         let authorized_voter = Keypair::new();
         let payer0 = Keypair::new();
         let payer1 = Keypair::new();
@@ -9333,7 +9333,7 @@ pub(crate) mod tests {
         );
         let tx1 = system_transaction::transfer(
             &authorized_voter,
-            &solana_sdk::pubkey::new_rand(),
+            &paychains_sdk::pubkey::new_rand(),
             1,
             bank.last_blockhash(),
         );
@@ -9393,7 +9393,7 @@ pub(crate) mod tests {
         let key0 = Keypair::new();
         let key1 = Keypair::new();
         let key2 = Keypair::new();
-        let key3 = solana_sdk::pubkey::new_rand();
+        let key3 = paychains_sdk::pubkey::new_rand();
 
         let message = Message {
             header: MessageHeader {
@@ -9578,7 +9578,7 @@ pub(crate) mod tests {
         let initial_state = bank0.hash_internal_state();
         assert_eq!(bank1.hash_internal_state(), initial_state);
 
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = paychains_sdk::pubkey::new_rand();
         bank0.transfer(1_000, &mint_keypair, &pubkey).unwrap();
         assert_ne!(bank0.hash_internal_state(), initial_state);
         bank1.transfer(1_000, &mint_keypair, &pubkey).unwrap();
@@ -9588,7 +9588,7 @@ pub(crate) mod tests {
         let bank2 = new_from_parent(&Arc::new(bank1));
         assert_ne!(bank0.hash_internal_state(), bank2.hash_internal_state());
 
-        let pubkey2 = solana_sdk::pubkey::new_rand();
+        let pubkey2 = paychains_sdk::pubkey::new_rand();
         info!("transfer 2 {}", pubkey2);
         bank2.transfer(10, &mint_keypair, &pubkey2).unwrap();
         bank2.update_accounts_hash();
@@ -9597,18 +9597,18 @@ pub(crate) mod tests {
 
     #[test]
     fn test_bank_hash_internal_state_verify() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let (genesis_config, mint_keypair) = create_genesis_config(2_000);
         let bank0 = Bank::new_for_tests(&genesis_config);
 
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = paychains_sdk::pubkey::new_rand();
         info!("transfer 0 {} mint: {}", pubkey, mint_keypair.pubkey());
         bank0.transfer(1_000, &mint_keypair, &pubkey).unwrap();
 
         let bank0_state = bank0.hash_internal_state();
         let bank0 = Arc::new(bank0);
         // Checkpointing should result in a new state while freezing the parent
-        let bank2 = Bank::new_from_parent(&bank0, &solana_sdk::pubkey::new_rand(), 1);
+        let bank2 = Bank::new_from_parent(&bank0, &paychains_sdk::pubkey::new_rand(), 1);
         assert_ne!(bank0_state, bank2.hash_internal_state());
         // Checkpointing should modify the checkpoint's state when freezed
         assert_ne!(bank0_state, bank0.hash_internal_state());
@@ -9617,13 +9617,13 @@ pub(crate) mod tests {
         let bank0_state = bank0.hash_internal_state();
         bank2.update_accounts_hash();
         assert!(bank2.verify_bank_hash(true));
-        let bank3 = Bank::new_from_parent(&bank0, &solana_sdk::pubkey::new_rand(), 2);
+        let bank3 = Bank::new_from_parent(&bank0, &paychains_sdk::pubkey::new_rand(), 2);
         assert_eq!(bank0_state, bank0.hash_internal_state());
         assert!(bank2.verify_bank_hash(true));
         bank3.update_accounts_hash();
         assert!(bank3.verify_bank_hash(true));
 
-        let pubkey2 = solana_sdk::pubkey::new_rand();
+        let pubkey2 = paychains_sdk::pubkey::new_rand();
         info!("transfer 2 {}", pubkey2);
         bank2.transfer(10, &mint_keypair, &pubkey2).unwrap();
         bank2.update_accounts_hash();
@@ -9641,8 +9641,8 @@ pub(crate) mod tests {
 
     #[test]
     fn test_verify_snapshot_bank() {
-        solana_logger::setup();
-        let pubkey = solana_sdk::pubkey::new_rand();
+        paychains_logger::setup();
+        let pubkey = paychains_sdk::pubkey::new_rand();
         let (genesis_config, mint_keypair) = create_genesis_config(2_000);
         let bank = Bank::new_for_tests(&genesis_config);
         bank.transfer(1_000, &mint_keypair, &pubkey).unwrap();
@@ -9658,7 +9658,7 @@ pub(crate) mod tests {
     // Test that two bank forks with the same accounts should not hash to the same value.
     #[test]
     fn test_bank_hash_internal_state_same_account_different_fork() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let (genesis_config, mint_keypair) = create_genesis_config(2_000);
         let bank0 = Arc::new(Bank::new_for_tests(&genesis_config));
         let initial_state = bank0.hash_internal_state();
@@ -9666,7 +9666,7 @@ pub(crate) mod tests {
         assert_ne!(bank1.hash_internal_state(), initial_state);
 
         info!("transfer bank1");
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = paychains_sdk::pubkey::new_rand();
         bank1.transfer(1_000, &mint_keypair, &pubkey).unwrap();
         assert_ne!(bank1.hash_internal_state(), initial_state);
 
@@ -9693,8 +9693,8 @@ pub(crate) mod tests {
         let bank0 = Bank::new_for_tests(&genesis_config);
         let bank1 = Bank::new_for_tests(&genesis_config);
         assert_eq!(bank0.hash_internal_state(), bank1.hash_internal_state());
-        let key0 = solana_sdk::pubkey::new_rand();
-        let key1 = solana_sdk::pubkey::new_rand();
+        let key0 = paychains_sdk::pubkey::new_rand();
+        let key1 = paychains_sdk::pubkey::new_rand();
         bank0.transfer(10, &mint_keypair, &key0).unwrap();
         bank0.transfer(20, &mint_keypair, &key1).unwrap();
 
@@ -9706,10 +9706,10 @@ pub(crate) mod tests {
 
     #[test]
     fn test_hash_internal_state_error() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let (genesis_config, mint_keypair) = create_genesis_config(100);
         let bank = Bank::new_for_tests(&genesis_config);
-        let key0 = solana_sdk::pubkey::new_rand();
+        let key0 = paychains_sdk::pubkey::new_rand();
         bank.transfer(10, &mint_keypair, &key0).unwrap();
         let orig = bank.hash_internal_state();
 
@@ -9744,7 +9744,7 @@ pub(crate) mod tests {
     /// Verifies that last ids and accounts are correctly referenced from parent
     #[test]
     fn test_bank_squash() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let (genesis_config, mint_keypair) = create_genesis_config(2);
         let key1 = Keypair::new();
         let key2 = Keypair::new();
@@ -9820,7 +9820,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_bank_get_account_in_parent_after_squash2() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let (genesis_config, mint_keypair) = create_genesis_config(500);
         let bank0 = Arc::new(Bank::new_for_tests(&genesis_config));
 
@@ -9866,7 +9866,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_bank_get_account_modified_since_parent_with_fixed_root() {
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = paychains_sdk::pubkey::new_rand();
 
         let (genesis_config, mint_keypair) = create_genesis_config(500);
         let bank1 = Arc::new(Bank::new_for_tests(&genesis_config));
@@ -9906,7 +9906,7 @@ pub(crate) mod tests {
     fn test_bank_update_sysvar_account() {
         use sysvar::clock::Clock;
 
-        let dummy_clock_id = solana_sdk::pubkey::new_rand();
+        let dummy_clock_id = paychains_sdk::pubkey::new_rand();
         let dummy_rent_epoch = 44;
         let (mut genesis_config, _mint_keypair) = create_genesis_config(500);
 
@@ -10039,7 +10039,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_bank_epoch_vote_accounts() {
-        let leader_pubkey = solana_sdk::pubkey::new_rand();
+        let leader_pubkey = paychains_sdk::pubkey::new_rand();
         let leader_lamports = 3;
         let mut genesis_config =
             create_genesis_config_with_leader(5, &leader_pubkey, leader_lamports).genesis_config;
@@ -10142,7 +10142,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_zero_signatures() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let (genesis_config, mint_keypair) = create_genesis_config(500);
         let mut bank = Bank::new_for_tests(&genesis_config);
         bank.fee_rate_governor.lamports_per_signature = 2;
@@ -10222,11 +10222,11 @@ pub(crate) mod tests {
         // Bank 1
         let bank1 = Arc::new(Bank::new_from_parent(
             &bank0,
-            &solana_sdk::pubkey::new_rand(),
+            &paychains_sdk::pubkey::new_rand(),
             1,
         ));
         // Bank 2
-        let bank2 = Bank::new_from_parent(&bank0, &solana_sdk::pubkey::new_rand(), 2);
+        let bank2 = Bank::new_from_parent(&bank0, &paychains_sdk::pubkey::new_rand(), 2);
 
         // transfer a token
         assert_eq!(
@@ -10249,7 +10249,7 @@ pub(crate) mod tests {
         assert_eq!(bank2.transaction_count(), 0);
         assert_eq!(bank1.transaction_count(), 1);
 
-        let bank6 = Bank::new_from_parent(&bank1, &solana_sdk::pubkey::new_rand(), 3);
+        let bank6 = Bank::new_from_parent(&bank1, &paychains_sdk::pubkey::new_rand(), 3);
         assert_eq!(bank1.transaction_count(), 1);
         assert_eq!(bank6.transaction_count(), 1);
 
@@ -10281,7 +10281,7 @@ pub(crate) mod tests {
             genesis_config,
             mint_keypair,
             ..
-        } = create_genesis_config_with_leader(500, &solana_sdk::pubkey::new_rand(), 1);
+        } = create_genesis_config_with_leader(500, &paychains_sdk::pubkey::new_rand(), 1);
         let bank = Arc::new(Bank::new_for_tests(&genesis_config));
 
         let vote_accounts = bank.vote_accounts();
@@ -10329,7 +10329,7 @@ pub(crate) mod tests {
             genesis_config,
             mint_keypair,
             ..
-        } = create_genesis_config_with_leader(500, &solana_sdk::pubkey::new_rand(), 1);
+        } = create_genesis_config_with_leader(500, &paychains_sdk::pubkey::new_rand(), 1);
         let bank = Arc::new(Bank::new_for_tests(&genesis_config));
 
         let stake_delegations = bank.cloned_stake_delegations();
@@ -10414,7 +10414,7 @@ pub(crate) mod tests {
         // Should fail with InstructionError, but InstructionErrors are committable,
         // so is_delta should be true
         assert_eq!(
-            bank.transfer(10_001, &mint_keypair, &solana_sdk::pubkey::new_rand()),
+            bank.transfer(10_001, &mint_keypair, &paychains_sdk::pubkey::new_rand()),
             Err(TransactionError::InstructionError(
                 0,
                 SystemError::ResultWithNegativeLamports.into(),
@@ -10440,12 +10440,12 @@ pub(crate) mod tests {
         assert!(
             genesis_accounts
                 .iter()
-                .any(|(pubkey, _, _)| solana_sdk::sysvar::is_sysvar_id(pubkey)),
+                .any(|(pubkey, _, _)| paychains_sdk::sysvar::is_sysvar_id(pubkey)),
             "no sysvars found"
         );
 
         let bank0 = Arc::new(new_from_parent(&parent));
-        let pubkey0 = solana_sdk::pubkey::new_rand();
+        let pubkey0 = paychains_sdk::pubkey::new_rand();
         let program_id = Pubkey::new(&[2; 32]);
         let account0 = AccountSharedData::new(1, 0, &program_id);
         bank0.store_account(&pubkey0, &account0);
@@ -10475,11 +10475,11 @@ pub(crate) mod tests {
         );
 
         let bank2 = Arc::new(new_from_parent(&bank1));
-        let pubkey1 = solana_sdk::pubkey::new_rand();
+        let pubkey1 = paychains_sdk::pubkey::new_rand();
         let account1 = AccountSharedData::new(3, 0, &program_id);
         bank2.store_account(&pubkey1, &account1);
         // Accounts with 0 lamports should be filtered out by Accounts::load_by_program()
-        let pubkey2 = solana_sdk::pubkey::new_rand();
+        let pubkey2 = paychains_sdk::pubkey::new_rand();
         let account2 = AccountSharedData::new(0, 0, &program_id);
         bank2.store_account(&pubkey2, &account2);
 
@@ -10609,7 +10609,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_status_cache_ancestors() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let (genesis_config, _mint_keypair) = create_genesis_config(500);
         let parent = Arc::new(Bank::new_for_tests(&genesis_config));
         let bank1 = Arc::new(new_from_parent(&parent));
@@ -10689,7 +10689,7 @@ pub(crate) mod tests {
             genesis_config,
             mint_keypair,
             ..
-        } = create_genesis_config_with_leader(500, &solana_sdk::pubkey::new_rand(), 0);
+        } = create_genesis_config_with_leader(500, &paychains_sdk::pubkey::new_rand(), 0);
         let mut bank = Bank::new_for_tests(&genesis_config);
 
         fn mock_vote_processor(
@@ -10719,13 +10719,13 @@ pub(crate) mod tests {
             bank.last_blockhash(),
         );
 
-        let vote_loader_account = bank.get_account(&solana_vote_program::id()).unwrap();
+        let vote_loader_account = bank.get_account(&paychains_vote_program::id()).unwrap();
         bank.add_builtin(
-            "solana_vote_program",
-            &solana_vote_program::id(),
+            "paychains_vote_program",
+            &paychains_vote_program::id(),
             mock_vote_processor,
         );
-        let new_vote_loader_account = bank.get_account(&solana_vote_program::id()).unwrap();
+        let new_vote_loader_account = bank.get_account(&paychains_vote_program::id()).unwrap();
         // Vote loader account should not be updated since it was included in the genesis config.
         assert_eq!(vote_loader_account.data(), new_vote_loader_account.data());
         assert_eq!(
@@ -10882,7 +10882,7 @@ pub(crate) mod tests {
             const LOTSA: usize = 4_096;
 
             (0..LOTSA).for_each(|_| {
-                let pubkey = solana_sdk::pubkey::new_rand();
+                let pubkey = paychains_sdk::pubkey::new_rand();
                 genesis_config.add_account(
                     pubkey,
                     stake_state::create_lockup_stake_account(
@@ -10894,7 +10894,7 @@ pub(crate) mod tests {
                 );
             });
         }
-        solana_logger::setup();
+        paychains_logger::setup();
         let (mut genesis_config, _) = create_genesis_config(100_000_000_000_000);
         add_lotsa_stake_accounts(&mut genesis_config);
         let mut bank = std::sync::Arc::new(Bank::new_for_tests(&genesis_config));
@@ -11277,7 +11277,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_nonce_authority() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let (mut bank, _mint_keypair, custodian_keypair, nonce_keypair) =
             setup_nonce_with_bank(10_000_000, |_| {}, 5_000_000, 250_000, None).unwrap();
         let alice_keypair = Keypair::new();
@@ -11336,7 +11336,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_nonce_payer() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let nonce_starting_balance = 250_000;
         let (mut bank, _mint_keypair, custodian_keypair, nonce_keypair) =
             setup_nonce_with_bank(10_000_000, |_| {}, 5_000_000, nonce_starting_balance, None)
@@ -11430,7 +11430,7 @@ pub(crate) mod tests {
                 system_instruction::advance_nonce_account(&nonce_pubkey, &nonce_pubkey),
                 system_instruction::transfer(
                     &custodian_pubkey,
-                    &solana_sdk::pubkey::new_rand(),
+                    &paychains_sdk::pubkey::new_rand(),
                     100_000,
                 ),
             ],
@@ -11518,8 +11518,8 @@ pub(crate) mod tests {
         let bank0 = Arc::new(new_from_parent(&parent));
 
         let keypair = Keypair::new();
-        let pubkey0 = solana_sdk::pubkey::new_rand();
-        let pubkey1 = solana_sdk::pubkey::new_rand();
+        let pubkey0 = paychains_sdk::pubkey::new_rand();
+        let pubkey1 = paychains_sdk::pubkey::new_rand();
         let program_id = Pubkey::new(&[2; 32]);
         let keypair_account = AccountSharedData::new(8, 0, &program_id);
         let account0 = AccountSharedData::new(11, 0, &program_id);
@@ -11569,9 +11569,9 @@ pub(crate) mod tests {
 
         let keypair0 = Keypair::new();
         let keypair1 = Keypair::new();
-        let pubkey0 = solana_sdk::pubkey::new_rand();
-        let pubkey1 = solana_sdk::pubkey::new_rand();
-        let pubkey2 = solana_sdk::pubkey::new_rand();
+        let pubkey0 = paychains_sdk::pubkey::new_rand();
+        let pubkey1 = paychains_sdk::pubkey::new_rand();
+        let pubkey2 = paychains_sdk::pubkey::new_rand();
         let keypair0_account = AccountSharedData::new(8, 0, &Pubkey::default());
         let keypair1_account = AccountSharedData::new(9, 0, &Pubkey::default());
         let account0 = AccountSharedData::new(11, 0, &Pubkey::default());
@@ -11660,8 +11660,8 @@ pub(crate) mod tests {
         let mock_program_id = Pubkey::new(&[2u8; 32]);
         bank.add_builtin("mock_program", &mock_program_id, mock_process_instruction);
 
-        let from_pubkey = solana_sdk::pubkey::new_rand();
-        let to_pubkey = solana_sdk::pubkey::new_rand();
+        let from_pubkey = paychains_sdk::pubkey::new_rand();
+        let to_pubkey = paychains_sdk::pubkey::new_rand();
         let dup_pubkey = from_pubkey;
         let from_account = AccountSharedData::new(100, 1, &mock_program_id);
         let to_account = AccountSharedData::new(0, 1, &mock_program_id);
@@ -11704,8 +11704,8 @@ pub(crate) mod tests {
         let mock_program_id = Pubkey::new(&[2u8; 32]);
         bank.add_builtin("mock_program", &mock_program_id, mock_process_instruction);
 
-        let from_pubkey = solana_sdk::pubkey::new_rand();
-        let to_pubkey = solana_sdk::pubkey::new_rand();
+        let from_pubkey = paychains_sdk::pubkey::new_rand();
+        let to_pubkey = paychains_sdk::pubkey::new_rand();
         let dup_pubkey = from_pubkey;
         let from_account = AccountSharedData::new(100, 1, &mock_program_id);
         let to_account = AccountSharedData::new(0, 1, &mock_program_id);
@@ -11732,12 +11732,12 @@ pub(crate) mod tests {
 
     #[test]
     fn test_account_ids_after_program_ids() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let (genesis_config, mint_keypair) = create_genesis_config(500);
         let mut bank = Bank::new_for_tests(&genesis_config);
 
-        let from_pubkey = solana_sdk::pubkey::new_rand();
-        let to_pubkey = solana_sdk::pubkey::new_rand();
+        let from_pubkey = paychains_sdk::pubkey::new_rand();
+        let to_pubkey = paychains_sdk::pubkey::new_rand();
 
         let account_metas = vec![
             AccountMeta::new(from_pubkey, false),
@@ -11745,7 +11745,7 @@ pub(crate) mod tests {
         ];
 
         let instruction =
-            Instruction::new_with_bincode(solana_vote_program::id(), &10, account_metas);
+            Instruction::new_with_bincode(paychains_vote_program::id(), &10, account_metas);
         let mut tx = Transaction::new_signed_with_payer(
             &[instruction],
             Some(&mint_keypair.pubkey()),
@@ -11753,16 +11753,16 @@ pub(crate) mod tests {
             bank.last_blockhash(),
         );
 
-        tx.message.account_keys.push(solana_sdk::pubkey::new_rand());
+        tx.message.account_keys.push(paychains_sdk::pubkey::new_rand());
 
         bank.add_builtin(
             "mock_vote",
-            &solana_vote_program::id(),
+            &paychains_vote_program::id(),
             mock_ok_vote_processor,
         );
         let result = bank.process_transaction(&tx);
         assert_eq!(result, Ok(()));
-        let account = bank.get_account(&solana_vote_program::id()).unwrap();
+        let account = bank.get_account(&paychains_vote_program::id()).unwrap();
         info!("account: {:?}", account);
         assert!(account.executable());
     }
@@ -11797,12 +11797,12 @@ pub(crate) mod tests {
 
     #[test]
     fn test_duplicate_account_key() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let (genesis_config, mint_keypair) = create_genesis_config(500);
         let mut bank = Bank::new_for_tests(&genesis_config);
 
-        let from_pubkey = solana_sdk::pubkey::new_rand();
-        let to_pubkey = solana_sdk::pubkey::new_rand();
+        let from_pubkey = paychains_sdk::pubkey::new_rand();
+        let to_pubkey = paychains_sdk::pubkey::new_rand();
 
         let account_metas = vec![
             AccountMeta::new(from_pubkey, false),
@@ -11811,12 +11811,12 @@ pub(crate) mod tests {
 
         bank.add_builtin(
             "mock_vote",
-            &solana_vote_program::id(),
+            &paychains_vote_program::id(),
             mock_ok_vote_processor,
         );
 
         let instruction =
-            Instruction::new_with_bincode(solana_vote_program::id(), &10, account_metas);
+            Instruction::new_with_bincode(paychains_vote_program::id(), &10, account_metas);
         let mut tx = Transaction::new_signed_with_payer(
             &[instruction],
             Some(&mint_keypair.pubkey()),
@@ -11831,12 +11831,12 @@ pub(crate) mod tests {
 
     #[test]
     fn test_process_transaction_with_too_many_account_locks() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let (genesis_config, mint_keypair) = create_genesis_config(500);
         let mut bank = Bank::new_for_tests(&genesis_config);
 
-        let from_pubkey = solana_sdk::pubkey::new_rand();
-        let to_pubkey = solana_sdk::pubkey::new_rand();
+        let from_pubkey = paychains_sdk::pubkey::new_rand();
+        let to_pubkey = paychains_sdk::pubkey::new_rand();
 
         let account_metas = vec![
             AccountMeta::new(from_pubkey, false),
@@ -11845,12 +11845,12 @@ pub(crate) mod tests {
 
         bank.add_builtin(
             "mock_vote",
-            &solana_vote_program::id(),
+            &paychains_vote_program::id(),
             mock_ok_vote_processor,
         );
 
         let instruction =
-            Instruction::new_with_bincode(solana_vote_program::id(), &10, account_metas);
+            Instruction::new_with_bincode(paychains_vote_program::id(), &10, account_metas);
         let mut tx = Transaction::new_signed_with_payer(
             &[instruction],
             Some(&mint_keypair.pubkey()),
@@ -11859,7 +11859,7 @@ pub(crate) mod tests {
         );
 
         while tx.message.account_keys.len() <= MAX_TX_ACCOUNT_LOCKS {
-            tx.message.account_keys.push(solana_sdk::pubkey::new_rand());
+            tx.message.account_keys.push(paychains_sdk::pubkey::new_rand());
         }
 
         let result = bank.process_transaction(&tx);
@@ -11868,12 +11868,12 @@ pub(crate) mod tests {
 
     #[test]
     fn test_program_id_as_payer() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let (genesis_config, mint_keypair) = create_genesis_config(500);
         let mut bank = Bank::new_for_tests(&genesis_config);
 
-        let from_pubkey = solana_sdk::pubkey::new_rand();
-        let to_pubkey = solana_sdk::pubkey::new_rand();
+        let from_pubkey = paychains_sdk::pubkey::new_rand();
+        let to_pubkey = paychains_sdk::pubkey::new_rand();
 
         let account_metas = vec![
             AccountMeta::new(from_pubkey, false),
@@ -11882,12 +11882,12 @@ pub(crate) mod tests {
 
         bank.add_builtin(
             "mock_vote",
-            &solana_vote_program::id(),
+            &paychains_vote_program::id(),
             mock_ok_vote_processor,
         );
 
         let instruction =
-            Instruction::new_with_bincode(solana_vote_program::id(), &10, account_metas);
+            Instruction::new_with_bincode(paychains_vote_program::id(), &10, account_metas);
         let mut tx = Transaction::new_signed_with_payer(
             &[instruction],
             Some(&mint_keypair.pubkey()),
@@ -11902,7 +11902,7 @@ pub(crate) mod tests {
         );
         assert_eq!(tx.message.account_keys.len(), 4);
         tx.message.account_keys.clear();
-        tx.message.account_keys.push(solana_vote_program::id());
+        tx.message.account_keys.push(paychains_vote_program::id());
         tx.message.account_keys.push(mint_keypair.pubkey());
         tx.message.account_keys.push(from_pubkey);
         tx.message.account_keys.push(to_pubkey);
@@ -11929,8 +11929,8 @@ pub(crate) mod tests {
         let (genesis_config, mint_keypair) = create_genesis_config(500);
         let mut bank = Bank::new_for_tests(&genesis_config);
 
-        let from_pubkey = solana_sdk::pubkey::new_rand();
-        let to_pubkey = solana_sdk::pubkey::new_rand();
+        let from_pubkey = paychains_sdk::pubkey::new_rand();
+        let to_pubkey = paychains_sdk::pubkey::new_rand();
 
         let account_metas = vec![
             AccountMeta::new(from_pubkey, false),
@@ -11939,12 +11939,12 @@ pub(crate) mod tests {
 
         bank.add_builtin(
             "mock_vote",
-            &solana_vote_program::id(),
+            &paychains_vote_program::id(),
             mock_ok_vote_processor,
         );
 
         let instruction =
-            Instruction::new_with_bincode(solana_vote_program::id(), &10, account_metas);
+            Instruction::new_with_bincode(paychains_vote_program::id(), &10, account_metas);
         let mut tx = Transaction::new_signed_with_payer(
             &[instruction],
             Some(&mint_keypair.pubkey()),
@@ -11952,7 +11952,7 @@ pub(crate) mod tests {
             bank.last_blockhash(),
         );
 
-        tx.message.account_keys.push(solana_sdk::pubkey::new_rand());
+        tx.message.account_keys.push(paychains_sdk::pubkey::new_rand());
         assert_eq!(tx.message.account_keys.len(), 5);
         tx.message.instructions[0].accounts.remove(0);
         tx.message.instructions[0].accounts.push(4);
@@ -11963,7 +11963,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_fuzz_instructions() {
-        solana_logger::setup();
+        paychains_logger::setup();
         use rand::{thread_rng, Rng};
         let (genesis_config, _mint_keypair) = create_genesis_config(1_000_000_000);
         let mut bank = Bank::new_for_tests(&genesis_config);
@@ -11972,7 +11972,7 @@ pub(crate) mod tests {
         let program_keys: Vec<_> = (0..max_programs)
             .enumerate()
             .map(|i| {
-                let key = solana_sdk::pubkey::new_rand();
+                let key = paychains_sdk::pubkey::new_rand();
                 let name = format!("program{:?}", i);
                 bank.add_builtin(&name, &key, mock_ok_vote_processor);
                 (key, name.as_bytes().to_vec())
@@ -11982,7 +11982,7 @@ pub(crate) mod tests {
         let keys: Vec<_> = (0..max_keys)
             .enumerate()
             .map(|_| {
-                let key = solana_sdk::pubkey::new_rand();
+                let key = paychains_sdk::pubkey::new_rand();
                 let balance = if thread_rng().gen_ratio(9, 10) {
                     let lamports = if thread_rng().gen_ratio(1, 5) {
                         thread_rng().gen_range(0, 10)
@@ -12118,7 +12118,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_bank_hash_consistency() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let mut genesis_config = GenesisConfig::new(
             &[(
@@ -12183,11 +12183,11 @@ pub(crate) mod tests {
         let mut bank = Bank::new_for_tests(&genesis_config);
 
         // Add a new program
-        let program1_pubkey = solana_sdk::pubkey::new_rand();
+        let program1_pubkey = paychains_sdk::pubkey::new_rand();
         bank.add_builtin("program", &program1_pubkey, nested_processor);
 
         // Add a new program owned by the first
-        let program2_pubkey = solana_sdk::pubkey::new_rand();
+        let program2_pubkey = paychains_sdk::pubkey::new_rand();
         let mut program2_account = AccountSharedData::new(42, 1, &program1_pubkey);
         program2_account.set_executable(true);
         bank.store_account(&program2_pubkey, &program2_account);
@@ -12237,7 +12237,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_clean_nonrooted() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let (genesis_config, _mint_keypair) = create_genesis_config(1_000_000_000);
         let pubkey0 = Pubkey::new(&[0; 32]);
@@ -12315,12 +12315,12 @@ pub(crate) mod tests {
 
     #[test]
     fn test_shrink_candidate_slots_cached() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let (genesis_config, _mint_keypair) = create_genesis_config(1_000_000_000);
-        let pubkey0 = solana_sdk::pubkey::new_rand();
-        let pubkey1 = solana_sdk::pubkey::new_rand();
-        let pubkey2 = solana_sdk::pubkey::new_rand();
+        let pubkey0 = paychains_sdk::pubkey::new_rand();
+        let pubkey1 = paychains_sdk::pubkey::new_rand();
+        let pubkey2 = paychains_sdk::pubkey::new_rand();
 
         // Set root for bank 0, with caching enabled
         let mut bank0 = Arc::new(Bank::new_with_config(
@@ -12390,11 +12390,11 @@ pub(crate) mod tests {
 
     #[test]
     fn test_process_stale_slot_with_budget() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let (genesis_config, _mint_keypair) = create_genesis_config(1_000_000_000);
-        let pubkey1 = solana_sdk::pubkey::new_rand();
-        let pubkey2 = solana_sdk::pubkey::new_rand();
+        let pubkey1 = paychains_sdk::pubkey::new_rand();
+        let pubkey2 = paychains_sdk::pubkey::new_rand();
 
         let mut bank = Arc::new(Bank::new_for_tests(&genesis_config));
         bank.restore_old_behavior_for_fragile_tests();
@@ -12450,7 +12450,7 @@ pub(crate) mod tests {
         }
 
         let slot = 123;
-        let program_id = solana_sdk::pubkey::new_rand();
+        let program_id = paychains_sdk::pubkey::new_rand();
 
         let mut bank = Arc::new(Bank::new_from_parent(
             &Arc::new(Bank::new_for_tests(&genesis_config)),
@@ -12499,7 +12499,7 @@ pub(crate) mod tests {
         }
 
         let slot = 123;
-        let loader_id = solana_sdk::pubkey::new_rand();
+        let loader_id = paychains_sdk::pubkey::new_rand();
 
         let mut bank = Arc::new(Bank::new_from_parent(
             &Arc::new(Bank::new_for_tests(&genesis_config)),
@@ -12526,7 +12526,7 @@ pub(crate) mod tests {
         activate_all_features(&mut genesis_config);
 
         let slot = 123;
-        let program_id = solana_sdk::pubkey::new_rand();
+        let program_id = paychains_sdk::pubkey::new_rand();
 
         let bank = Arc::new(Bank::new_from_parent(
             &Arc::new(Bank::new_for_tests(&genesis_config)),
@@ -12586,7 +12586,7 @@ pub(crate) mod tests {
     fn test_add_builtin_account_inherited_cap_while_replacing() {
         let (genesis_config, mint_keypair) = create_genesis_config(100_000);
         let bank = Bank::new_for_tests(&genesis_config);
-        let program_id = solana_sdk::pubkey::new_rand();
+        let program_id = paychains_sdk::pubkey::new_rand();
 
         bank.add_builtin_account("mock_program", &program_id, false);
         assert_eq!(bank.capitalization(), bank.calculate_capitalization(true));
@@ -12605,7 +12605,7 @@ pub(crate) mod tests {
     fn test_add_builtin_account_squatted_while_not_replacing() {
         let (genesis_config, mint_keypair) = create_genesis_config(100_000);
         let bank = Bank::new_for_tests(&genesis_config);
-        let program_id = solana_sdk::pubkey::new_rand();
+        let program_id = paychains_sdk::pubkey::new_rand();
 
         // someone managed to squat at program_id!
         bank.withdraw(&mint_keypair.pubkey(), 10).unwrap();
@@ -12667,7 +12667,7 @@ pub(crate) mod tests {
         activate_all_features(&mut genesis_config);
 
         let slot = 123;
-        let program_id = solana_sdk::pubkey::new_rand();
+        let program_id = paychains_sdk::pubkey::new_rand();
 
         let bank = Arc::new(Bank::new_from_parent(
             &Arc::new(Bank::new_for_tests(&genesis_config)),
@@ -12700,7 +12700,7 @@ pub(crate) mod tests {
     fn test_add_precompiled_account_inherited_cap_while_replacing() {
         let (genesis_config, mint_keypair) = create_genesis_config(100_000);
         let bank = Bank::new_for_tests(&genesis_config);
-        let program_id = solana_sdk::pubkey::new_rand();
+        let program_id = paychains_sdk::pubkey::new_rand();
 
         bank.add_precompiled_account(&program_id);
         assert_eq!(bank.capitalization(), bank.calculate_capitalization(true));
@@ -12719,7 +12719,7 @@ pub(crate) mod tests {
     fn test_add_precompiled_account_squatted_while_not_replacing() {
         let (genesis_config, mint_keypair) = create_genesis_config(100_000);
         let bank = Bank::new_for_tests(&genesis_config);
-        let program_id = solana_sdk::pubkey::new_rand();
+        let program_id = paychains_sdk::pubkey::new_rand();
 
         // someone managed to squat at program_id!
         bank.withdraw(&mint_keypair.pubkey(), 10).unwrap();
@@ -12756,10 +12756,10 @@ pub(crate) mod tests {
 
     #[test]
     fn test_reconfigure_token2_native_mint() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let mut genesis_config =
-            create_genesis_config_with_leader(5, &solana_sdk::pubkey::new_rand(), 0).genesis_config;
+            create_genesis_config_with_leader(5, &paychains_sdk::pubkey::new_rand(), 0).genesis_config;
 
         // ClusterType::Development - Native mint exists immediately
         assert_eq!(genesis_config.cluster_type, ClusterType::Development);
@@ -12818,19 +12818,19 @@ pub(crate) mod tests {
 
     #[test]
     fn test_ensure_no_storage_rewards_pool() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let mut genesis_config =
-            create_genesis_config_with_leader(5, &solana_sdk::pubkey::new_rand(), 0).genesis_config;
+            create_genesis_config_with_leader(5, &paychains_sdk::pubkey::new_rand(), 0).genesis_config;
 
         // Testnet - Storage rewards pool is purged at epoch 93
         // Also this is with bad capitalization
         genesis_config.cluster_type = ClusterType::Testnet;
         genesis_config.inflation = Inflation::default();
-        let reward_pubkey = solana_sdk::pubkey::new_rand();
+        let reward_pubkey = paychains_sdk::pubkey::new_rand();
         genesis_config.rewards_pools.insert(
             reward_pubkey,
-            Account::new(u64::MAX, 0, &solana_sdk::pubkey::new_rand()),
+            Account::new(u64::MAX, 0, &paychains_sdk::pubkey::new_rand()),
         );
         let bank0 = Bank::new_for_tests(&genesis_config);
         // because capitalization has been reset with bogus capitalization calculation allowing overflows,
@@ -12883,10 +12883,10 @@ pub(crate) mod tests {
 
     #[test]
     fn test_cached_executors() {
-        let key1 = solana_sdk::pubkey::new_rand();
-        let key2 = solana_sdk::pubkey::new_rand();
-        let key3 = solana_sdk::pubkey::new_rand();
-        let key4 = solana_sdk::pubkey::new_rand();
+        let key1 = paychains_sdk::pubkey::new_rand();
+        let key2 = paychains_sdk::pubkey::new_rand();
+        let key3 = paychains_sdk::pubkey::new_rand();
+        let key4 = paychains_sdk::pubkey::new_rand();
         let executor: Arc<dyn Executor> = Arc::new(TestExecutor {});
         let mut cache = CachedExecutors::new(3, 0);
 
@@ -12924,10 +12924,10 @@ pub(crate) mod tests {
 
     #[test]
     fn test_cached_executor_eviction() {
-        let key1 = solana_sdk::pubkey::new_rand();
-        let key2 = solana_sdk::pubkey::new_rand();
-        let key3 = solana_sdk::pubkey::new_rand();
-        let key4 = solana_sdk::pubkey::new_rand();
+        let key1 = paychains_sdk::pubkey::new_rand();
+        let key2 = paychains_sdk::pubkey::new_rand();
+        let key3 = paychains_sdk::pubkey::new_rand();
+        let key4 = paychains_sdk::pubkey::new_rand();
         let executor: Arc<dyn Executor> = Arc::new(TestExecutor {});
         let mut cache = CachedExecutors::new(3, 0);
         assert!(cache.current_epoch == 0);
@@ -12975,9 +12975,9 @@ pub(crate) mod tests {
 
     #[test]
     fn test_cached_executors_evicts_smallest() {
-        let key1 = solana_sdk::pubkey::new_rand();
-        let key2 = solana_sdk::pubkey::new_rand();
-        let key3 = solana_sdk::pubkey::new_rand();
+        let key1 = paychains_sdk::pubkey::new_rand();
+        let key2 = paychains_sdk::pubkey::new_rand();
+        let key3 = paychains_sdk::pubkey::new_rand();
         let executor: Arc<dyn Executor> = Arc::new(TestExecutor {});
         let mut cache = CachedExecutors::new(2, 0);
 
@@ -13004,15 +13004,15 @@ pub(crate) mod tests {
 
     #[test]
     fn test_bank_executor_cache() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let (genesis_config, _) = create_genesis_config(1);
         let bank = Bank::new_for_tests(&genesis_config);
 
-        let key1 = solana_sdk::pubkey::new_rand();
-        let key2 = solana_sdk::pubkey::new_rand();
-        let key3 = solana_sdk::pubkey::new_rand();
-        let key4 = solana_sdk::pubkey::new_rand();
+        let key1 = paychains_sdk::pubkey::new_rand();
+        let key2 = paychains_sdk::pubkey::new_rand();
+        let key3 = paychains_sdk::pubkey::new_rand();
+        let key4 = paychains_sdk::pubkey::new_rand();
         let executor: Arc<dyn Executor> = Arc::new(TestExecutor {});
 
         let message = Message {
@@ -13067,7 +13067,7 @@ pub(crate) mod tests {
         assert!(executors.borrow().contains_key(&key4));
 
         // Check inheritance
-        let bank = Bank::new_from_parent(&Arc::new(bank), &solana_sdk::pubkey::new_rand(), 1);
+        let bank = Bank::new_from_parent(&Arc::new(bank), &paychains_sdk::pubkey::new_rand(), 1);
         let executors = bank.get_executors(&message, accounts, program_indices);
         assert_eq!(executors.borrow().len(), 4);
         assert!(executors.borrow().contains_key(&key1));
@@ -13090,13 +13090,13 @@ pub(crate) mod tests {
 
     #[test]
     fn test_bank_executor_cow() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let (genesis_config, _) = create_genesis_config(1);
         let root = Arc::new(Bank::new_for_tests(&genesis_config));
 
-        let key1 = solana_sdk::pubkey::new_rand();
-        let key2 = solana_sdk::pubkey::new_rand();
+        let key1 = paychains_sdk::pubkey::new_rand();
+        let key2 = paychains_sdk::pubkey::new_rand();
         let executor: Arc<dyn Executor> = Arc::new(TestExecutor {});
         let message =
             SanitizedMessage::try_from(Message::new(&[], Some(&Pubkey::new_unique()))).unwrap();
@@ -13304,7 +13304,7 @@ pub(crate) mod tests {
     // this test can be removed after rent_for_sysvars activation on mainnet-beta
     #[test]
     fn test_no_deletion_due_to_rent_upon_rent_for_sysvar_activation() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let (mut genesis_config, _mint_keypair) = create_genesis_config(0);
         let feature_balance =
@@ -13350,7 +13350,7 @@ pub(crate) mod tests {
     // this test can be removed after rent_for_sysvars activation on mainnet-beta
     #[test]
     fn test_rent_for_sysvars_adjustment_minimum_genesis_set() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let (mut genesis_config, _mint_keypair) = create_genesis_config(0);
         let feature_balance =
@@ -13428,7 +13428,7 @@ pub(crate) mod tests {
     // this test can be removed after rent_for_sysvars activation on mainnet-beta
     #[test]
     fn test_rent_for_sysvars_adjustment_full_set() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let (mut genesis_config, _mint_keypair) = create_genesis_config(0);
         let feature_balance =
@@ -13450,19 +13450,19 @@ pub(crate) mod tests {
             _first_instruction_account: usize,
             _data: &[u8],
             _invoke_context: &mut InvokeContext,
-        ) -> std::result::Result<(), solana_sdk::instruction::InstructionError> {
+        ) -> std::result::Result<(), paychains_sdk::instruction::InstructionError> {
             Ok(())
         }
         let builtins = Builtins {
             genesis_builtins: vec![
                 Builtin::new(
                     "mock bpf",
-                    solana_sdk::bpf_loader::id(),
+                    paychains_sdk::bpf_loader::id(),
                     mock_process_instruction,
                 ),
                 Builtin::new(
                     "mock bpf",
-                    solana_sdk::bpf_loader_deprecated::id(),
+                    paychains_sdk::bpf_loader_deprecated::id(),
                     mock_process_instruction,
                 ),
             ],
@@ -13542,7 +13542,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_update_clock_timestamp() {
-        let leader_pubkey = solana_sdk::pubkey::new_rand();
+        let leader_pubkey = paychains_sdk::pubkey::new_rand();
         let GenesisConfigInfo {
             genesis_config,
             voting_keypair,
@@ -13641,7 +13641,7 @@ pub(crate) mod tests {
                 + (poh_estimate_offset * max_allowable_drift / 100).as_secs()) as i64
         }
 
-        let leader_pubkey = solana_sdk::pubkey::new_rand();
+        let leader_pubkey = paychains_sdk::pubkey::new_rand();
         let GenesisConfigInfo {
             mut genesis_config,
             voting_keypair,
@@ -13739,7 +13739,7 @@ pub(crate) mod tests {
                 - (poh_estimate_offset * max_allowable_drift / 100).as_secs()) as i64
         }
 
-        let leader_pubkey = solana_sdk::pubkey::new_rand();
+        let leader_pubkey = paychains_sdk::pubkey::new_rand();
         let GenesisConfigInfo {
             mut genesis_config,
             voting_keypair,
@@ -13828,11 +13828,11 @@ pub(crate) mod tests {
                 u64,
             ) + std::marker::Send,
     {
-        solana_logger::setup();
+        paychains_logger::setup();
         // Set up initial bank
         let mut genesis_config = create_genesis_config_with_leader(
             10,
-            &solana_sdk::pubkey::new_rand(),
+            &paychains_sdk::pubkey::new_rand(),
             374_999_998_287_840,
         )
         .genesis_config;
@@ -13848,7 +13848,7 @@ pub(crate) mod tests {
         // Set up pubkeys to write to
         let total_pubkeys = ITER_BATCH_SIZE * 10;
         let total_pubkeys_to_modify = 10;
-        let all_pubkeys: Vec<Pubkey> = std::iter::repeat_with(solana_sdk::pubkey::new_rand)
+        let all_pubkeys: Vec<Pubkey> = std::iter::repeat_with(paychains_sdk::pubkey::new_rand)
             .take(total_pubkeys)
             .collect();
         let program_id = system_program::id();
@@ -14016,7 +14016,7 @@ pub(crate) mod tests {
                         {
                             current_minor_fork_bank = Arc::new(Bank::new_from_parent(
                                 &current_minor_fork_bank,
-                                &solana_sdk::pubkey::new_rand(),
+                                &paychains_sdk::pubkey::new_rand(),
                                 current_minor_fork_bank.slot() + 2,
                             ));
                             let account = AccountSharedData::new(lamports, 0, &program_id);
@@ -14041,7 +14041,7 @@ pub(crate) mod tests {
                         // *partial* clean of the banks < `next_major_bank`.
                         current_major_fork_bank = Arc::new(Bank::new_from_parent(
                             &current_major_fork_bank,
-                            &solana_sdk::pubkey::new_rand(),
+                            &paychains_sdk::pubkey::new_rand(),
                             current_minor_fork_bank.slot() - 1,
                         ));
                         let lamports = current_major_fork_bank.slot() + starting_lamports + 1;
@@ -14129,7 +14129,7 @@ pub(crate) mod tests {
                         prev_bank = current_bank.clone();
                         current_bank = Arc::new(Bank::new_from_parent(
                             &current_bank,
-                            &solana_sdk::pubkey::new_rand(),
+                            &paychains_sdk::pubkey::new_rand(),
                             current_bank.slot() + 1,
                         ));
                     }
@@ -14171,7 +14171,7 @@ pub(crate) mod tests {
             for i in 0..step_size {
                 bank_at_fork_tip = Arc::new(Bank::new_from_parent(
                     &bank_at_fork_tip,
-                    &solana_sdk::pubkey::new_rand(),
+                    &paychains_sdk::pubkey::new_rand(),
                     bank_at_fork_tip.slot() + 1,
                 ));
                 if lamports_this_round == 0 {
@@ -14379,7 +14379,7 @@ pub(crate) mod tests {
     fn test_get_inflation_start_slot_devnet_testnet() {
         let GenesisConfigInfo {
             mut genesis_config, ..
-        } = create_genesis_config_with_leader(42, &solana_sdk::pubkey::new_rand(), 42);
+        } = create_genesis_config_with_leader(42, &paychains_sdk::pubkey::new_rand(), 42);
         genesis_config
             .accounts
             .remove(&feature_set::pico_inflation::id())
@@ -14460,7 +14460,7 @@ pub(crate) mod tests {
     fn test_get_inflation_start_slot_mainnet() {
         let GenesisConfigInfo {
             mut genesis_config, ..
-        } = create_genesis_config_with_leader(42, &solana_sdk::pubkey::new_rand(), 42);
+        } = create_genesis_config_with_leader(42, &paychains_sdk::pubkey::new_rand(), 42);
         genesis_config
             .accounts
             .remove(&feature_set::pico_inflation::id())
@@ -14545,7 +14545,7 @@ pub(crate) mod tests {
     fn test_get_inflation_num_slots_with_activations() {
         let GenesisConfigInfo {
             mut genesis_config, ..
-        } = create_genesis_config_with_leader(42, &solana_sdk::pubkey::new_rand(), 42);
+        } = create_genesis_config_with_leader(42, &paychains_sdk::pubkey::new_rand(), 42);
         let slots_per_epoch = 32;
         genesis_config.epoch_schedule = EpochSchedule::new(slots_per_epoch);
         genesis_config
@@ -14609,7 +14609,7 @@ pub(crate) mod tests {
     fn test_get_inflation_num_slots_already_activated() {
         let GenesisConfigInfo {
             mut genesis_config, ..
-        } = create_genesis_config_with_leader(42, &solana_sdk::pubkey::new_rand(), 42);
+        } = create_genesis_config_with_leader(42, &paychains_sdk::pubkey::new_rand(), 42);
         let slots_per_epoch = 32;
         genesis_config.epoch_schedule = EpochSchedule::new(slots_per_epoch);
         let mut bank = Bank::new_for_tests(&genesis_config);
@@ -14839,7 +14839,7 @@ pub(crate) mod tests {
     #[test]
     fn test_get_largest_accounts() {
         let GenesisConfigInfo { genesis_config, .. } =
-            create_genesis_config_with_leader(42, &solana_sdk::pubkey::new_rand(), 42);
+            create_genesis_config_with_leader(42, &paychains_sdk::pubkey::new_rand(), 42);
         let bank = Bank::new_for_tests(&genesis_config);
 
         let pubkeys: Vec<_> = (0..5).map(|_| Pubkey::new_unique()).collect();
@@ -14849,15 +14849,15 @@ pub(crate) mod tests {
             .iter()
             .cloned()
             .zip(vec![
-                sol_to_lamports(2.0),
-                sol_to_lamports(3.0),
-                sol_to_lamports(3.0),
-                sol_to_lamports(4.0),
-                sol_to_lamports(5.0),
+                pay_to_lamports(2.0),
+                pay_to_lamports(3.0),
+                pay_to_lamports(3.0),
+                pay_to_lamports(4.0),
+                pay_to_lamports(5.0),
             ])
             .collect();
 
-        // Initialize accounts; all have larger SOL balances than current Bank built-ins
+        // Initialize accounts; all have larger PAY balances than current Bank built-ins
         let account0 = AccountSharedData::new(pubkeys_balances[0].1, 0, &Pubkey::default());
         bank.store_account(&pubkeys_balances[0].0, &account0);
         let account1 = AccountSharedData::new(pubkeys_balances[1].1, 0, &Pubkey::default());
@@ -14879,17 +14879,17 @@ pub(crate) mod tests {
         assert_eq!(
             bank.get_largest_accounts(1, &pubkeys_hashset, AccountAddressFilter::Include)
                 .unwrap(),
-            vec![(pubkeys[4], sol_to_lamports(5.0))]
+            vec![(pubkeys[4], pay_to_lamports(5.0))]
         );
         assert_eq!(
             bank.get_largest_accounts(1, &HashSet::new(), AccountAddressFilter::Exclude)
                 .unwrap(),
-            vec![(pubkeys[4], sol_to_lamports(5.0))]
+            vec![(pubkeys[4], pay_to_lamports(5.0))]
         );
         assert_eq!(
             bank.get_largest_accounts(1, &exclude4, AccountAddressFilter::Exclude)
                 .unwrap(),
-            vec![(pubkeys[3], sol_to_lamports(4.0))]
+            vec![(pubkeys[3], pay_to_lamports(4.0))]
         );
 
         // Return all added accounts
@@ -14950,7 +14950,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_transfer_sysvar() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let GenesisConfigInfo {
             genesis_config,
             mint_keypair,
@@ -14974,7 +14974,7 @@ pub(crate) mod tests {
                 .set_data(&[0; 40])
         }
 
-        let program_id = solana_sdk::pubkey::new_rand();
+        let program_id = paychains_sdk::pubkey::new_rand();
         bank.add_builtin("mock_program1", &program_id, mock_ix_processor);
 
         let blockhash = bank.last_blockhash();
@@ -15013,13 +15013,13 @@ pub(crate) mod tests {
 
     #[test]
     fn test_clean_dropped_unrooted_frozen_banks() {
-        solana_logger::setup();
+        paychains_logger::setup();
         do_test_clean_dropped_unrooted_banks(FreezeBank1::Yes);
     }
 
     #[test]
     fn test_clean_dropped_unrooted_unfrozen_banks() {
-        solana_logger::setup();
+        paychains_logger::setup();
         do_test_clean_dropped_unrooted_banks(FreezeBank1::No);
     }
 
@@ -15151,7 +15151,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_compute_budget_program_noop() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let GenesisConfigInfo {
             mut genesis_config,
             mint_keypair,
@@ -15188,7 +15188,7 @@ pub(crate) mod tests {
             );
             Ok(())
         }
-        let program_id = solana_sdk::pubkey::new_rand();
+        let program_id = paychains_sdk::pubkey::new_rand();
         bank.add_builtin("mock_program", &program_id, mock_ix_processor);
 
         let message = Message::new(
@@ -15205,7 +15205,7 @@ pub(crate) mod tests {
 
     #[test]
     fn test_compute_request_instruction() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let GenesisConfigInfo {
             genesis_config,
             mint_keypair,
@@ -15233,7 +15233,7 @@ pub(crate) mod tests {
             );
             Ok(())
         }
-        let program_id = solana_sdk::pubkey::new_rand();
+        let program_id = paychains_sdk::pubkey::new_rand();
         bank.add_builtin("mock_program", &program_id, mock_ix_processor);
 
         let message = Message::new(
@@ -15252,7 +15252,7 @@ pub(crate) mod tests {
     fn test_verify_and_hash_transaction_sig_len() {
         let GenesisConfigInfo {
             mut genesis_config, ..
-        } = create_genesis_config_with_leader(42, &solana_sdk::pubkey::new_rand(), 42);
+        } = create_genesis_config_with_leader(42, &paychains_sdk::pubkey::new_rand(), 42);
 
         // activate all features but verify_tx_signatures_len
         activate_all_features(&mut genesis_config);
@@ -15315,7 +15315,7 @@ pub(crate) mod tests {
     #[test]
     fn test_verify_transactions_packet_data_size() {
         let GenesisConfigInfo { genesis_config, .. } =
-            create_genesis_config_with_leader(42, &solana_sdk::pubkey::new_rand(), 42);
+            create_genesis_config_with_leader(42, &paychains_sdk::pubkey::new_rand(), 42);
         let bank = Bank::new_for_tests(&genesis_config);
 
         let mut rng = rand::thread_rng();
@@ -15374,7 +15374,7 @@ pub(crate) mod tests {
         // libsecp256k1
         let secp_privkey = libsecp256k1::SecretKey::random(&mut rand::thread_rng());
         let message_arr = b"hello";
-        let instruction = solana_sdk::secp256k1_instruction::new_secp256k1_instruction(
+        let instruction = paychains_sdk::secp256k1_instruction::new_secp256k1_instruction(
             &secp_privkey,
             message_arr,
         );
@@ -15392,7 +15392,7 @@ pub(crate) mod tests {
         let privkey = ed25519_dalek::Keypair::generate(&mut rand::thread_rng());
         let message_arr = b"hello";
         let instruction =
-            solana_sdk::ed25519_instruction::new_ed25519_instruction(&privkey, message_arr);
+            paychains_sdk::ed25519_instruction::new_ed25519_instruction(&privkey, message_arr);
         let tx = Transaction::new_signed_with_payer(
             &[instruction],
             Some(&mint_keypair.pubkey()),
@@ -15464,7 +15464,7 @@ pub(crate) mod tests {
     #[test]
     fn test_an_empty_instruction_without_program() {
         let (genesis_config, mint_keypair) = create_genesis_config(1);
-        let destination = solana_sdk::pubkey::new_rand();
+        let destination = paychains_sdk::pubkey::new_rand();
         let mut ix = system_instruction::transfer(&mint_keypair.pubkey(), &destination, 0);
         ix.program_id = native_loader::id(); // Empty executable account chain
         let message = Message::new(&[ix], Some(&mint_keypair.pubkey()));
@@ -15499,13 +15499,13 @@ pub(crate) mod tests {
     /// Test exceeding the accounts data budget by creating accounts in a loop
     #[test]
     fn test_accounts_data_budget_exceeded() {
-        use solana_program_runtime::accounts_data_meter::MAX_ACCOUNTS_DATA_LEN;
-        use solana_sdk::system_instruction::MAX_PERMITTED_DATA_LENGTH;
+        use paychains_program_runtime::accounts_data_meter::MAX_ACCOUNTS_DATA_LEN;
+        use paychains_sdk::system_instruction::MAX_PERMITTED_DATA_LENGTH;
 
-        solana_logger::setup();
+        paychains_logger::setup();
         let (genesis_config, mint_keypair) = create_genesis_config(1_000_000_000_000);
         let mut bank = Bank::new_for_tests(&genesis_config);
-        bank.activate_feature(&solana_sdk::feature_set::cap_accounts_data_len::id());
+        bank.activate_feature(&paychains_sdk::feature_set::cap_accounts_data_len::id());
 
         let mut i = 0;
         let result = loop {
@@ -15515,7 +15515,7 @@ pub(crate) mod tests {
                 bank.last_blockhash(),
                 1,
                 MAX_PERMITTED_DATA_LENGTH,
-                &solana_sdk::system_program::id(),
+                &paychains_sdk::system_program::id(),
             );
 
             let result = bank.process_transaction(&txn);
@@ -15535,7 +15535,7 @@ pub(crate) mod tests {
             result,
             Err(TransactionError::InstructionError(
                 _,
-                solana_sdk::instruction::InstructionError::AccountsDataBudgetExceeded,
+                paychains_sdk::instruction::InstructionError::AccountsDataBudgetExceeded,
             ))
         ));
     }
@@ -15621,7 +15621,7 @@ pub(crate) mod tests {
             mut genesis_config,
             mint_keypair,
             ..
-        } = create_genesis_config_with_leader(sol_to_lamports(100.), &Pubkey::new_unique(), 42);
+        } = create_genesis_config_with_leader(pay_to_lamports(100.), &Pubkey::new_unique(), 42);
         genesis_config.rent = Rent::default();
 
         let mock_program_id = Pubkey::new_unique();
@@ -15722,7 +15722,7 @@ pub(crate) mod tests {
             mut genesis_config,
             mint_keypair,
             ..
-        } = create_genesis_config_with_leader(sol_to_lamports(100.), &Pubkey::new_unique(), 42);
+        } = create_genesis_config_with_leader(pay_to_lamports(100.), &Pubkey::new_unique(), 42);
         genesis_config.rent = Rent::default();
 
         let mock_program_id = Pubkey::new_unique();
@@ -15780,13 +15780,13 @@ pub(crate) mod tests {
             mut genesis_config,
             mint_keypair,
             ..
-        } = create_genesis_config_with_leader(sol_to_lamports(100.), &Pubkey::new_unique(), 42);
+        } = create_genesis_config_with_leader(pay_to_lamports(100.), &Pubkey::new_unique(), 42);
         genesis_config.rent = Rent::default();
         // Activate features, including require_rent_exempt_accounts
         activate_all_features(&mut genesis_config);
 
-        let validator_pubkey = solana_sdk::pubkey::new_rand();
-        let validator_stake_lamports = sol_to_lamports(1.);
+        let validator_pubkey = paychains_sdk::pubkey::new_rand();
+        let validator_stake_lamports = pay_to_lamports(1.);
         let validator_staking_keypair = Keypair::new();
         let validator_voting_keypair = Keypair::new();
 
@@ -15844,7 +15844,7 @@ pub(crate) mod tests {
             mut genesis_config,
             mint_keypair,
             ..
-        } = create_genesis_config_with_leader(sol_to_lamports(100.), &Pubkey::new_unique(), 42);
+        } = create_genesis_config_with_leader(pay_to_lamports(100.), &Pubkey::new_unique(), 42);
         genesis_config.rent = Rent::default();
         // Activate features, including require_rent_exempt_accounts
         activate_all_features(&mut genesis_config);
@@ -15854,7 +15854,7 @@ pub(crate) mod tests {
         let tx = system_transaction::transfer(
             &mint_keypair,
             &recipient,
-            sol_to_lamports(1.),
+            pay_to_lamports(1.),
             bank.last_blockhash(),
         );
         let num_accounts = tx.message().account_keys.len();

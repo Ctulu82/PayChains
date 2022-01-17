@@ -1,12 +1,12 @@
 [package]
-name = "solana-net-utils"
+name = "paychains-net-utils"
 version = "1.10.0"
-description = "Solana Network Utilities"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana"
+description = "PayChains Network Utilities"
+authors = ["PayChains Maintainers <maintainers@paychains.foundation>"]
+repository = "https://github.com/paychains-labs/paychains"
 license = "Apache-2.0"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-net-utils"
+homepage = "https://paychains.com/"
+documentation = "https://docs.rs/paychains-net-utils"
 edition = "2021"
 
 [dependencies]
@@ -19,21 +19,21 @@ rand = "0.7.0"
 serde = "1.0.133"
 serde_derive = "1.0.103"
 socket2 = "0.4.2"
-solana-logger = { path = "../logger", version = "=1.10.0" }
-solana-sdk = { path = "../sdk", version = "=1.10.0" }
-solana-version = { path = "../version", version = "=1.10.0" }
+paychains-logger = { path = "../logger", version = "=1.10.0" }
+paychains-sdk = { path = "../sdk", version = "=1.10.0" }
+paychains-version = { path = "../version", version = "=1.10.0" }
 tokio = { version = "1", features = ["full"] }
 url = "2.2.2"
 
 [lib]
-name = "solana_net_utils"
+name = "paychains_net_utils"
 
 [[bin]]
-name = "solana-ip-address"
+name = "paychains-ip-address"
 path = "src/bin/ip_address.rs"
 
 [[bin]]
-name = "solana-ip-address-server"
+name = "paychains-ip-address-server"
 path = "src/bin/ip_address_server.rs"
 
 [package.metadata.docs.rs]

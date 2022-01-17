@@ -2,7 +2,7 @@
 
 use {
     crate::{
-        rpc_pubsub::{RpcSolPubSubImpl, RpcSolPubSubInternal},
+        rpc_pubsub::{RpcPayPubSubImpl, RpcPayPubSubInternal},
         rpc_subscription_tracker::{
             SubscriptionControl, SubscriptionId, SubscriptionParams, SubscriptionToken,
         },
@@ -11,7 +11,7 @@ use {
     dashmap::{mapref::entry::Entry, DashMap},
     jsonrpc_core::IoHandler,
     soketto::handshake::{server, Server},
-    solana_metrics::TokenCounter,
+    paychains_metrics::TokenCounter,
     std::{
         io,
         net::SocketAddr,
@@ -85,7 +85,7 @@ impl PubSubService {
 
         let (trigger, tripwire) = Tripwire::new();
         let thread_hdl = Builder::new()
-            .name("solana-pubsub".to_string())
+            .name("paychains-pubsub".to_string())
             .spawn(move || {
                 let runtime = tokio::runtime::Builder::new_multi_thread()
                     .worker_threads(pubsub_config.worker_threads)
@@ -231,10 +231,10 @@ impl TestBroadcastReceiver {
 #[cfg(test)]
 pub fn test_connection(
     subscriptions: &Arc<RpcSubscriptions>,
-) -> (RpcSolPubSubImpl, TestBroadcastReceiver) {
+) -> (RpcPayPubSubImpl, TestBroadcastReceiver) {
     let current_subscriptions = Arc::new(DashMap::new());
 
-    let rpc_impl = RpcSolPubSubImpl::new(
+    let rpc_impl = RpcPayPubSubImpl::new(
         PubSubConfig {
             enable_block_subscription: true,
             enable_vote_subscription: true,
@@ -286,7 +286,7 @@ async fn handle_connection(
     let current_subscriptions = Arc::new(DashMap::new());
 
     let mut json_rpc_handler = IoHandler::new();
-    let rpc_impl = RpcSolPubSubImpl::new(
+    let rpc_impl = RpcPayPubSubImpl::new(
         config,
         subscription_control,
         Arc::clone(&current_subscriptions),
@@ -382,7 +382,7 @@ mod tests {
     use {
         super::*,
         crate::optimistically_confirmed_bank_tracker::OptimisticallyConfirmedBank,
-        solana_runtime::{
+        paychains_runtime::{
             bank::Bank,
             bank_forks::BankForks,
             commitment::BlockCommitmentCache,
@@ -417,6 +417,6 @@ mod tests {
         let (_trigger, pubsub_service) =
             PubSubService::new(PubSubConfig::default(), &subscriptions, pubsub_addr);
         let thread = pubsub_service.thread_hdl.thread();
-        assert_eq!(thread.name().unwrap(), "solana-pubsub");
+        assert_eq!(thread.name().unwrap(), "paychains-pubsub");
     }
 }

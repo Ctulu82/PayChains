@@ -1,7 +1,7 @@
 use {
     serde_json::{json, Value},
     serial_test::serial,
-    solana_client::{
+    paychains_client::{
         pubsub_client::PubsubClient,
         rpc_client::RpcClient,
         rpc_config::{
@@ -10,31 +10,31 @@ use {
         },
         rpc_response::{RpcBlockUpdate, SlotInfo},
     },
-    solana_ledger::{blockstore::Blockstore, get_tmp_ledger_path},
-    solana_rpc::{
+    paychains_ledger::{blockstore::Blockstore, get_tmp_ledger_path},
+    paychains_rpc::{
         optimistically_confirmed_bank_tracker::OptimisticallyConfirmedBank,
         rpc::create_test_transactions_and_populate_blockstore,
         rpc_pubsub_service::{PubSubConfig, PubSubService},
         rpc_subscriptions::RpcSubscriptions,
     },
-    solana_runtime::{
+    paychains_runtime::{
         bank::Bank,
         bank_forks::BankForks,
         commitment::{BlockCommitmentCache, CommitmentSlots},
         genesis_utils::{create_genesis_config, GenesisConfigInfo},
     },
-    solana_sdk::{
+    paychains_sdk::{
         clock::Slot,
         commitment_config::{CommitmentConfig, CommitmentLevel},
-        native_token::sol_to_lamports,
+        native_token::pay_to_lamports,
         pubkey::Pubkey,
         rpc_port,
         signature::{Keypair, Signer},
         system_program, system_transaction,
     },
-    solana_streamer::socket::SocketAddrSpace,
-    solana_test_validator::TestValidator,
-    solana_transaction_status::{TransactionDetails, UiTransactionEncoding},
+    paychains_streamer::socket::SocketAddrSpace,
+    paychains_test_validator::TestValidator,
+    paychains_transaction_status::{TransactionDetails, UiTransactionEncoding},
     std::{
         collections::HashSet,
         net::{IpAddr, SocketAddr},
@@ -50,19 +50,19 @@ use {
 
 #[test]
 fn test_rpc_client() {
-    solana_logger::setup();
+    paychains_logger::setup();
 
     let alice = Keypair::new();
     let test_validator =
         TestValidator::with_no_fees(alice.pubkey(), None, SocketAddrSpace::Unspecified);
 
-    let bob_pubkey = solana_sdk::pubkey::new_rand();
+    let bob_pubkey = paychains_sdk::pubkey::new_rand();
 
     let client = RpcClient::new(test_validator.rpc_url());
 
     assert_eq!(
-        client.get_version().unwrap().solana_core,
-        solana_version::semver!()
+        client.get_version().unwrap().paychains_core,
+        paychains_version::semver!()
     );
 
     assert!(client.get_account(&bob_pubkey).is_err());
@@ -73,7 +73,7 @@ fn test_rpc_client() {
 
     let blockhash = client.get_latest_blockhash().unwrap();
 
-    let tx = system_transaction::transfer(&alice, &bob_pubkey, sol_to_lamports(20.0), blockhash);
+    let tx = system_transaction::transfer(&alice, &bob_pubkey, pay_to_lamports(20.0), blockhash);
     let signature = client.send_transaction(&tx).unwrap();
 
     let mut confirmed_tx = false;
@@ -96,11 +96,11 @@ fn test_rpc_client() {
 
     assert_eq!(
         client.get_balance(&bob_pubkey).unwrap(),
-        sol_to_lamports(20.0)
+        pay_to_lamports(20.0)
     );
     assert_eq!(
         client.get_balance(&alice.pubkey()).unwrap(),
-        original_alice_balance - sol_to_lamports(20.0)
+        original_alice_balance - pay_to_lamports(20.0)
     );
 }
 

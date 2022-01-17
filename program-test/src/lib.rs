@@ -1,4 +1,4 @@
-//! The solana-program-test provides a BanksClient-based test framework BPF programs
+//! The paychains-program-test provides a BanksClient-based test framework BPF programs
 #![allow(clippy::integer_arithmetic)]
 
 // Export tokio for test clients
@@ -7,19 +7,19 @@ use {
     async_trait::async_trait,
     chrono_humanize::{Accuracy, HumanTime, Tense},
     log::*,
-    solana_banks_client::start_client,
-    solana_banks_server::banks_server::start_local_server,
-    solana_program_runtime::{
+    paychains_banks_client::start_client,
+    paychains_banks_server::banks_server::start_local_server,
+    paychains_program_runtime::{
         ic_msg, invoke_context::ProcessInstructionWithContext, stable_log, timings::ExecuteTimings,
     },
-    solana_runtime::{
+    paychains_runtime::{
         bank::Bank,
         bank_forks::BankForks,
         builtins::Builtin,
         commitment::BlockCommitmentCache,
         genesis_utils::{create_genesis_config_with_leader_ex, GenesisConfigInfo},
     },
-    solana_sdk::{
+    paychains_sdk::{
         account::{Account, AccountSharedData, ReadableAccount, WritableAccount},
         account_info::AccountInfo,
         clock::Slot,
@@ -29,7 +29,7 @@ use {
         genesis_config::{ClusterType, GenesisConfig},
         hash::Hash,
         instruction::{Instruction, InstructionError},
-        native_token::sol_to_lamports,
+        native_token::pay_to_lamports,
         poh_config::PohConfig,
         program_error::{ProgramError, ACCOUNT_BORROW_FAILED, UNSUPPORTED_SYSVAR},
         pubkey::Pubkey,
@@ -37,7 +37,7 @@ use {
         signature::{Keypair, Signer},
         sysvar::{Sysvar, SysvarId},
     },
-    solana_vote_program::vote_state::{VoteState, VoteStateVersions},
+    paychains_vote_program::vote_state::{VoteState, VoteStateVersions},
     std::{
         cell::RefCell,
         collections::HashSet,
@@ -56,13 +56,13 @@ use {
     thiserror::Error,
     tokio::task::JoinHandle,
 };
-// Export types so test clients can limit their solana crate dependencies
-pub use {solana_banks_client::BanksClient, solana_program_runtime::invoke_context::InvokeContext};
+// Export types so test clients can limit their paychains crate dependencies
+pub use {paychains_banks_client::BanksClient, paychains_program_runtime::invoke_context::InvokeContext};
 
 pub mod programs;
 
 #[macro_use]
-extern crate solana_bpf_loader_program;
+extern crate paychains_bpf_loader_program;
 
 /// Errors from the program test environment
 #[derive(Error, Debug, PartialEq)]
@@ -88,7 +88,7 @@ fn get_invoke_context<'a, 'b>() -> &'a mut InvokeContext<'b> {
 }
 
 pub fn builtin_process_instruction(
-    process_instruction: solana_sdk::entrypoint::ProcessInstruction,
+    process_instruction: paychains_sdk::entrypoint::ProcessInstruction,
     _first_instruction_account: usize,
     input: &[u8],
     invoke_context: &mut InvokeContext,
@@ -182,7 +182,7 @@ pub fn builtin_process_instruction(
     Ok(())
 }
 
-/// Converts a `solana-program`-style entrypoint into the runtime's entrypoint style, for
+/// Converts a `paychains-program`-style entrypoint into the runtime's entrypoint style, for
 /// use with `ProgramTest::add_program`
 #[macro_export]
 macro_rules! processor {
@@ -190,7 +190,7 @@ macro_rules! processor {
         Some(
             |first_instruction_account: usize,
              input: &[u8],
-             invoke_context: &mut solana_program_test::InvokeContext| {
+             invoke_context: &mut paychains_program_test::InvokeContext| {
                 $crate::builtin_process_instruction(
                     $process_instruction,
                     first_instruction_account,
@@ -228,13 +228,13 @@ fn get_sysvar<T: Default + Sysvar + Sized + serde::de::DeserializeOwned + Clone>
 }
 
 struct SyscallStubs {}
-impl solana_sdk::program_stubs::SyscallStubs for SyscallStubs {
-    fn sol_log(&self, message: &str) {
+impl paychains_sdk::program_stubs::SyscallStubs for SyscallStubs {
+    fn pay_log(&self, message: &str) {
         let invoke_context = get_invoke_context();
         ic_msg!(invoke_context, "Program log: {}", message);
     }
 
-    fn sol_invoke_signed(
+    fn pay_invoke_signed(
         &self,
         instruction: &Instruction,
         account_infos: &[AccountInfo],
@@ -333,14 +333,14 @@ impl solana_sdk::program_stubs::SyscallStubs for SyscallStubs {
         Ok(())
     }
 
-    fn sol_get_clock_sysvar(&self, var_addr: *mut u8) -> u64 {
+    fn pay_get_clock_sysvar(&self, var_addr: *mut u8) -> u64 {
         get_sysvar(
             get_invoke_context().get_sysvar_cache().get_clock(),
             var_addr,
         )
     }
 
-    fn sol_get_epoch_schedule_sysvar(&self, var_addr: *mut u8) -> u64 {
+    fn pay_get_epoch_schedule_sysvar(&self, var_addr: *mut u8) -> u64 {
         get_sysvar(
             get_invoke_context().get_sysvar_cache().get_epoch_schedule(),
             var_addr,
@@ -348,11 +348,11 @@ impl solana_sdk::program_stubs::SyscallStubs for SyscallStubs {
     }
 
     #[allow(deprecated)]
-    fn sol_get_fees_sysvar(&self, var_addr: *mut u8) -> u64 {
+    fn pay_get_fees_sysvar(&self, var_addr: *mut u8) -> u64 {
         get_sysvar(get_invoke_context().get_sysvar_cache().get_fees(), var_addr)
     }
 
-    fn sol_get_rent_sysvar(&self, var_addr: *mut u8) -> u64 {
+    fn pay_get_rent_sysvar(&self, var_addr: *mut u8) -> u64 {
         get_sysvar(get_invoke_context().get_sysvar_cache().get_rent(), var_addr)
     }
 }
@@ -447,11 +447,11 @@ impl Default for ProgramTest {
     /// * the current working directory
     ///
     fn default() -> Self {
-        solana_logger::setup_with_default(
-            "solana_rbpf::vm=debug,\
-             solana_runtime::message_processor=debug,\
-             solana_runtime::system_instruction_processor=trace,\
-             solana_program_test=info",
+        paychains_logger::setup_with_default(
+            "paychains_rbpf::vm=debug,\
+             paychains_runtime::message_processor=debug,\
+             paychains_runtime::system_instruction_processor=trace,\
+             paychains_program_test=info",
         );
         let prefer_bpf = std::env::var("BPF_OUT_DIR").is_ok();
 
@@ -597,7 +597,7 @@ impl ProgramTest {
                 Account {
                     lamports: Rent::default().minimum_balance(data.len()).min(1),
                     data,
-                    owner: solana_sdk::bpf_loader::id(),
+                    owner: paychains_sdk::bpf_loader::id(),
                     executable: true,
                     rent_epoch: 0,
                 },
@@ -703,7 +703,7 @@ impl ProgramTest {
             static ONCE: Once = Once::new();
 
             ONCE.call_once(|| {
-                solana_sdk::program_stubs::set_syscall_stubs(Box::new(SyscallStubs {}));
+                paychains_sdk::program_stubs::set_syscall_stubs(Box::new(SyscallStubs {}));
             });
         }
 
@@ -711,13 +711,13 @@ impl ProgramTest {
         let fee_rate_governor = FeeRateGovernor::default();
         let bootstrap_validator_pubkey = Pubkey::new_unique();
         let bootstrap_validator_stake_lamports =
-            rent.minimum_balance(VoteState::size_of()) + sol_to_lamports(1_000_000.0);
+            rent.minimum_balance(VoteState::size_of()) + pay_to_lamports(1_000_000.0);
 
         let mint_keypair = Keypair::new();
         let voting_keypair = Keypair::new();
 
         let mut genesis_config = create_genesis_config_with_leader_ex(
-            sol_to_lamports(1_000_000.0),
+            pay_to_lamports(1_000_000.0),
             &mint_keypair.pubkey(),
             &bootstrap_validator_pubkey,
             &voting_keypair.pubkey(),
@@ -742,13 +742,13 @@ impl ProgramTest {
                 bank.add_builtin(&$b.0, &$b.1, $b.2)
             };
         }
-        add_builtin!(solana_bpf_loader_deprecated_program!());
+        add_builtin!(paychains_bpf_loader_deprecated_program!());
         if self.use_bpf_jit {
-            add_builtin!(solana_bpf_loader_program_with_jit!());
-            add_builtin!(solana_bpf_loader_upgradeable_program_with_jit!());
+            add_builtin!(paychains_bpf_loader_program_with_jit!());
+            add_builtin!(paychains_bpf_loader_upgradeable_program_with_jit!());
         } else {
-            add_builtin!(solana_bpf_loader_program!());
-            add_builtin!(solana_bpf_loader_upgradeable_program!());
+            add_builtin!(paychains_bpf_loader_program!());
+            add_builtin!(paychains_bpf_loader_upgradeable_program!());
         }
 
         // Add commonly-used SPL programs as a convenience to the user
@@ -832,7 +832,7 @@ impl ProgramTest {
     /// Start the test client
     ///
     /// Returns a `BanksClient` interface into the test environment as well as a payer `Keypair`
-    /// with SOL for sending transactions
+    /// with PAY for sending transactions
     pub async fn start_with_context(self) -> ProgramTestContext {
         let (bank_forks, block_commitment_cache, last_blockhash, gci) = self.setup_bank();
         let target_tick_duration = gci.genesis_config.poh_config.target_tick_duration;
@@ -1065,7 +1065,7 @@ impl ProgramTestContext {
         ));
         bank_forks.set_root(
             pre_warp_slot,
-            &solana_runtime::accounts_background_service::AbsRequestSender::default(),
+            &paychains_runtime::accounts_background_service::AbsRequestSender::default(),
             Some(pre_warp_slot),
         );
 

@@ -8,10 +8,10 @@
 use {
     crate::sigverify,
     crossbeam_channel::{Receiver, RecvTimeoutError, SendError, Sender},
-    solana_measure::measure::Measure,
-    solana_perf::packet::PacketBatch,
-    solana_sdk::timing,
-    solana_streamer::streamer::{self, PacketBatchReceiver, StreamerError},
+    paychains_measure::measure::Measure,
+    paychains_perf::packet::PacketBatch,
+    paychains_sdk::timing,
+    paychains_streamer::streamer::{self, PacketBatchReceiver, StreamerError},
     std::{
         collections::HashMap,
         thread::{self, Builder, JoinHandle},
@@ -225,7 +225,7 @@ impl SigVerifyStage {
         let mut stats = SigVerifierStats::default();
         let mut last_print = Instant::now();
         Builder::new()
-            .name("solana-verifier".to_string())
+            .name("paychains-verifier".to_string())
             .spawn(move || loop {
                 if let Err(e) =
                     Self::verifier(&packet_receiver, &verified_sender, &verifier, &mut stats)
@@ -267,7 +267,7 @@ impl SigVerifyStage {
 
 #[cfg(test)]
 mod tests {
-    use {super::*, solana_perf::packet::Packet};
+    use {super::*, paychains_perf::packet::Packet};
 
     fn count_non_discard(packet_batches: &[PacketBatch]) -> usize {
         packet_batches
@@ -284,7 +284,7 @@ mod tests {
 
     #[test]
     fn test_packet_discard() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let mut batch = PacketBatch::default();
         batch.packets.resize(10, Packet::default());
         batch.packets[3].meta.addr = std::net::IpAddr::from([1u16; 8]);

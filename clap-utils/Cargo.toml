@@ -1,20 +1,20 @@
 [package]
-name = "solana-clap-utils"
+name = "paychains-clap-utils"
 version = "1.10.0"
-description = "Solana utilities for the clap"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana"
+description = "PayChains utilities for the clap"
+authors = ["PayChains Maintainers <maintainers@paychains.foundation>"]
+repository = "https://github.com/paychains-labs/paychains"
 license = "Apache-2.0"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-clap-utils"
+homepage = "https://paychains.com/"
+documentation = "https://docs.rs/paychains-clap-utils"
 edition = "2021"
 
 [dependencies]
 clap = "2.33.0"
 rpassword = "5.0"
-solana-perf = { path = "../perf", version = "=1.10.0" }
-solana-remote-wallet = { path = "../remote-wallet", version = "=1.10.0" }
-solana-sdk = { path = "../sdk", version = "=1.10.0" }
+paychains-perf = { path = "../perf", version = "=1.10.0" }
+paychains-remote-wallet = { path = "../remote-wallet", version = "=1.10.0" }
+paychains-sdk = { path = "../sdk", version = "=1.10.0" }
 thiserror = "1.0.30"
 tiny-bip39 = "0.8.2"
 uriparse = "0.6.3"
@@ -25,7 +25,7 @@ chrono = "0.4"
 tempfile = "3.3.0"
 
 [lib]
-name = "solana_clap_utils"
+name = "paychains_clap_utils"
 
 [package.metadata.docs.rs]
 targets = ["x86_64-unknown-linux-gnu"]

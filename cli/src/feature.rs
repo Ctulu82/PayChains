@@ -6,11 +6,11 @@ use {
     clap::{App, AppSettings, Arg, ArgMatches, SubCommand},
     console::style,
     serde::{Deserialize, Deserializer, Serialize, Serializer},
-    solana_clap_utils::{input_parsers::*, input_validators::*, keypair::*},
-    solana_cli_output::{QuietDisplay, VerboseDisplay},
-    solana_client::{client_error::ClientError, rpc_client::RpcClient},
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_sdk::{
+    paychains_clap_utils::{input_parsers::*, input_validators::*, keypair::*},
+    paychains_cli_output::{QuietDisplay, VerboseDisplay},
+    paychains_client::{client_error::ClientError, rpc_client::RpcClient},
+    paychains_remote_wallet::remote_wallet::RemoteWalletManager,
+    paychains_sdk::{
         account::Account,
         clock::Slot,
         feature::{self, Feature},
@@ -564,7 +564,7 @@ fn feature_activation_allowed(
     rpc_client: &RpcClient,
     quiet: bool,
 ) -> Result<(bool, Option<CliClusterFeatureSets>), ClientError> {
-    let my_feature_set = solana_version::Version::default().feature_set;
+    let my_feature_set = paychains_version::Version::default().feature_set;
 
     let feature_set_stats = feature_set_stats(rpc_client)?;
 

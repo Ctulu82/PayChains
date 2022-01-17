@@ -1,7 +1,7 @@
 use {
     crate::{StoredExtendedRewards, StoredTransactionStatusMeta},
-    solana_account_decoder::parse_token::{real_number_string_trimmed, UiTokenAmount},
-    solana_sdk::{
+    paychains_account_decoder::parse_token::{real_number_string_trimmed, UiTokenAmount},
+    paychains_sdk::{
         hash::Hash,
         instruction::{CompiledInstruction, InstructionError},
         message::{Message, MessageHeader},
@@ -9,7 +9,7 @@ use {
         signature::Signature,
         transaction::{Transaction, TransactionError},
     },
-    solana_transaction_status::{
+    paychains_transaction_status::{
         ConfirmedBlock, InnerInstructions, Reward, RewardType, TransactionByAddrInfo,
         TransactionStatusMeta, TransactionTokenBalance, TransactionWithStatusMeta,
     },
@@ -22,14 +22,14 @@ use {
 pub mod generated {
     include!(concat!(
         env!("OUT_DIR"),
-        "/solana.storage.confirmed_block.rs"
+        "/paychains.storage.confirmed_block.rs"
     ));
 }
 
 pub mod tx_by_addr {
     include!(concat!(
         env!("OUT_DIR"),
-        "/solana.storage.transaction_by_addr.rs"
+        "/paychains.storage.transaction_by_addr.rs"
     ));
 }
 

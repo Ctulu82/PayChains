@@ -4,12 +4,12 @@ use {
     log::*,
     rand::{thread_rng, Rng},
     rayon::prelude::*,
-    solana_clap_utils::input_parsers::pubkey_of,
-    solana_cli::{cli::CliConfig, program::process_deploy},
-    solana_client::{rpc_client::RpcClient, transaction_executor::TransactionExecutor},
-    solana_faucet::faucet::{request_airdrop_transaction, FAUCET_PORT},
-    solana_gossip::gossip_service::discover,
-    solana_sdk::{
+    paychains_clap_utils::input_parsers::pubkey_of,
+    paychains_cli::{cli::CliConfig, program::process_deploy},
+    paychains_client::{rpc_client::RpcClient, transaction_executor::TransactionExecutor},
+    paychains_faucet::faucet::{request_airdrop_transaction, FAUCET_PORT},
+    paychains_gossip::gossip_service::discover,
+    paychains_sdk::{
         commitment_config::CommitmentConfig,
         instruction::{AccountMeta, Instruction},
         message::Message,
@@ -19,7 +19,7 @@ use {
         system_instruction,
         transaction::Transaction,
     },
-    solana_streamer::socket::SocketAddrSpace,
+    paychains_streamer::socket::SocketAddrSpace,
     std::{
         net::SocketAddr,
         process::exit,
@@ -413,10 +413,10 @@ fn run_transactions_dos(
 }
 
 fn main() {
-    solana_logger::setup_with_default("solana=info");
+    paychains_logger::setup_with_default("paychains=info");
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(paychains_version::version!())
         .arg(
             Arg::with_name("entrypoint")
                 .long("entrypoint")
@@ -528,14 +528,14 @@ fn main() {
     let port = if skip_gossip { DEFAULT_RPC_PORT } else { 8001 };
     let mut entrypoint_addr = SocketAddr::from(([127, 0, 0, 1], port));
     if let Some(addr) = matches.value_of("entrypoint") {
-        entrypoint_addr = solana_net_utils::parse_host_port(addr).unwrap_or_else(|e| {
+        entrypoint_addr = paychains_net_utils::parse_host_port(addr).unwrap_or_else(|e| {
             eprintln!("failed to parse entrypoint address: {}", e);
             exit(1)
         });
     }
     let mut faucet_addr = SocketAddr::from(([127, 0, 0, 1], FAUCET_PORT));
     if let Some(addr) = matches.value_of("faucet_addr") {
-        faucet_addr = solana_net_utils::parse_host_port(addr).unwrap_or_else(|e| {
+        faucet_addr = paychains_net_utils::parse_host_port(addr).unwrap_or_else(|e| {
             eprintln!("failed to parse entrypoint address: {}", e);
             exit(1)
         });
@@ -623,18 +623,18 @@ fn main() {
 pub mod test {
     use {
         super::*,
-        solana_core::validator::ValidatorConfig,
-        solana_local_cluster::{
+        paychains_core::validator::ValidatorConfig,
+        paychains_local_cluster::{
             local_cluster::{ClusterConfig, LocalCluster},
             validator_configs::make_identical_validator_configs,
         },
-        solana_measure::measure::Measure,
-        solana_sdk::poh_config::PohConfig,
+        paychains_measure::measure::Measure,
+        paychains_sdk::poh_config::PohConfig,
     };
 
     #[test]
     fn test_tx_size() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let keypair = Keypair::new();
         let num_instructions = 20;
         let program_id = Pubkey::new_unique();
@@ -653,7 +653,7 @@ pub mod test {
             &account_metas,
         );
         let signers: Vec<&Keypair> = vec![&keypair];
-        let blockhash = solana_sdk::hash::Hash::default();
+        let blockhash = paychains_sdk::hash::Hash::default();
         let tx = Transaction::new(&signers, message, blockhash);
         let size = bincode::serialized_size(&tx).unwrap();
         info!("size:{}", size);
@@ -663,7 +663,7 @@ pub mod test {
     #[test]
     #[ignore]
     fn test_transaction_dos() {
-        solana_logger::setup();
+        paychains_logger::setup();
 
         let validator_config = ValidatorConfig::default();
         let num_nodes = 1;

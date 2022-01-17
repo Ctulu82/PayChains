@@ -4,9 +4,9 @@ use {
     crate::poh_recorder::{PohRecorder, Record},
     crossbeam_channel::Receiver,
     log::*,
-    solana_entry::poh::Poh,
-    solana_measure::measure::Measure,
-    solana_sdk::poh_config::PohConfig,
+    paychains_entry::poh::Poh,
+    paychains_measure::measure::Measure,
+    paychains_sdk::poh_config::PohConfig,
     std::{
         sync::{
             atomic::{AtomicBool, Ordering},
@@ -98,9 +98,9 @@ impl PohService {
         let poh_exit_ = poh_exit.clone();
         let poh_config = poh_config.clone();
         let tick_producer = Builder::new()
-            .name("solana-poh-service-tick_producer".to_string())
+            .name("paychains-poh-service-tick_producer".to_string())
             .spawn(move || {
-                solana_sys_tuner::request_realtime_poh();
+                paychains_sys_tuner::request_realtime_poh();
                 if poh_config.hashes_per_tick.is_none() {
                     if poh_config.target_tick_count.is_none() {
                         Self::sleepy_tick_producer(
@@ -373,16 +373,16 @@ mod tests {
     use {
         super::*,
         rand::{thread_rng, Rng},
-        solana_ledger::{
+        paychains_ledger::{
             blockstore::Blockstore,
             genesis_utils::{create_genesis_config, GenesisConfigInfo},
             get_tmp_ledger_path,
             leader_schedule_cache::LeaderScheduleCache,
         },
-        solana_measure::measure::Measure,
-        solana_perf::test_tx::test_tx,
-        solana_runtime::bank::Bank,
-        solana_sdk::{
+        paychains_measure::measure::Measure,
+        paychains_perf::test_tx::test_tx,
+        paychains_runtime::bank::Bank,
+        paychains_sdk::{
             clock, hash::hash, pubkey::Pubkey, timing, transaction::VersionedTransaction,
         },
         std::{thread::sleep, time::Duration},
@@ -391,7 +391,7 @@ mod tests {
     #[test]
     #[ignore]
     fn test_poh_service() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(2);
         let bank = Arc::new(Bank::new_no_wallclock_throttle_for_tests(&genesis_config));
         let prev_hash = bank.last_blockhash();
@@ -441,7 +441,7 @@ mod tests {
                 let exit = exit.clone();
 
                 Builder::new()
-                    .name("solana-poh-service-entry_producer".to_string())
+                    .name("paychains-poh-service-entry_producer".to_string())
                     .spawn(move || {
                         let now = Instant::now();
                         let mut total_us = 0;

@@ -11,15 +11,15 @@ use {
     regex::Regex,
     serde::Serialize,
     serde_json::json,
-    solana_clap_utils::{
+    paychains_clap_utils::{
         input_parsers::{cluster_type_of, pubkey_of, pubkeys_of},
         input_validators::{
             is_parsable, is_pow2, is_pubkey, is_pubkey_or_keypair, is_slot, is_valid_percentage,
         },
     },
-    solana_core::system_monitor_service::SystemMonitorService,
-    solana_entry::entry::Entry,
-    solana_ledger::{
+    paychains_core::system_monitor_service::SystemMonitorService,
+    paychains_entry::entry::Entry,
+    paychains_ledger::{
         ancestor_iterator::AncestorIterator,
         bank_forks_utils,
         blockstore::{create_new_ledger, Blockstore, PurgeType},
@@ -27,8 +27,8 @@ use {
         blockstore_processor::ProcessOptions,
         shred::Shred,
     },
-    solana_measure::measure::Measure,
-    solana_runtime::{
+    paychains_measure::measure::Measure,
+    paychains_runtime::{
         accounts_db::AccountsDbConfig,
         accounts_index::{AccountsIndexConfig, ScanConfig},
         bank::{Bank, RewardCalculationEvent},
@@ -43,14 +43,14 @@ use {
             DEFAULT_MAX_INCREMENTAL_SNAPSHOT_ARCHIVES_TO_RETAIN,
         },
     },
-    solana_sdk::{
+    paychains_sdk::{
         account::{AccountSharedData, ReadableAccount, WritableAccount},
         account_utils::StateMut,
         clock::{Epoch, Slot},
         genesis_config::{ClusterType, GenesisConfig},
         hash::Hash,
         inflation::Inflation,
-        native_token::{lamports_to_sol, sol_to_lamports, Sol},
+        native_token::{lamports_to_pay, pay_to_lamports, Pay},
         pubkey::Pubkey,
         rent::Rent,
         shred_version::compute_shred_version,
@@ -58,8 +58,8 @@ use {
         system_program,
         transaction::{SanitizedTransaction, TransactionError},
     },
-    solana_stake_program::stake_state::{self, PointValue},
-    solana_vote_program::{
+    paychains_stake_program::stake_state::{self, PointValue},
+    paychains_vote_program::{
         self,
         vote_state::{self, VoteState},
     },
@@ -111,8 +111,8 @@ fn output_slot_rewards(blockstore: &Blockstore, slot: Slot, method: &LedgerOutpu
                             "-".to_string()
                         },
                         sign,
-                        lamports_to_sol(reward.lamports.abs() as u64),
-                        lamports_to_sol(reward.post_balance),
+                        lamports_to_pay(reward.lamports.abs() as u64),
+                        lamports_to_pay(reward.post_balance),
                         reward
                             .commission
                             .map(|commission| format!("{:>9}%", commission))
@@ -155,7 +155,7 @@ fn output_entry(
                     .map(|transaction_status| transaction_status.into());
 
                 if let Some(legacy_tx) = transaction.into_legacy_transaction() {
-                    solana_cli_output::display::println_transaction(
+                    paychains_cli_output::display::println_transaction(
                         &legacy_tx, &tx_status, "      ", None, None,
                     );
                 } else {
@@ -436,9 +436,9 @@ fn graph_forks(bank_forks: &BankForks, include_all_votes: bool) -> String {
                         slot_stake_and_vote_count.get(&bank.slot())
                     {
                         format!(
-                            "\nvotes: {}, stake: {:.1} SOL ({:.1}%)",
+                            "\nvotes: {}, stake: {:.1} PAY ({:.1}%)",
                             votes,
-                            lamports_to_sol(*stake),
+                            lamports_to_pay(*stake),
                             *stake as f64 / *total_stake as f64 * 100.,
                         )
                     } else {
@@ -497,10 +497,10 @@ fn graph_forks(bank_forks: &BankForks, include_all_votes: bool) -> String {
         });
 
         dot.push(format!(
-            r#"  "last vote {}"[shape=box,label="Latest validator vote: {}\nstake: {} SOL\nroot slot: {}\nvote history:\n{}"];"#,
+            r#"  "last vote {}"[shape=box,label="Latest validator vote: {}\nstake: {} PAY\nroot slot: {}\nvote history:\n{}"];"#,
             node_pubkey,
             node_pubkey,
-            lamports_to_sol(*stake),
+            lamports_to_pay(*stake),
             vote_state.root_slot.unwrap_or(0),
             vote_state
                 .votes
@@ -531,9 +531,9 @@ fn graph_forks(bank_forks: &BankForks, include_all_votes: bool) -> String {
     // Annotate the final "..." node with absent vote and stake information
     if absent_votes > 0 {
         dot.push(format!(
-            r#"    "..."[label="...\nvotes: {}, stake: {:.1} SOL {:.1}%"];"#,
+            r#"    "..."[label="...\nvotes: {}, stake: {:.1} PAY {:.1}%"];"#,
             absent_votes,
-            lamports_to_sol(absent_stake),
+            lamports_to_pay(absent_stake),
             absent_stake as f64 / lowest_total_stake as f64 * 100.,
         ));
     }
@@ -575,7 +575,7 @@ fn graph_forks(bank_forks: &BankForks, include_all_votes: bool) -> String {
 }
 
 fn analyze_column<
-    C: solana_ledger::blockstore_db::Column + solana_ledger::blockstore_db::ColumnName,
+    C: paychains_ledger::blockstore_db::Column + paychains_ledger::blockstore_db::ColumnName,
 >(
     db: &Database,
     name: &str,
@@ -846,7 +846,7 @@ fn main() {
 
     const DEFAULT_ROOT_COUNT: &str = "1";
     const DEFAULT_MAX_SLOTS_ROOT_REPAIR: &str = "2000";
-    solana_logger::setup_with_default("solana=info");
+    paychains_logger::setup_with_default("paychains=info");
 
     let starting_slot_arg = Arg::with_name("starting_slot")
         .long("starting-slot")
@@ -990,16 +990,16 @@ fn main() {
     .help("The maximum number of incremental snapshot archives to hold on to when purging older snapshots.");
 
     let rent = Rent::default();
-    let default_bootstrap_validator_lamports = &sol_to_lamports(500.0)
+    let default_bootstrap_validator_lamports = &pay_to_lamports(500.0)
         .max(VoteState::get_rent_exempt_reserve(&rent))
         .to_string();
-    let default_bootstrap_validator_stake_lamports = &sol_to_lamports(0.5)
+    let default_bootstrap_validator_stake_lamports = &pay_to_lamports(0.5)
         .max(StakeState::get_rent_exempt_reserve(&rent))
         .to_string();
 
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(paychains_version::version!())
         .setting(AppSettings::InferSubcommands)
         .setting(AppSettings::SubcommandRequiredElseHelp)
         .setting(AppSettings::VersionlessSubcommands)
@@ -1615,7 +1615,7 @@ fn main() {
         )
         .get_matches();
 
-    info!("{} {}", crate_name!(), solana_version::version!());
+    info!("{} {}", crate_name!(), paychains_version::version!());
 
     let ledger_path = parse_ledger_path(&matches, "ledger_path");
 
@@ -1693,7 +1693,7 @@ fn main() {
 
                 if let Some(hashes_per_tick) = arg_matches.value_of("hashes_per_tick") {
                     genesis_config.poh_config.hashes_per_tick = match hashes_per_tick {
-                        // Note: Unlike `solana-genesis`, "auto" is not supported here.
+                        // Note: Unlike `paychains-genesis`, "auto" is not supported here.
                         "sleep" => None,
                         _ => Some(value_t_or_exit!(arg_matches, "hashes_per_tick", u64)),
                     }
@@ -1702,7 +1702,7 @@ fn main() {
                 create_new_ledger(
                     &output_directory,
                     &genesis_config,
-                    solana_runtime::hardened_unpack::MAX_GENESIS_ARCHIVE_UNPACKED_SIZE,
+                    paychains_runtime::hardened_unpack::MAX_GENESIS_ARCHIVE_UNPACKED_SIZE,
                     AccessType::PrimaryOnly,
                 )
                 .unwrap_or_else(|err| {
@@ -2227,7 +2227,7 @@ fn main() {
 
                             if let Some(hashes_per_tick) = hashes_per_tick {
                                 child_bank.set_hashes_per_tick(match hashes_per_tick {
-                                    // Note: Unlike `solana-genesis`, "auto" is not supported here.
+                                    // Note: Unlike `paychains-genesis`, "auto" is not supported here.
                                     "sleep" => None,
                                     _ => {
                                         Some(value_t_or_exit!(arg_matches, "hashes_per_tick", u64))
@@ -2310,7 +2310,7 @@ fn main() {
                             // Delete existing vote accounts
                             for (address, mut account) in bank
                                 .get_program_accounts(
-                                    &solana_vote_program::id(),
+                                    &paychains_vote_program::id(),
                                     &ScanConfig::default(),
                                 )
                                 .unwrap()
@@ -2520,7 +2520,7 @@ fn main() {
                     .unwrap()
                     .into_iter()
                     .filter(|(pubkey, _account, _slot)| {
-                        include_sysvars || !solana_sdk::sysvar::is_sysvar_id(pubkey)
+                        include_sysvars || !paychains_sdk::sysvar::is_sysvar_id(pubkey)
                     })
                     .map(|(pubkey, account, slot)| (pubkey, (account, slot)))
                     .collect();
@@ -2543,7 +2543,7 @@ fn main() {
                     for (pubkey, (account, slot)) in accounts.into_iter() {
                         let data_len = account.data().len();
                         println!("{}:", pubkey);
-                        println!("  - balance: {} SOL", lamports_to_sol(account.lamports()));
+                        println!("  - balance: {} PAY", lamports_to_pay(account.lamports()));
                         println!("  - owner: '{}'", account.owner());
                         println!("  - executable: {}", account.executable());
                         println!("  - slot: {}", slot);
@@ -2593,7 +2593,7 @@ fn main() {
                             if old_capitalization == bank.capitalization() {
                                 eprintln!(
                                     "Capitalization was identical: {}",
-                                    Sol(old_capitalization)
+                                    Pay(old_capitalization)
                                 );
                             }
                         }
@@ -2670,7 +2670,7 @@ fn main() {
                                 new_credits_observed: Option<u64>,
                                 skipped_reasons: String,
                             }
-                            use solana_stake_program::stake_state::InflationPointCalculationEvent;
+                            use paychains_stake_program::stake_state::InflationPointCalculationEvent;
                             let stake_calculation_details: DashMap<Pubkey, CalculationDetail> =
                                 DashMap::new();
                             let last_point_value = Arc::new(RwLock::new(None));
@@ -2779,9 +2779,9 @@ fn main() {
                                 / warped_bank.epoch_duration_in_years(base_bank.epoch());
                             println!(
                                 "Capitalization: {} => {} (+{} {}%; annualized {}%)",
-                                Sol(base_bank.capitalization()),
-                                Sol(warped_bank.capitalization()),
-                                Sol(warped_bank.capitalization() - base_bank.capitalization()),
+                                Pay(base_bank.capitalization()),
+                                Pay(warped_bank.capitalization()),
+                                Pay(warped_bank.capitalization() - base_bank.capitalization()),
                                 interest_per_epoch,
                                 interest_per_year,
                             );
@@ -2839,7 +2839,7 @@ fn main() {
                             for (pubkey, warped_account) in all_accounts {
                                 // Don't output sysvars; it's always updated but not related to
                                 // inflation.
-                                if solana_sdk::sysvar::is_sysvar_id(&pubkey) {
+                                if paychains_sdk::sysvar::is_sysvar_id(&pubkey) {
                                     continue;
                                 }
 
@@ -2852,9 +2852,9 @@ fn main() {
                                         "{:<45}({}): {} => {} (+{} {:>4.9}%) {:?}",
                                         format!("{}", pubkey), // format! is needed to pad/justify correctly.
                                         base_account.owner(),
-                                        Sol(base_account.lamports()),
-                                        Sol(warped_account.lamports()),
-                                        Sol(delta),
+                                        Pay(base_account.lamports()),
+                                        Pay(warped_account.lamports()),
+                                        Pay(delta),
                                         ((warped_account.lamports() as f64)
                                             / (base_account.lamports() as f64)
                                             * 100_f64)
@@ -3002,7 +3002,7 @@ fn main() {
                                 }
                             }
                             if overall_delta > 0 {
-                                println!("Sum of lamports changes: {}", Sol(overall_delta));
+                                println!("Sum of lamports changes: {}", Pay(overall_delta));
                             }
                         } else {
                             if arg_matches.is_present("recalculate_capitalization") {
@@ -3019,7 +3019,7 @@ fn main() {
                             assert_capitalization(bank);
                             println!("Inflation: {:?}", bank.inflation());
                             println!("RentCollector: {:?}", bank.rent_collector());
-                            println!("Capitalization: {}", Sol(bank.capitalization()));
+                            println!("Capitalization: {}", Pay(bank.capitalization()));
                         }
                     }
                     Err(err) => {

@@ -1,5 +1,5 @@
 #[cfg(RUSTC_WITH_SPECIALIZATION)]
-use solana_frozen_abi::abi_example::IgnoreAsHelper;
+use paychains_frozen_abi::abi_example::IgnoreAsHelper;
 use {
     crate::{
         accounts::Accounts,
@@ -23,8 +23,8 @@ use {
     log::*,
     rayon::prelude::*,
     serde::{de::DeserializeOwned, Deserialize, Serialize},
-    solana_measure::measure::Measure,
-    solana_sdk::{
+    paychains_measure::measure::Measure,
+    paychains_sdk::{
         clock::{Epoch, Slot, UnixTimestamp},
         epoch_schedule::EpochSchedule,
         fee_calculator::{FeeCalculator, FeeRateGovernor},

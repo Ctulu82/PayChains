@@ -6,7 +6,7 @@ import {
   ConfirmedTransactionMeta,
   TransactionSignature,
   PublicKey,
-} from "@solana/web3.js";
+} from "@paychains/web3.js";
 import { ErrorCard } from "components/common/ErrorCard";
 import { Signature } from "components/common/Signature";
 import { Address } from "components/common/Address";

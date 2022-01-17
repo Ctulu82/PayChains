@@ -13,13 +13,13 @@ use {
         DBRecoveryMode, IteratorMode as RocksIteratorMode, Options, WriteBatch as RWriteBatch, DB,
     },
     serde::{de::DeserializeOwned, Serialize},
-    solana_runtime::hardened_unpack::UnpackError,
-    solana_sdk::{
+    paychains_runtime::hardened_unpack::UnpackError,
+    paychains_sdk::{
         clock::{Slot, UnixTimestamp},
         pubkey::Pubkey,
         signature::Signature,
     },
-    solana_storage_proto::convert::generated,
+    paychains_storage_proto::convert::generated,
     std::{
         collections::{HashMap, HashSet},
         ffi::{CStr, CString},
@@ -333,7 +333,7 @@ impl Rocks {
                 match DB::open_cf_descriptors(&db_options, path, cfs) {
                     Ok(db) => Rocks(db, ActualAccessType::Primary, oldest_slot),
                     Err(err) => {
-                        let secondary_path = path.join("solana-secondary");
+                        let secondary_path = path.join("paychains-secondary");
 
                         warn!("Error when opening as primary: {}", err);
                         warn!("Trying as secondary at : {:?}", secondary_path);
@@ -356,7 +356,7 @@ impl Rocks {
                 }
             }
         };
-        // this is only needed for LedgerCleanupService. so guard with PrimaryOnly (i.e. running solana-validator)
+        // this is only needed for LedgerCleanupService. so guard with PrimaryOnly (i.e. running paychains-validator)
         if matches!(access_type, AccessType::PrimaryOnly) {
             for cf_name in cf_names {
                 // these special column families must be excluded from LedgerCleanupService's rocksdb

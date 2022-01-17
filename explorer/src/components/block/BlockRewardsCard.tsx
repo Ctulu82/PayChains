@@ -1,6 +1,6 @@
 import React from "react";
-import { SolBalance } from "utils";
-import { BlockResponse, PublicKey } from "@solana/web3.js";
+import { PayBalance } from "utils";
+import { BlockResponse, PublicKey } from "@paychains/web3.js";
 import { Address } from "components/common/Address";
 
 const PAGE_SIZE = 10;
@@ -50,11 +50,11 @@ export function BlockRewardsCard({ block }: { block: BlockResponse }) {
                   </td>
                   <td>{reward.rewardType}</td>
                   <td>
-                    <SolBalance lamports={reward.lamports} />
+                    <PayBalance lamports={reward.lamports} />
                   </td>
                   <td>
                     {reward.postBalance ? (
-                      <SolBalance lamports={reward.postBalance} />
+                      <PayBalance lamports={reward.postBalance} />
                     ) : (
                       "-"
                     )}

@@ -1,4 +1,4 @@
-import * as BufferLayout from '@solana/buffer-layout';
+import * as BufferLayout from '@paychains/buffer-layout';
 import type {Buffer} from 'buffer';
 
 import * as Layout from './layout';
@@ -40,7 +40,7 @@ export type BlockTimestamp = {
 };
 
 /**
- * See https://github.com/solana-labs/solana/blob/8a12ed029cfa38d4a45400916c2463fb82bbec8c/programs/vote_api/src/vote_state.rs#L68-L88
+ * See https://github.com/paychains-labs/paychains/blob/8a12ed029cfa38d4a45400916c2463fb82bbec8c/programs/vote_api/src/vote_state.rs#L68-L88
  *
  * @internal
  */

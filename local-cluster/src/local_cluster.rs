@@ -6,22 +6,22 @@ use {
     },
     itertools::izip,
     log::*,
-    solana_client::thin_client::{create_client, ThinClient},
-    solana_core::{
+    paychains_client::thin_client::{create_client, ThinClient},
+    paychains_core::{
         tower_storage::FileTowerStorage,
         validator::{Validator, ValidatorConfig, ValidatorStartProgress},
     },
-    solana_gossip::{
+    paychains_gossip::{
         cluster_info::{Node, VALIDATOR_PORT_RANGE},
         contact_info::ContactInfo,
         gossip_service::discover_cluster,
     },
-    solana_ledger::create_new_tmp_ledger,
-    solana_runtime::genesis_utils::{
+    paychains_ledger::create_new_tmp_ledger,
+    paychains_runtime::genesis_utils::{
         create_genesis_config_with_vote_accounts_and_cluster_type, GenesisConfigInfo,
         ValidatorVoteKeypairs,
     },
-    solana_sdk::{
+    paychains_sdk::{
         account::{Account, AccountSharedData},
         client::SyncClient,
         clock::{DEFAULT_DEV_SLOTS_PER_EPOCH, DEFAULT_TICKS_PER_SLOT},
@@ -39,9 +39,9 @@ use {
         system_transaction,
         transaction::Transaction,
     },
-    solana_stake_program::{config::create_account as create_stake_config_account, stake_state},
-    solana_streamer::socket::SocketAddrSpace,
-    solana_vote_program::{
+    paychains_stake_program::{config::create_account as create_stake_config_account, stake_state},
+    paychains_streamer::socket::SocketAddrSpace,
+    paychains_vote_program::{
         vote_instruction,
         vote_state::{VoteInit, VoteState},
     },

@@ -1,15 +1,15 @@
 #![feature(test)]
 
-extern crate solana_core;
+extern crate paychains_core;
 extern crate test;
 
 use {
     crossbeam_channel::unbounded,
     log::*,
     rand::{thread_rng, Rng},
-    solana_core::{sigverify::TransactionSigVerifier, sigverify_stage::SigVerifyStage},
-    solana_perf::{packet::to_packet_batches, test_tx::test_tx},
-    solana_sdk::{
+    paychains_core::{sigverify::TransactionSigVerifier, sigverify_stage::SigVerifyStage},
+    paychains_perf::{packet::to_packet_batches, test_tx::test_tx},
+    paychains_sdk::{
         hash::Hash,
         signature::{Keypair, Signer},
         system_transaction,
@@ -21,7 +21,7 @@ use {
 
 #[bench]
 fn bench_packet_discard(bencher: &mut Bencher) {
-    solana_logger::setup();
+    paychains_logger::setup();
     let len = 30 * 1000;
     let chunk_size = 1024;
     let tx = test_tx();
@@ -59,7 +59,7 @@ fn bench_packet_discard(bencher: &mut Bencher) {
 
 #[bench]
 fn bench_sigverify_stage(bencher: &mut Bencher) {
-    solana_logger::setup();
+    paychains_logger::setup();
     let (packet_s, packet_r) = unbounded();
     let (verified_s, verified_r) = unbounded();
     let verifier = TransactionSigVerifier::default();

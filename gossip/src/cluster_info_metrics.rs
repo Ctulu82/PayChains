@@ -1,8 +1,8 @@
 use {
     crate::crds_gossip::CrdsGossip,
     itertools::Itertools,
-    solana_measure::measure::Measure,
-    solana_sdk::{clock::Slot, pubkey::Pubkey},
+    paychains_measure::measure::Measure,
+    paychains_sdk::{clock::Slot, pubkey::Pubkey},
     std::{
         cmp::Reverse,
         collections::HashMap,

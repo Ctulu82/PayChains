@@ -12,7 +12,7 @@ use {
         scalar::Scalar,
     },
     serde::{Deserialize, Serialize},
-    solana_sdk::{
+    paychains_sdk::{
         instruction::Instruction,
         message::Message,
         pubkey::Pubkey,
@@ -540,7 +540,7 @@ mod tests {
     use {
         super::*,
         crate::encryption::pedersen::Pedersen,
-        solana_sdk::{signature::Keypair, signer::null_signer::NullSigner},
+        paychains_sdk::{signature::Keypair, signer::null_signer::NullSigner},
     };
 
     #[test]

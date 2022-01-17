@@ -1,7 +1,7 @@
 use {
     crate::id,
     serde::{Deserialize, Serialize},
-    solana_sdk::{
+    paychains_sdk::{
         clock::Slot,
         instruction::{AccountMeta, Instruction},
         pubkey::Pubkey,

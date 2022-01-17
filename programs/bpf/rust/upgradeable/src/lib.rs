@@ -1,7 +1,7 @@
 //! Example Rust-based BPF upgradeable program
 
-extern crate solana_program;
-use solana_program::{
+extern crate paychains_program;
+use paychains_program::{
     account_info::AccountInfo, entrypoint, entrypoint::ProgramResult, msg, pubkey::Pubkey,
     sysvar::clock,
 };

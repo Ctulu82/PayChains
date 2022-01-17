@@ -1,9 +1,9 @@
 #[cfg(all(test, RUSTC_WITH_SPECIALIZATION))]
-use solana_frozen_abi::abi_example::IgnoreAsHelper;
+use paychains_frozen_abi::abi_example::IgnoreAsHelper;
 use {
     super::{common::UnusedAccounts, *},
     crate::{ancestors::AncestorsForSerialization, stakes::StakesCache},
-    solana_measure::measure::Measure,
+    paychains_measure::measure::Measure,
     std::{cell::RefCell, sync::RwLock},
 };
 
@@ -34,7 +34,7 @@ impl SerializableStorage for SerializableAccountStorageEntry {
 }
 
 #[cfg(all(test, RUSTC_WITH_SPECIALIZATION))]
-impl solana_frozen_abi::abi_example::IgnoreAsHelper for SerializableAccountStorageEntry {}
+impl paychains_frozen_abi::abi_example::IgnoreAsHelper for SerializableAccountStorageEntry {}
 
 impl From<&AccountStorageEntry> for SerializableAccountStorageEntry {
     fn from(rhs: &AccountStorageEntry) -> Self {

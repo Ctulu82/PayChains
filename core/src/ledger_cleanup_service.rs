@@ -3,12 +3,12 @@
 use {
     crossbeam_channel::{Receiver, RecvTimeoutError},
     rand::{thread_rng, Rng},
-    solana_ledger::{
+    paychains_ledger::{
         blockstore::{Blockstore, PurgeType},
         blockstore_db::Result as BlockstoreResult,
     },
-    solana_measure::measure::Measure,
-    solana_sdk::clock::{Slot, DEFAULT_TICKS_PER_SLOT, TICKS_PER_DAY},
+    paychains_measure::measure::Measure,
+    paychains_sdk::clock::{Slot, DEFAULT_TICKS_PER_SLOT, TICKS_PER_DAY},
     std::{
         string::ToString,
         sync::{
@@ -72,7 +72,7 @@ impl LedgerCleanupService {
         let blockstore_compact = blockstore.clone();
 
         let t_cleanup = Builder::new()
-            .name("sol-led-cleanup".to_string())
+            .name("pay-led-cleanup".to_string())
             .spawn(move || loop {
                 if exit.load(Ordering::Relaxed) {
                     break;
@@ -94,7 +94,7 @@ impl LedgerCleanupService {
             .unwrap();
 
         let t_compact = Builder::new()
-            .name("sol-led-compact".to_string())
+            .name("pay-led-compact".to_string())
             .spawn(move || loop {
                 if exit_compact.load(Ordering::Relaxed) {
                     break;
@@ -199,7 +199,7 @@ impl LedgerCleanupService {
             let purge_complete1 = purge_complete.clone();
             let last_compact_slot1 = last_compact_slot.clone();
             let _t_purge = Builder::new()
-                .name("solana-ledger-purge".to_string())
+                .name("paychains-ledger-purge".to_string())
                 .spawn(move || {
                     let mut slot_update_time = Measure::start("slot_update");
                     *blockstore.lowest_cleanup_slot.write().unwrap() = lowest_cleanup_slot;
@@ -313,12 +313,12 @@ mod tests {
     use {
         super::*,
         crossbeam_channel::unbounded,
-        solana_ledger::{blockstore::make_many_slot_entries, get_tmp_ledger_path},
+        paychains_ledger::{blockstore::make_many_slot_entries, get_tmp_ledger_path},
     };
 
     #[test]
     fn test_cleanup1() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let blockstore_path = get_tmp_ledger_path!();
         let blockstore = Blockstore::open(&blockstore_path).unwrap();
         let (shreds, _) = make_many_slot_entries(0, 50, 5);
@@ -366,7 +366,7 @@ mod tests {
 
     #[test]
     fn test_cleanup_speed() {
-        solana_logger::setup();
+        paychains_logger::setup();
         let blockstore_path = get_tmp_ledger_path!();
         let mut blockstore = Blockstore::open(&blockstore_path).unwrap();
         blockstore.set_no_compaction(true);
